@@ -1,0 +1,1386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Smart Attendance Pro | QR Kiosk System</title>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  
+  <!-- QR Code Generator -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  
+  <!-- Scanner Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --secondary: #ec4899;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --dark: #1e293b;
+      --light: #f8fafc;
+      --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --shadow: 0 20px 40px -5px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f0f4f8;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.1) 0, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.1) 0, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(99, 102, 241, 0.1) 0, transparent 50%);
+      min-height: 100vh;
+      color: var(--dark);
+    }
+
+    /* Navigation */
+    .navbar {
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar-brand {
+      font-weight: 800;
+      font-size: 1.5rem;
+      background: var(--gradient-1);
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nav-link {
+      font-weight: 600;
+      color: #64748b !important;
+      padding: 0.5rem 1.25rem !important;
+      border-radius: 8px;
+      transition: all 0.3s;
+      margin: 0 0.25rem;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      color: var(--primary) !important;
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    /* Cards */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border-radius: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.5);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .glass-card:hover {
+      box-shadow: var(--shadow-lg);
+    }
+
+    .card-header-custom {
+      background: var(--gradient-1);
+      color: white;
+      padding: 1.5rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    /* Scanner Section */
+    .scanner-container {
+      position: relative;
+      background: #000;
+      border-radius: 20px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+    }
+
+    #reader {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .scanner-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .scan-frame {
+      width: 280px;
+      height: 280px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 24px;
+      position: relative;
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.6);
+    }
+
+    .scan-corner {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-color: var(--success);
+      border-style: solid;
+      border-width: 4px;
+      transition: all 0.3s;
+    }
+
+    .scan-corner.tl { top: -3px; left: -3px; border-right: 0; border-bottom: 0; border-top-left-radius: 20px; }
+    .scan-corner.tr { top: -3px; right: -3px; border-left: 0; border-bottom: 0; border-top-right-radius: 20px; }
+    .scan-corner.bl { bottom: -3px; left: -3px; border-right: 0; border-top: 0; border-bottom-left-radius: 20px; }
+    .scan-corner.br { bottom: -3px; right: -3px; border-left: 0; border-top: 0; border-bottom-right-radius: 20px; }
+
+    .scan-line {
+      position: absolute;
+      width: 100%;
+      height: 3px;
+      background: var(--success);
+      box-shadow: 0 0 20px var(--success), 0 0 40px var(--success);
+      animation: scan 2s linear infinite;
+      opacity: 0;
+    }
+
+    .scanning .scan-line {
+      opacity: 1;
+    }
+
+    .scanning .scan-corner {
+      border-color: var(--success);
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+    }
+
+    @keyframes scan {
+      0%, 100% { top: 0; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { top: 100%; }
+    }
+
+    .scanner-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.8);
+      background: rgba(0, 0, 0, 0.5);
+    }
+
+    /* Stats Cards */
+    .stat-card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      transition: transform 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+    }
+
+    .stat-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+    }
+
+    .stat-icon.blue { background: #dbeafe; color: #2563eb; }
+    .stat-icon.green { background: #d1fae5; color: #059669; }
+    .stat-icon.purple { background: #ede9fe; color: #7c3aed; }
+    .stat-icon.orange { background: #ffedd5; color: #ea580c; }
+
+    /* Table Styles */
+    .table-container {
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .table-header {
+      padding: 1.25rem 1.5rem;
+      background: linear-gradient(to right, #f8fafc, #f1f5f9);
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .custom-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+    }
+
+    .custom-table thead th {
+      background: #f8fafc;
+      color: #64748b;
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 1rem 1.25rem;
+      border-bottom: 2px solid #e2e8f0;
+      white-space: nowrap;
+    }
+
+    .custom-table tbody td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 0.9rem;
+      vertical-align: middle;
+    }
+
+    .custom-table tbody tr {
+      transition: all 0.2s;
+      animation: slideIn 0.4s ease-out;
+    }
+
+    .custom-table tbody tr:hover {
+      background: #f8fafc;
+      transform: scale(1.002);
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .student-info {
+      display: flex;
+      align-items: center;
+      gap: 0.875rem;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      background: var(--gradient-1);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.875rem;
+    }
+
+    .time-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.375rem 0.75rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    .time-badge.am-in { background: #dbeafe; color: #1e40af; }
+    .time-badge.am-out { background: #fee2e2; color: #991b1b; }
+    .time-badge.pm-in { background: #fef3c7; color: #92400e; }
+    .time-badge.pm-out { background: #fce7f3; color: #9d174d; }
+
+    .total-hours {
+      font-weight: 800;
+      color: var(--success);
+      font-size: 1.1rem;
+    }
+
+    /* Registration Form */
+    .form-floating input, .form-floating select {
+      border-radius: 12px;
+      border: 2px solid #e2e8f0;
+      padding: 1rem 0.75rem;
+      height: calc(3.5rem + 2px);
+      font-weight: 500;
+    }
+
+    .form-floating input:focus, .form-floating select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    }
+
+    .btn-primary-custom {
+      background: var(--gradient-1);
+      border: none;
+      border-radius: 12px;
+      padding: 1rem 2rem;
+      font-weight: 700;
+      color: white;
+      transition: all 0.3s;
+      box-shadow: 0 10px 20px -5px rgba(99, 102, 241, 0.4);
+    }
+
+    .btn-primary-custom:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 20px 30px -5px rgba(99, 102, 241, 0.5);
+      color: white;
+    }
+
+    /* QR Card for Printing */
+    .qr-card {
+      background: white;
+      border-radius: 24px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .qr-display {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 16px;
+      margin: 1.5rem 0;
+      border: 3px dashed #e2e8f0;
+    }
+
+    .qr-display canvas {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Print Styles */
+    @media print {
+      body * { visibility: hidden; }
+      .print-area, .print-area * { visibility: visible; }
+      .print-area {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        max-width: 400px;
+      }
+      .no-print { display: none !important; }
+    }
+
+    /* Toast Notifications */
+    .toast-container {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .toast-custom {
+      background: white;
+      border-left: 4px solid var(--primary);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      min-width: 350px;
+      animation: toastSlide 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .toast-custom.success { border-left-color: var(--success); }
+    .toast-custom.error { border-left-color: var(--danger); }
+    .toast-custom.warning { border-left-color: var(--warning); }
+
+    @keyframes toastSlide {
+      from { transform: translateX(100%) scale(0.9); opacity: 0; }
+      to { transform: translateX(0) scale(1); opacity: 1; }
+    }
+
+    /* Tab Content Animation */
+    .tab-pane {
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Scrollbar */
+    .custom-scroll::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 4px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .scan-frame { width: 200px; height: 200px; }
+      .stat-card { margin-bottom: 1rem; }
+      .table-header { flex-direction: column; align-items: stretch; }
+      .custom-table { font-size: 0.8rem; }
+      .custom-table th, .custom-table td { padding: 0.75rem; }
+    }
+
+    /* Loading Animation */
+    .pulse-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+      background: rgba(99, 102, 241, 0.3);
+    }
+
+    @keyframes pulse-ring {
+      0% { transform: scale(0.33); }
+      80%, 100% { opacity: 0; }
+    }
+
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 0.5rem;
+    }
+
+    .status-online { background: var(--success); box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.3); animation: pulse 2s infinite; }
+    .status-offline { background: var(--danger); }
+    .status-scanning { background: var(--warning); animation: pulse 1s infinite; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fa-solid fa-qrcode"></i>
+        SmartAttendance Pro
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="#scanner" data-bs-toggle="tab">
+              <i class="fa-solid fa-camera me-2"></i>Scanner
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#attendance" data-bs-toggle="tab">
+              <i class="fa-solid fa-list me-2"></i>Attendance Log
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#register" data-bs-toggle="tab">
+              <i class="fa-solid fa-user-plus me-2"></i>Registration
+            </a>
+          </li>
+        </ul>
+        <div class="ms-lg-4 d-flex align-items-center gap-3">
+          <div class="text-end">
+            <div id="clockTime" class="fw-bold fs-5 text-primary">--:--:--</div>
+            <div id="clockDate" class="small text-muted">Loading...</div>
+          </div>
+          <span id="sessionBadge" class="badge bg-primary rounded-pill px-3 py-2">Morning</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container py-4">
+    <div class="tab-content">
+
+      <!-- SCANNER TAB -->
+      <div class="tab-pane fade show active" id="scanner">
+        <!-- Stats Row -->
+        <div class="row g-3 mb-4">
+          <div class="col-md-3 col-6">
+            <div class="stat-card">
+              <div class="stat-icon blue">
+                <i class="fa-solid fa-users"></i>
+              </div>
+              <div>
+                <div class="text-muted small">Total Today</div>
+                <div class="fw-bold fs-4" id="statTotal">0</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="stat-card">
+              <div class="stat-icon green">
+                <i class="fa-solid fa-sign-in-alt"></i>
+              </div>
+              <div>
+                <div class="text-muted small">Checked In</div>
+                <div class="fw-bold fs-4" id="statCheckedIn">0</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="stat-card">
+              <div class="stat-icon purple">
+                <i class="fa-solid fa-sign-out-alt"></i>
+              </div>
+              <div>
+                <div class="text-muted small">Checked Out</div>
+                <div class="fw-bold fs-4" id="statCheckedOut">0</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 col-6">
+            <div class="stat-card">
+              <div class="stat-icon orange">
+                <i class="fa-solid fa-clock"></i>
+              </div>
+              <div>
+                <div class="text-muted small">Pending</div>
+                <div class="fw-bold fs-4" id="statPending">0</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <!-- Scanner Column -->
+          <div class="col-lg-5">
+            <div class="glass-card">
+              <div class="card-header-custom">
+                <i class="fa-solid fa-camera"></i>
+                QR Code Scanner
+                <span class="ms-auto badge bg-white text-primary" id="scanModeBadge">Auto Mode</span>
+              </div>
+              <div class="p-4">
+                <!-- Scanner -->
+                <div class="scanner-container mb-4" id="scannerContainer">
+                  <div id="reader"></div>
+                  <div class="scanner-overlay" id="scannerOverlay">
+                    <div class="scan-frame">
+                      <div class="scan-corner tl"></div>
+                      <div class="scan-corner tr"></div>
+                      <div class="scan-corner bl"></div>
+                      <div class="scan-corner br"></div>
+                      <div class="scan-line"></div>
+                    </div>
+                  </div>
+                  <div class="scanner-placeholder" id="scannerPlaceholder">
+                    <i class="fa-solid fa-camera-slash fa-3x mb-3 opacity-50"></i>
+                    <p class="mb-0">Camera is inactive</p>
+                    <small class="opacity-75">Click Start to begin scanning</small>
+                  </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="row g-2 mb-3">
+                  <div class="col-6">
+                    <select id="cameraSelect" class="form-select form-select-sm">
+                      <option>Select Camera...</option>
+                    </select>
+                  </div>
+                  <div class="col-6">
+                    <select id="scanMode" class="form-select form-select-sm">
+                      <option value="auto">🤖 Auto Detect</option>
+                      <option value="am_in">☀️ AM Time In</option>
+                      <option value="am_out">🌅 AM Time Out</option>
+                      <option value="pm_in">🌤️ PM Time In</option>
+                      <option value="pm_out">🌙 PM Time Out</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                  <button id="btnStart" class="btn btn-primary-custom">
+                    <i class="fa-solid fa-play me-2"></i>Start Scanner
+                  </button>
+                  <div class="row g-2">
+                    <div class="col-6">
+                      <button id="btnStop" class="btn btn-outline-secondary w-100" disabled>
+                        <i class="fa-solid fa-stop me-1"></i> Stop
+                      </button>
+                    </div>
+                    <div class="col-6">
+                      <button id="btnUpload" class="btn btn-outline-primary w-100">
+                        <i class="fa-solid fa-upload me-1"></i> Upload
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <hr class="my-4">
+
+                <!-- Manual Entry -->
+                <div class="input-group">
+                  <span class="input-group-text bg-light border-end-0">
+                    <i class="fa-solid fa-keyboard text-muted"></i>
+                  </span>
+                  <input type="text" id="manualCode" class="form-control border-start-0" placeholder="Enter Student ID manually...">
+                  <button id="btnManual" class="btn btn-dark">
+                    <i class="fa-solid fa-arrow-right"></i>
+                  </button>
+                </div>
+                <small class="text-muted mt-2 d-block">
+                  <i class="fa-solid fa-info-circle me-1"></i>
+                  Tip: For blurry QR codes, use the Upload button or enter ID manually
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Log Column -->
+          <div class="col-lg-7">
+            <div class="glass-card h-100">
+              <div class="card-header-custom justify-content-between">
+                <span><i class="fa-solid fa-bolt me-2"></i>Live Activity</span>
+                <span class="status-indicator status-online" id="systemStatus"></span>
+              </div>
+              <div class="p-0">
+                <div class="table-responsive custom-scroll" style="max-height: 600px;">
+                  <table class="custom-table mb-0">
+                    <thead class="sticky-top">
+                      <tr>
+                        <th>Student</th>
+                        <th>Date</th>
+                        <th>AM In</th>
+                        <th>AM Out</th>
+                        <th>PM In</th>
+                        <th>PM Out</th>
+                        <th>Total</th>
+                      </tr>
+                    </thead>
+                    <tbody id="liveLogBody">
+                      <!-- Dynamic rows -->
+                    </tbody>
+                  </table>
+                </div>
+                <div class="p-3 border-top bg-light text-center text-muted small" id="lastScanInfo">
+                  <i class="fa-solid fa-circle-notch fa-spin me-2"></i>Waiting for scan...
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ATTENDANCE LOG TAB -->
+      <div class="tab-pane fade" id="attendance">
+        <div class="glass-card">
+          <div class="card-header-custom justify-content-between">
+            <span><i class="fa-solid fa-history me-2"></i>Complete Attendance History</span>
+            <div class="d-flex gap-2 no-print">
+              <input type="text" id="searchLog" class="form-control form-control-sm" placeholder="Search student..." style="width: 200px;">
+              <input type="date" id="filterDate" class="form-control form-control-sm">
+              <button class="btn btn-light btn-sm" onclick="exportToCSV()">
+                <i class="fa-solid fa-download"></i>
+              </button>
+              <button class="btn btn-light btn-sm" onclick="window.print()">
+                <i class="fa-solid fa-print"></i>
+              </button>
+            </div>
+          </div>
+          <div class="table-responsive custom-scroll" style="max-height: 70vh;">
+            <table class="custom-table mb-0" id="fullLogTable">
+              <thead class="sticky-top">
+                <tr>
+                  <th>ID</th>
+                  <th>Student Name</th>
+                  <th>Login Type</th>
+                  <th>Date</th>
+                  <th>AM In</th>
+                  <th>AM Out</th>
+                  <th>PM In</th>
+                  <th>PM Out</th>
+                  <th class="text-end">Work Hours</th>
+                </tr>
+              </thead>
+              <tbody id="fullLogBody">
+                <!-- Populated from server -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- REGISTRATION TAB -->
+      <div class="tab-pane fade" id="register">
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="glass-card">
+              <div class="card-header-custom">
+                <i class="fa-solid fa-user-plus"></i>
+                New Student Registration
+              </div>
+              <div class="p-5">
+                <form id="registrationForm" class="row g-4">
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input type="text" class="form-control" id="regName" placeholder="Full Name" required>
+                      <label for="regName"><i class="fa-solid fa-user me-2 text-primary"></i>Full Name</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <select class="form-control" id="regType" required>
+                        <option value="">Select Type</option>
+                        <option value="Student">Student</option>
+                        <option value="Teacher">Teacher</option>
+                        <option value="Staff">Staff</option>
+                        <option value="Visitor">Visitor</option>
+                      </select>
+                      <label for="regType"><i class="fa-solid fa-id-badge me-2 text-primary"></i>Login Type</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input type="email" class="form-control" id="regEmail" placeholder="Email">
+                      <label for="regEmail"><i class="fa-solid fa-envelope me-2 text-primary"></i>Email (Optional)</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating">
+                      <input type="text" class="form-control" id="regCourse" placeholder="Course/Department">
+                      <label for="regCourse"><i class="fa-solid fa-graduation-cap me-2 text-primary"></i>Course/Dept</label>
+                    </div>
+                  </div>
+                  <div class="col-12">
+                    <button type="submit" class="btn btn-primary-custom w-100 btn-lg">
+                      <i class="fa-solid fa-fingerprint me-2"></i>Generate QR Code & Register
+                    </button>
+                  </div>
+                </form>
+
+                <!-- QR Display Section (Hidden initially) -->
+                <div id="qrResult" class="mt-5 d-none">
+                  <div class="alert alert-success">
+                    <i class="fa-solid fa-check-circle me-2"></i>
+                    Student registered successfully! Student ID: <strong id="generatedId"></strong>
+                  </div>
+                  
+                  <div class="qr-card print-area" id="printableCard">
+                    <div class="d-flex align-items-center justify-content-center gap-2 mb-3">
+                      <i class="fa-solid fa-school fa-2x text-primary"></i>
+                      <div class="text-start">
+                        <div class="fw-bold fs-5">SmartAttendance</div>
+                        <div class="small text-muted">Official ID Card</div>
+                      </div>
+                    </div>
+                    
+                    <div class="qr-display">
+                      <canvas id="qrCanvas"></canvas>
+                    </div>
+                    
+                    <h5 class="fw-bold mb-1" id="qrName">Student Name</h5>
+                    <p class="text-muted mb-3" id="qrType">Student</p>
+                    
+                    <div class="d-flex justify-content-center gap-2 text-muted small">
+                      <span><i class="fa-solid fa-hashtag me-1"></i>ID: <span id="qrId"></span></span>
+                    </div>
+                    
+                    <div class="mt-4 pt-3 border-top">
+                      <div class="small text-muted mb-2">Scan for attendance</div>
+                      <i class="fa-solid fa-wifi fa-spin text-primary"></i>
+                    </div>
+                  </div>
+
+                  <div class="text-center mt-4 no-print">
+                    <button class="btn btn-primary-custom me-2" onclick="printQR()">
+                      <i class="fa-solid fa-print me-2"></i>Print ID Card
+                    </button>
+                    <button class="btn btn-outline-secondary" onclick="resetRegistration()">
+                      <i class="fa-solid fa-plus me-2"></i>Register Another
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Hidden File Input -->
+  <input type="file" id="fileInput" accept="image/*" style="display: none;">
+  
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    // ==================== CONFIGURATION ====================
+    const API_URL = 'https://script.google.com/macros/s/AKfycbweTqSYJngsA2EEZDJfBWaM1wehEYGrCuE4XJpU0mv1NTPL5rT7mLXpU7FQoDPOyP_2XA/exec'; // REPLACE WITH YOUR URL
+    
+    // ==================== STATE MANAGEMENT ====================
+    const state = {
+      scanner: null,
+      scanning: false,
+      cameras: [],
+      lastScan: null,
+      lastScanTime: 0,
+      students: new Map(), // Cache student data
+      todayRecords: new Map(), // Today's records by student
+      currentSession: 'morning'
+    };
+
+    // ==================== DOM ELEMENTS ====================
+    const elements = {
+      clockTime: document.getElementById('clockTime'),
+      clockDate: document.getElementById('clockDate'),
+      sessionBadge: document.getElementById('sessionBadge'),
+      scannerOverlay: document.getElementById('scannerOverlay'),
+      scannerPlaceholder: document.getElementById('scannerPlaceholder'),
+      cameraSelect: document.getElementById('cameraSelect'),
+      scanMode: document.getElementById('scanMode'),
+      btnStart: document.getElementById('btnStart'),
+      btnStop: document.getElementById('btnStop'),
+      btnUpload: document.getElementById('btnUpload'),
+      fileInput: document.getElementById('fileInput'),
+      manualCode: document.getElementById('manualCode'),
+      btnManual: document.getElementById('btnManual'),
+      liveLogBody: document.getElementById('liveLogBody'),
+      fullLogBody: document.getElementById('fullLogBody'),
+      lastScanInfo: document.getElementById('lastScanInfo'),
+      toastContainer: document.getElementById('toastContainer'),
+      stats: {
+        total: document.getElementById('statTotal'),
+        checkedIn: document.getElementById('statCheckedIn'),
+        checkedOut: document.getElementById('statCheckedOut'),
+        pending: document.getElementById('statPending')
+      }
+    };
+
+    // ==================== CLOCK & SESSION ====================
+    function updateClock() {
+      const now = new Date();
+      const hours = now.getHours();
+      
+      elements.clockTime.textContent = now.toLocaleTimeString('en-US', { hour12: true });
+      elements.clockDate.textContent = now.toLocaleDateString('en-US', { 
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' 
+      });
+      
+      // Determine session
+      state.currentSession = hours < 12 ? 'morning' : 'afternoon';
+      elements.sessionBadge.textContent = state.currentSession === 'morning' ? 'Morning Session' : 'Afternoon Session';
+      elements.sessionBadge.className = `badge rounded-pill px-3 py-2 ${state.currentSession === 'morning' ? 'bg-primary' : 'bg-warning text-dark'}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // ==================== TOAST NOTIFICATIONS ====================
+    function showToast(message, type = 'info', duration = 3000) {
+      const toast = document.createElement('div');
+      toast.className = `toast-custom ${type}`;
+      
+      const icons = {
+        success: 'fa-check-circle',
+        error: 'fa-exclamation-circle',
+        warning: 'fa-exclamation-triangle',
+        info: 'fa-info-circle'
+      };
+      
+      toast.innerHTML = `
+        <i class="fa-solid ${icons[type]} fa-lg text-${type === 'info' ? 'primary' : type}"></i>
+        <div class="flex-grow-1">
+          <div class="fw-bold">${type.charAt(0).toUpperCase() + type.slice(1)}</div>
+          <div class="small text-muted">${message}</div>
+        </div>
+      `;
+      
+      elements.toastContainer.appendChild(toast);
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(100%)';
+        setTimeout(() => toast.remove(), 300);
+      }, duration);
+    }
+
+    // ==================== SCANNER INITIALIZATION ====================
+    async function initCameras() {
+      try {
+        state.cameras = await Html5Qrcode.getCameras();
+        elements.cameraSelect.innerHTML = '<option value="">Select Camera...</option>';
+        
+        if (state.cameras.length === 0) {
+          showToast('No cameras found. Check permissions.', 'error');
+          return;
+        }
+        
+        state.cameras.forEach((cam, idx) => {
+          const option = document.createElement('option');
+          option.value = cam.id;
+          option.textContent = cam.label || `Camera ${idx + 1}`;
+          elements.cameraSelect.appendChild(option);
+        });
+        
+        // Auto-select back camera
+        const backCam = state.cameras.find(c => 
+          c.label.toLowerCase().includes('back') || 
+          c.label.toLowerCase().includes('rear') ||
+          c.label.toLowerCase().includes('environment')
+        );
+        if (backCam) elements.cameraSelect.value = backCam.id;
+        
+      } catch (err) {
+        console.error('Camera init error:', err);
+        showToast('Camera access denied. Check permissions.', 'error');
+      }
+    }
+
+    async function startScanner() {
+      if (state.scanning) return;
+      
+      const cameraId = elements.cameraSelect.value;
+      if (!cameraId) {
+        showToast('Please select a camera first', 'warning');
+        return;
+      }
+
+      try {
+        if (!state.scanner) {
+          state.scanner = new Html5Qrcode('reader');
+        }
+
+        elements.scannerPlaceholder.style.display = 'none';
+        elements.scannerOverlay.parentElement.classList.add('scanning');
+        
+        await state.scanner.start(
+          cameraId,
+          {
+            fps: 15, // Increased for faster scanning
+            qrbox: { width: 280, height: 280 },
+            aspectRatio: 1.0,
+            videoConstraints: {
+              width: { min: 640, ideal: 1280, max: 1920 },
+              height: { min: 480, ideal: 720, max: 1080 },
+              facingMode: "environment"
+            }
+          },
+          onScanSuccess,
+          onScanFailure
+        );
+        
+        state.scanning = true;
+        elements.btnStart.disabled = true;
+        elements.btnStop.disabled = false;
+        document.getElementById('systemStatus').className = 'status-indicator status-scanning';
+        showToast('Scanner started successfully', 'success');
+        
+      } catch (err) {
+        console.error('Start error:', err);
+        showToast('Failed to start scanner: ' + err.message, 'error');
+        elements.scannerPlaceholder.style.display = 'flex';
+      }
+    }
+
+    function stopScanner() {
+      if (!state.scanner || !state.scanning) return;
+      
+      state.scanner.stop().then(() => {
+        state.scanning = false;
+        elements.btnStart.disabled = false;
+        elements.btnStop.disabled = true;
+        elements.scannerOverlay.parentElement.classList.remove('scanning');
+        elements.scannerPlaceholder.style.display = 'flex';
+        document.getElementById('systemStatus').className = 'status-indicator status-online';
+        showToast('Scanner stopped', 'info');
+      }).catch(err => {
+        console.error('Stop error:', err);
+      });
+    }
+
+    // ==================== SCAN HANDLING ====================
+    async function onScanSuccess(decodedText) {
+      const now = Date.now();
+      
+      // Debounce: prevent duplicate scans within 2 seconds
+      if (state.lastScan === decodedText && (now - state.lastScanTime) < 2000) {
+        return;
+      }
+      
+      state.lastScan = decodedText;
+      state.lastScanTime = now;
+      
+      // Visual feedback
+      elements.scannerOverlay.style.boxShadow = '0 0 50px rgba(16, 185, 129, 0.5)';
+      setTimeout(() => {
+        elements.scannerOverlay.style.boxShadow = '';
+      }, 300);
+      
+      await processAttendance(decodedText);
+    }
+
+    function onScanFailure(err) {
+      // Silent fail - continuous scanning
+    }
+
+    async function processAttendance(code, forcedMode = null) {
+      const mode = forcedMode || elements.scanMode.value;
+      
+      elements.lastScanInfo.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin me-2 text-primary"></i>Processing: ${code}...`;
+      
+      try {
+        // Simulate API call - REPLACE WITH ACTUAL API
+        // const response = await fetch(`${API_URL}?action=scan&code=${code}&mode=${mode}`);
+        // const result = await response.json();
+        
+        // Simulated response for demo
+        await new Promise(r => setTimeout(r, 500));
+        const result = simulateScanResponse(code, mode);
+        
+        if (result.status === 'not_found') {
+          showToast('Student not found: ' + code, 'error');
+          elements.lastScanInfo.innerHTML = `<span class="text-danger"><i class="fa-solid fa-times-circle me-2"></i>Invalid: ${code}</span>`;
+          return;
+        }
+        
+        // Update UI
+        updateLiveLog(result);
+        updateStats();
+        
+        const actionText = result.action.replace('_', ' ').toUpperCase();
+        showToast(`${result.name} - ${actionText} recorded!`, 'success');
+        elements.lastScanInfo.innerHTML = `
+          <span class="text-success">
+            <i class="fa-solid fa-check-circle me-2"></i>
+            ${result.name} - ${actionText} at ${new Date().toLocaleTimeString()}
+          </span>
+        `;
+        
+      } catch (err) {
+        console.error('Process error:', err);
+        showToast('Network error. Please try again.', 'error');
+        elements.lastScanInfo.innerHTML = `<span class="text-danger"><i class="fa-solid fa-wifi me-2"></i>Connection error</span>`;
+      }
+    }
+
+    // Simulated response - REMOVE IN PRODUCTION
+    function simulateScanResponse(code, mode) {
+      const students = {
+        'STU001': { name: 'John Smith', type: 'Student' },
+        'STU002': { name: 'Sarah Johnson', type: 'Teacher' },
+        'STU003': { name: 'Mike Chen', type: 'Student' }
+      };
+      
+      const student = students[code] || { name: 'Unknown ' + code.slice(0, 6), type: 'Student' };
+      const now = new Date();
+      const hour = now.getHours();
+      const isMorning = hour < 12;
+      
+      let action = mode;
+      if (mode === 'auto') {
+        // Logic to determine action based on existing records
+        const existing = state.todayRecords.get(code);
+        if (!existing) {
+          action = isMorning ? 'am_in' : 'pm_in';
+        } else if (isMorning && !existing.am_out) {
+          action = 'am_out';
+        } else if (!isMorning && !existing.pm_out) {
+          action = 'pm_out';
+        } else if (isMorning && existing.am_out && !existing.pm_in) {
+          action = 'pm_in'; // Crossover to afternoon
+        } else {
+          action = isMorning ? 'am_in' : 'pm_in';
+        }
+      }
+      
+      return {
+        status: 'success',
+        student_id: code,
+        name: student.name,
+        login_type: student.type,
+        date: now.toISOString().split('T')[0],
+        action: action,
+        time: now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true })
+      };
+    }
+
+    // ==================== TABLE MANAGEMENT ====================
+    function updateLiveLog(record) {
+      const key = `${record.student_id}-${record.date}`;
+      let row = state.todayRecords.get(record.student_id);
+      
+      if (!row) {
+        row = {
+          student_id: record.student_id,
+          name: record.name,
+          login_type: record.login_type,
+          date: record.date,
+          am_in: '',
+          am_out: '',
+          pm_in: '',
+          pm_out: '',
+          element: null
+        };
+        state.todayRecords.set(record.student_id, row);
+      }
+      
+      // Update the specific field
+      if (record.action === 'am_in') row.am_in = record.time;
+      if (record.action === 'am_out') row.am_out = record.time;
+      if (record.action === 'pm_in') row.pm_in = record.time;
+      if (record.action === 'pm_out') row.pm_out = record.time;
+      
+      // Calculate total hours
+      const totalHours = calculateHours(row.am_in, row.am_out) + calculateHours(row.pm_in, row.pm_out);
+      
+      // Render or update row
+      renderOrUpdateRow(row, totalHours);
+    }
+
+    function calculateHours(start, end) {
+      if (!start || !end) return 0;
+      const parseTime = (t) => {
+        const [time, period] = t.split(' ');
+        let [h, m] = time.split(':').map(Number);
+        if (period === 'PM' && h !== 12) h += 12;
+        if (period === 'AM' && h === 12) h = 0;
+        return h * 60 + m;
+      };
+      const diff = parseTime(end) - parseTime(start);
+      return diff > 0 ? (diff / 60).toFixed(1) : 0;
+    }
+
+    function renderOrUpdateRow(row, totalHours) {
+      const tbody = elements.liveLogBody;
+      
+      if (row.element) {
+        // Update existing
+        const tds = row.element.querySelectorAll('td');
+        tds[2].innerHTML = row.am_in ? `<span class="time-badge am-in"><i class="fa-solid fa-sun me-1"></i>${row.am_in}</span>` : '-';
+        tds[3].innerHTML = row.am_out ? `<span class="time-badge am-out"><i class="fa-solid fa-moon me-1"></i>${row.am_out}</span>` : '-';
+        tds[4].innerHTML = row.pm_in ? `<span class="time-badge pm-in"><i class="fa-solid fa-sun me-1"></i>${row.pm_in}</span>` : '-';
+        tds[5].innerHTML = row.pm_out ? `<span class="time-badge pm-out"><i class="fa-solid fa-moon me-1"></i>${row.pm_out}</span>` : '-';
+        tds[6].textContent = totalHours > 0 ? `${totalHours}h` : '-';
+        tds[6].className = totalHours > 0 ? 'total-hours' : '';
+      } else {
+        // Create new
+        const tr = document.createElement('tr');
+        tr.style.animation = 'none';
+        tr.offsetHeight; // Trigger reflow
+        tr.style.animation = 'slideIn 0.4s ease-out';
+        
+        tr.innerHTML = `
+          <td>
+            <div class="student-info">
+              <div class="avatar">${row.name.charAt(0)}</div>
+              <div>
+                <div class="fw-bold">${row.name}</div>
+                <div class="small text-muted">${row.login_type}</div>
+              </div>
+            </div>
+          </td>
+          <td>${row.date}</td>
+          <td>${row.am_in ? `<span class="time-badge am-in"><i class="fa-solid fa-sun me-1"></i>${row.am_in}</span>` : '-'}</td>
+          <td>${row.am_out ? `<span class="time-badge am-out"><i class="fa-solid fa-moon me-1"></i>${row.am_out}</span>` : '-'}</td>
+          <td>${row.pm_in ? `<span class="time-badge pm-in"><i class="fa-solid fa-sun me-1"></i>${row.pm_in}</span>` : '-'}</td>
+          <td>${row.pm_out ? `<span class="time-badge pm-out"><i class="fa-solid fa-moon me-1"></i>${row.pm_out}</span>` : '-'}</td>
+          <td class="${totalHours > 0 ? 'total-hours' : ''}">${totalHours > 0 ? totalHours + 'h' : '-'}</td>
+        `;
+        
+        row.element = tr;
+        tbody.insertBefore(tr, tbody.firstChild);
+      }
+    }
+
+    function updateStats() {
+      const records = Array.from(state.todayRecords.values());
+      elements.stats.total.textContent = records.length;
+      elements.stats.checkedIn.textContent = records.filter(r => r.am_in || r.pm_in).length;
+      elements.stats.checkedOut.textContent = records.filter(r => r.am_out || r.pm_out).length;
+      elements.stats.pending.textContent = records.filter(r => (r.am_in && !r.am_out) || (r.pm_in && !r.pm_out)).length;
+    }
+
+    // ==================== IMAGE UPLOAD ====================
+    elements.btnUpload.addEventListener('click', () => elements.fileInput.click());
+    
+    elements.fileInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      
+      showToast('Processing image...', 'info');
+      
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        const code = jsQR(imageData.data, canvas.width, canvas.height, {
+          inversionAttempts: 'attemptBoth'
+        });
+        
+        if (code) {
+          showToast('QR Code detected in image!', 'success');
+          processAttendance(code.data);
+        } else {
+          showToast('No QR code found in image. Try manual entry.', 'error');
+        }
+      };
+      img.src = URL.createObjectURL(file);
+    });
+
+    // ==================== MANUAL ENTRY ====================
+    elements.btnManual.addEventListener('click', () => {
+      const code = elements.manualCode.value.trim();
+      if (code) {
+        processAttendance(code);
+        elements.manualCode.value = '';
+      }
+    });
+
+    elements.manualCode.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') elements.btnManual.click();
+    });
+
+    // ==================== REGISTRATION ====================
+    document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const name = document.getElementById('regName').value;
+      const type = document.getElementById('regType').value;
+      const email = document.getElementById('regEmail').value;
+      const course = document.getElementById('regCourse').value;
+      
+      // Generate unique ID
+      const studentId = 'STU' + Date.now().toString(36).toUpperCase().slice(-6);
+      
+      // Simulate API save
+      showToast('Registering student...', 'info');
+      await new Promise(r => setTimeout(r, 1000));
+      
+      // Generate QR
+      const qr = new QRious({
+        element: document.getElementById('qrCanvas'),
+        value: studentId,
+        size: 250,
+        level: 'H',
+        background: 'white',
+        foreground: 'black'
+      });
+      
+      // Update display
+      document.getElementById('generatedId').textContent = studentId;
+      document.getElementById('qrName').textContent = name;
+      document.getElementById('qrType').textContent = type;
+      document.getElementById('qrId').textContent = studentId;
+      
+      // Show result
+      document.getElementById('qrResult').classList.remove('d-none');
+      document.getElementById('registrationForm').classList.add('d-none');
+      
+      showToast('Registration successful!', 'success');
+    });
+
+    function printQR() {
+      window.print();
+    }
+
+    function resetRegistration() {
+      document.getElementById('registrationForm').reset();
+      document.getElementById('qrResult').classList.add('d-none');
+      document.getElementById('registrationForm').classList.remove('d-none');
+    }
+
+    // ==================== EXPORT & UTILITIES ====================
+    function exportToCSV() {
+      const rows = Array.from(elements.liveLogBody.querySelectorAll('tr'));
+      let csv = 'Student ID,Name,Type,Date,AM In,AM Out,PM In,PM Out,Total Hours\n';
+      
+      rows.forEach(row => {
+        const cells = row.querySelectorAll('td');
+        if (cells.length > 0) {
+          const name = cells[0].querySelector('.fw-bold').textContent;
+          const type = cells[0].querySelector('.text-muted').textContent;
+          csv += `ID,${name},${type},${cells[1].textContent},${cells[2].textContent},${cells[3].textContent},${cells[4].textContent},${cells[5].textContent},${cells[6].textContent}\n`;
+        }
+      });
+      
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `attendance_${new Date().toISOString().split('T')[0]}.csv`;
+      a.click();
+    }
+
+    // ==================== EVENT LISTENERS ====================
+    elements.btnStart.addEventListener('click', startScanner);
+    elements.btnStop.addEventListener('click', stopScanner);
+    elements.scanMode.addEventListener('change', (e) => {
+      document.getElementById('scanModeBadge').textContent = 
+        e.target.options[e.target.selectedIndex].text;
+    });
+
+    // Initialize
+    initCameras();
+    updateStats();
+    
+    // Load sample data for demo
+    setTimeout(() => {
+      showToast('System ready. Click Start Scanner to begin.', 'info', 5000);
+    }, 1000);
+  </script>
+</body>
+</html>
