@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Student Profiles | Smart Attendance</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --primary-light: #6366f1;
+      --primary-dark: #4338ca;
+      --success: #10b981;
+      --success-light: #34d399;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --info: #0ea5e9;
+
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --bg-card: rgba(30, 41, 59, 0.7);
+
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+
+      --border-subtle: rgba(255, 255, 255, 0.06);
+      --border-default: rgba(255, 255, 255, 0.1);
+      --border-focus: rgba(99, 102, 241, 0.4);
+
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+      --shadow-glow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+
+      --radius-sm: 8px;
+      --radius: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+
+      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+      --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      min-height: 100vh;
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    /* Ambient background (same vibe as index.html) */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 40%, rgba(79, 70, 229, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 40% at 80% 60%, rgba(16, 185, 129, 0.10) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    /* Noise texture overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.02;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* NAVBAR (match index.html) */
+    .navbar {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 0.875rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .navbar-brand {
+      font-weight: 800;
+      font-size: 1.375rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+
+    .navbar-brand i {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+
+    .navbar-toggler {
+      border: 0 !important;
+      padding: 0.35rem 0.55rem;
+      border-radius: var(--radius);
+      transition: background var(--transition-fast);
+    }
+    .navbar-toggler:hover { background: rgba(255,255,255,0.04); }
+    .navbar-toggler:focus { box-shadow: var(--shadow-glow); outline: none; }
+
+    .nav-link {
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: var(--text-muted) !important;
+      padding: 0.5rem 1rem !important;
+      border-radius: var(--radius);
+      transition: all var(--transition-fast);
+      margin: 0 0.125rem;
+      position: relative;
+    }
+
+    .nav-link:hover {
+      color: var(--text-secondary) !important;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .nav-link.active {
+      color: var(--text-primary) !important;
+      background: rgba(99, 102, 241, 0.1);
+    }
+
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -0.875rem;
+      left: 1rem;
+      right: 1rem;
+      height: 2px;
+      background: var(--primary-light);
+      border-radius: 2px;
+    }
+
+    /* Clock & Session badge (same as index.html) */
+    .nav-meta {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding-left: 1.5rem;
+      border-left: 1px solid var(--border-subtle);
+    }
+    .clock-group { text-align: right; }
+    #clockTime {
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+    }
+    #clockDate {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .session-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.5rem 1rem;
+      border-radius: 100px;
+      border: 1px solid var(--border-default);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .session-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+    .session-badge.afternoon::before {
+      background: var(--warning);
+      box-shadow: 0 0 8px var(--warning);
+    }
+
+    /* MAIN WRAPPER */
+    .main-container {
+      padding: 2rem;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+    @media (max-width: 576px) {
+      .main-container { padding: 1rem; }
+    }
+
+    /* Shared “glass” card */
+    .glass-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      transition: all var(--transition);
+    }
+    .glass-card:hover { border-color: var(--border-default); }
+
+    .card-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .card-header-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .card-header-title i { color: var(--primary-light); }
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    /* PAGE HEADER */
+    .page-hero {
+      margin-bottom: 1.5rem;
+    }
+    .page-hero .title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.25rem;
+    }
+    .page-hero .subtitle {
+      color: var(--text-muted);
+      font-size: 0.9375rem;
+    }
+
+    /* VIEW TRANSITION */
+    .view-section { animation: fadeIn 0.35s ease; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hidden { display: none !important; }
+
+        /* Grid View */
+    .students-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      align-items: stretch;
+    }
+
+    .profile-card {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+    }
+
+    /* Gradient border effect on hover */
+    .profile-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-xl);
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0), rgba(99, 102, 241, 0)); 
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      transition: background 0.3s ease;
+      pointer-events: none;
+    }
+
+    .profile-card:hover::before {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.4), rgba(168, 85, 247, 0.2));
+    }
+
+    .profile-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 0 15px rgba(99, 102, 241, 0.15);
+      border-color: rgba(99, 102, 241, 0.3);
+    }
+
+    .card-header-img {
+      height: 80px;
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative pattern on header */
+    .card-header-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(circle at 20% 100%, rgba(255,255,255,0.1) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 0%, rgba(255,255,255,0.1) 0%, transparent 40%);
+      opacity: 0.6;
+    }
+
+    .card-avatar {
+      width: 64px;
+      height: 64px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      border: 3px solid var(--bg-card); /* Matches card bg to create "cutout" effect */
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 800;
+      position: absolute;
+      top: 48px; /* 80px header - half height (32px) to sit on edge */
+      left: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 2;
+    }
+
+    .profile-card .card-body {
+      position: relative;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 2.5rem 1.5rem 1.25rem; /* Top padding large to clear avatar */
+    }
+
+    .card-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.25rem;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      /* Ensure text doesn't go under the badge */
+      padding-right: 90px; 
+      line-height: 1.3;
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--primary-light);
+      background: rgba(99, 102, 241, 0.15);
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      white-space: nowrap;
+      z-index: 2;
+    }
+
+    .card-meta {
+      margin-top: auto;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      overflow-wrap: anywhere;
+    }
+
+    .meta-item i {
+      width: 16px;
+      color: var(--text-subtle);
+      text-align: center;
+      flex-shrink: 0;
+      font-size: 0.9rem;
+    }
+    /* DETAIL VIEW */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      border: 1px solid var(--border-default);
+      color: var(--text-secondary);
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      margin-bottom: 1rem;
+    }
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+      transform: translateY(-1px);
+    }
+
+    .profile-hero {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      padding: 1.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .hero-avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: var(--radius-xl);
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      font-weight: 800;
+      box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
+      flex-shrink: 0;
+    }
+
+    .profile-info h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+      letter-spacing: -0.02em;
+    }
+
+    .profile-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 0.5rem;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.375rem 0.875rem;
+      border-radius: 100px;
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--primary-light);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+    }
+
+    .profile-email {
+      color: var(--text-muted);
+      font-size: 0.9375rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      overflow-wrap: anywhere;
+    }
+
+    .hero-body {
+      padding: 1.5rem;
+      padding-top: 1.25rem;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    @media (max-width: 900px) {
+      .stats-row { grid-template-columns: 1fr; }
+    }
+
+    .stat-box {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      text-align: center;
+      transition: all var(--transition);
+    }
+    .stat-box:hover {
+      border-color: var(--border-default);
+      transform: translateY(-2px);
+    }
+    .stat-value {
+      font-size: 1.875rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.02em;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+    }
+
+    /* Buttons (match index.html) */
+    .action-bar {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-weight: 600;
+      font-size: 0.875rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius);
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+    }
+
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-subtle);
+    }
+    .btn-secondary:hover:not(:disabled) {
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      border-color: var(--border-default);
+    }
+
+    .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    /* Filter inputs styled like index.html controls */
+    .form-control-custom {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+      border-radius: var(--radius);
+      padding: 0.625rem 1rem;
+      font-size: 0.875rem;
+      width: 160px;
+      transition: all var(--transition-fast);
+    }
+    .form-control-custom:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: var(--shadow-glow);
+    }
+
+    /* History Section */
+    .history-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+    }
+
+    .section-header {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .section-title {
+      font-weight: 700;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+      color: var(--text-primary);
+    }
+    .section-title i { color: var(--primary-light); }
+
+    .filter-bar {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .table-responsive {
+      max-height: 60vh;
+      overflow: auto;
+    }
+
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+    }
+
+    .custom-table thead { position: sticky; top: 0; z-index: 10; }
+
+    .custom-table th {
+      background: var(--bg-secondary);
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.6875rem;
+      letter-spacing: 0.08em;
+      padding: 1rem 1.25rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border-subtle);
+      white-space: nowrap;
+    }
+
+    .custom-table td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+
+    .custom-table tbody tr { transition: background var(--transition-fast); }
+    .custom-table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+    .custom-table tbody tr:last-child td { border-bottom: none; }
+
+    .time-col {
+      font-family: 'SF Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .hours-col {
+      text-align: right;
+      font-weight: 800;
+      color: var(--success-light);
+      white-space: nowrap;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted);
+    }
+    .empty-state i {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.3;
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+      .nav-meta { display: none !important; }
+    }
+
+    @media (max-width: 768px) {
+      .profile-header {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+      }
+      .hero-avatar { width: 88px; height: 88px; border-radius: 18px; }
+      .filter-bar { width: 100%; justify-content: flex-start; }
+      .form-control-custom { width: 100%; }
+      .filter-bar .btn { width: 100%; }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb {
+      background: var(--text-subtle);
+      border-radius: 3px;
+      opacity: 0.5;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+  </style>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid px-4">
+      <a class="navbar-brand" href="index.html">
+        <i class="fa-solid fa-qrcode"></i>
+        SmartAttendance Pro
+      </a>
+
+      <button class="navbar-toggler bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <i class="fa-solid fa-bars text-white"></i>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">
+              <i class="fa-solid fa-camera me-2"></i>Scanner
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="profile.html">
+              <i class="fa-solid fa-id-card me-2"></i>Profiles
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link"
+            href="https://script.google.com/macros/s/AKfycbyLsU64MflVmxrwu7JqXWyGwhLQurraonO4bS3kj7Lulwx2OD_-hakoajbPatjBINehMQ/exec?page=register"
+            target="_blank" rel="noopener">
+            <i class="fa-solid fa-user-plus me-2"></i>Registration
+            </a>
+          </li>
+        </ul>
+
+        <div class="nav-meta d-none d-lg-flex">
+          <div class="clock-group">
+            <div id="clockTime">--:--:--</div>
+            <div id="clockDate">Loading...</div>
+          </div>
+          <span id="sessionBadge" class="session-badge">Morning</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main-container">
+
+    <!-- Grid View -->
+    <div id="gridView" class="view-section">
+      <div class="page-hero">
+        <div class="title">Student Profiles</div>
+        <div class="subtitle">Manage and view student attendance records</div>
+      </div>
+
+      <div class="students-grid" id="studentGrid">
+        <div class="empty-state" style="grid-column: 1/-1;">
+          <i class="fa-solid fa-circle-notch fa-spin"></i>
+          <p>Loading students...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Detail View -->
+    <div id="detailView" class="view-section hidden">
+      <button class="back-btn" onclick="showGrid()">
+        <i class="fa-solid fa-arrow-left"></i>
+        Back to Profiles
+      </button>
+
+      <div class="profile-hero">
+        <div class="profile-header">
+          <div class="hero-avatar" id="detailAvatar">?</div>
+          <div class="profile-info">
+            <h1 id="detailName">Student Name</h1>
+            <div class="profile-tags">
+              <span class="tag" id="detailType">Student</span>
+              <span class="tag" id="detailDept">Department</span>
+            </div>
+            <div class="profile-email" id="detailEmail">
+              <i class="fa-solid fa-envelope"></i>
+              email@example.com
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-body">
+          <div class="stats-row">
+            <div class="stat-box">
+              <div class="stat-value" id="statDays">0</div>
+              <div class="stat-label">Days Present</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-value" id="statHours">0</div>
+              <div class="stat-label">Total Hours</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-value" id="statCode">#</div>
+              <div class="stat-label">QR Code</div>
+            </div>
+          </div>
+
+          <div class="action-bar">
+            <button class="btn btn-secondary" id="btnCopyCode">
+              <i class="fa-solid fa-copy"></i>
+              Copy QR Code
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="history-section">
+        <div class="section-header">
+          <div class="section-title">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            Attendance History
+          </div>
+          <div class="filter-bar">
+            <input type="date" id="filterStart" class="form-control-custom">
+            <input type="date" id="filterEnd" class="form-control-custom">
+            <button class="btn btn-primary" onclick="applyFilter()">
+              <i class="fa-solid fa-filter"></i>
+              Filter
+            </button>
+            <button class="btn btn-secondary" onclick="resetFilter()">
+              Reset
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="custom-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>AM In</th>
+                <th>AM Out</th>
+                <th>PM In</th>
+                <th>PM Out</th>
+                <th class="hours-col">Total</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody">
+              <tr>
+                <td colspan="6" class="empty-state">
+                  <i class="fa-solid fa-inbox"></i>
+                  <p>Loading records...</p>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbxy75tYNOZPKpX9Axd0RqHOoxjLMW3TzhBZQqEYan1h_lYLNfQaTZ2wG1CrBjlgV0BD3g/exec";
+
+    let students = [];
+    let currentStudent = null;
+    let currentLogs = [];
+
+    /* Navbar clock/session (match index.html) */
+    function updateClock(){
+      const elTime = document.getElementById('clockTime');
+      const elDate = document.getElementById('clockDate');
+      const elBadge = document.getElementById('sessionBadge');
+      if(!elTime || !elDate || !elBadge) return;
+
+      const now = new Date();
+      const h = now.getHours();
+
+      elTime.textContent = now.toLocaleTimeString('en-US', { hour12:true });
+      elDate.textContent = now.toLocaleDateString('en-US', {
+        weekday:'short', month:'short', day:'numeric'
+      });
+
+      const isMorning = h < 12;
+      elBadge.textContent = isMorning ? 'Morning Session' : 'Afternoon Session';
+      elBadge.classList.toggle('afternoon', !isMorning);
+    }
+    setInterval(updateClock, 1000);
+
+    async function api(params){
+      params._ts = Date.now();
+      const qs = new URLSearchParams(params).toString();
+      const res = await fetch(`${API_URL}?${qs}`, { cache:"no-store" });
+      const json = await res.json().catch(()=>null);
+      if(!json) throw new Error("Invalid JSON response");
+      return json;
+    }
+
+    function todayISO(){
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    }
+
+    function startOfMonthISO(){
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-01`;
+    }
+
+    function safe(v){ return (v===null || v===undefined || String(v).trim()==='') ? '-' : String(v); }
+
+    function timeDisplay(v){
+      if(!v || v === '-') return '-';
+      const s = String(v).trim();
+      if (/^\d{4}-\d{2}-\d{2}T/.test(s)) {
+        const d = new Date(s);
+        if (!isNaN(d)) return d.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit', hour12:true });
+      }
+      return s;
+    }
+
+    function parseTimeToMinutes(t){
+      t = String(t||'').trim();
+      if(!t || t === '-') return null;
+      if (/^\d{4}-\d{2}-\d{2}T/.test(t)) {
+        const d = new Date(t);
+        if (isNaN(d)) return null;
+        return d.getHours()*60 + d.getMinutes();
+      }
+      const d = new Date('1970-01-01 ' + t);
+      if (isNaN(d)) return null;
+      return d.getHours()*60 + d.getMinutes();
+    }
+
+    function calcHours(am_in,am_out,pm_in,pm_out){
+      const a1=parseTimeToMinutes(am_in), a2=parseTimeToMinutes(am_out);
+      const p1=parseTimeToMinutes(pm_in), p2=parseTimeToMinutes(pm_out);
+      const diff=(x,y)=>(x!=null && y!=null && y>x)?(y-x):0;
+      const mins = diff(a1,a2)+diff(p1,p2);
+      return mins ? (mins/60) : 0;
+    }
+
+    async function init() {
+      updateClock();
+      document.getElementById('filterStart').value = startOfMonthISO();
+      document.getElementById('filterEnd').value = todayISO();
+      await loadStudents();
+
+      document.getElementById('btnCopyCode').addEventListener('click', async ()=>{
+        if(!currentStudent) return;
+        try{
+          await navigator.clipboard.writeText(safe(currentStudent.generated_code));
+          const btn = document.getElementById('btnCopyCode');
+          const original = btn.innerHTML;
+          btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+          setTimeout(() => btn.innerHTML = original, 2000);
+        }catch(e){}
+      });
+    }
+
+    async function loadStudents(){
+      const grid = document.getElementById('studentGrid');
+
+      try{
+        const resp = await api({ action:'get_students' });
+        if(!resp.success) throw new Error(resp.message || 'get_students failed');
+
+        students = resp.students || [];
+        renderGrid();
+
+      }catch(err){
+        console.error(err);
+        grid.innerHTML = `
+          <div class="empty-state" style="grid-column: 1/-1;">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <p>Failed to load students</p>
+          </div>
+        `;
+      }
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById('studentGrid');
+
+      if(!students.length){
+        grid.innerHTML = `
+          <div class="empty-state" style="grid-column: 1/-1;">
+            <i class="fa-solid fa-user-slash"></i>
+            <p>No students registered</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = students.map(s => `
+        <div class="profile-card" onclick="showDetail('${safe(s.student_id).replace(/'/g,"&#39;")}')">
+          <div class="card-header-img"></div>
+          <div class="card-avatar">${safe(s.student_name).charAt(0).toUpperCase()}</div>
+          <div class="card-body">
+            <div class="card-title">${escapeHtml(safe(s.student_name))}</div>
+            <span class="card-badge">${escapeHtml(safe(s.login_type))}</span>
+            <div class="card-meta">
+              <div class="meta-item">
+                <i class="fa-solid fa-building"></i>
+                ${escapeHtml(safe(s.course_dept))}
+              </div>
+              <div class="meta-item">
+                <i class="fa-solid fa-envelope"></i>
+                ${escapeHtml(safe(s.email))}
+              </div>
+              <div class="meta-item">
+                <i class="fa-solid fa-qrcode"></i>
+                ${escapeHtml(safe(s.generated_code))}
+              </div>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function showDetail(id) {
+      currentStudent = students.find(s => String(s.student_id||'') === String(id||''));
+      if(!currentStudent) return;
+
+      document.getElementById('gridView').classList.add('hidden');
+      document.getElementById('detailView').classList.remove('hidden');
+
+      document.getElementById('detailAvatar').textContent = safe(currentStudent.student_name).charAt(0).toUpperCase();
+      document.getElementById('detailName').textContent = safe(currentStudent.student_name);
+      document.getElementById('detailType').textContent = safe(currentStudent.login_type);
+      document.getElementById('detailDept').textContent = safe(currentStudent.course_dept);
+      document.getElementById('detailEmail').innerHTML = `
+        <i class="fa-solid fa-envelope"></i>
+        ${safe(currentStudent.email)}
+      `;
+      document.getElementById('statCode').textContent = safe(currentStudent.generated_code).slice(-4);
+
+      const today = todayISO();
+      const som = startOfMonthISO();
+      document.getElementById('filterStart').value = som;
+      document.getElementById('filterEnd').value = today;
+
+      await loadStudentLogs(som, today);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showGrid() {
+      document.getElementById('gridView').classList.remove('hidden');
+      document.getElementById('detailView').classList.add('hidden');
+      currentStudent = null;
+      currentLogs = [];
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async function loadStudentLogs(from, to){
+      const tbody = document.getElementById('historyTableBody');
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" class="empty-state">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+            <p>Loading records...</p>
+          </td>
+        </tr>
+      `;
+
+      try{
+        const resp = await api({
+          action:'get_student_logs',
+          student_id: currentStudent.student_id,
+          from, to
+        });
+
+        if(!resp.success) throw new Error(resp.message || 'get_student_logs failed');
+
+        currentLogs = resp.logs || [];
+        const totalDays = currentLogs.length;
+        let totalHours = 0;
+
+        currentLogs.forEach(r=>{
+          const h = String(r.total_hours||'').trim() !== ''
+            ? (Number(String(r.total_hours).replace(/[^\d.]/g,'')) || 0)
+            : calcHours(timeDisplay(r.am_in), timeDisplay(r.am_out), timeDisplay(r.pm_in), timeDisplay(r.pm_out));
+          totalHours += h;
+        });
+
+        animateValue("statDays", 0, totalDays, 800);
+        animateValueFloat("statHours", 0, totalHours, 800, 1);
+
+        renderTable(currentLogs);
+
+      }catch(err){
+        console.error(err);
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="empty-state">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+              <p>No records available</p>
+            </td>
+          </tr>
+        `;
+        document.getElementById('statDays').textContent = '0';
+        document.getElementById('statHours').textContent = '0';
+      }
+    }
+
+    function renderTable(data) {
+      const tbody = document.getElementById('historyTableBody');
+      if(!data.length) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="empty-state">
+              <i class="fa-solid fa-inbox"></i>
+              <p>No records found for selected range</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = data.map(row => {
+        const amIn = timeDisplay(row.am_in);
+        const amOut = timeDisplay(row.am_out);
+        const pmIn = timeDisplay(row.pm_in);
+        const pmOut = timeDisplay(row.pm_out);
+        const total = String(row.total_hours||'').trim() !== ''
+          ? (Number(String(row.total_hours).replace(/[^\d.]/g,'')) || 0)
+          : calcHours(amIn, amOut, pmIn, pmOut);
+
+        return `
+          <tr>
+            <td>${escapeHtml(safe(row.date))}</td>
+            <td class="time-col">${escapeHtml(safe(amIn))}</td>
+            <td class="time-col">${escapeHtml(safe(amOut))}</td>
+            <td class="time-col">${escapeHtml(safe(pmIn))}</td>
+            <td class="time-col">${escapeHtml(safe(pmOut))}</td>
+            <td class="hours-col">${total ? total.toFixed(2)+'h' : '-'}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function applyFilter() {
+      if(!currentStudent) return;
+      const start = document.getElementById('filterStart').value;
+      const end = document.getElementById('filterEnd').value;
+      await loadStudentLogs(start, end);
+    }
+
+    async function resetFilter() {
+      if(!currentStudent) return;
+      const today = todayISO();
+      const som = startOfMonthISO();
+      document.getElementById('filterStart').value = som;
+      document.getElementById('filterEnd').value = today;
+      await loadStudentLogs(som, today);
+    }
+
+    function animateValue(id, start, end, duration) {
+      const obj = document.getElementById(id);
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        obj.innerHTML = Math.floor(progress * (end - start) + start);
+        if (progress < 1) window.requestAnimationFrame(step);
+      };
+      window.requestAnimationFrame(step);
+    }
+
+    function animateValueFloat(id, start, end, duration, decimals=2) {
+      const obj = document.getElementById(id);
+      let startTimestamp = null;
+      const step = (timestamp) => {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+        const val = (progress * (end - start) + start);
+        obj.innerHTML = val.toFixed(decimals);
+        if (progress < 1) window.requestAnimationFrame(step);
+      };
+      window.requestAnimationFrame(step);
+    }
+
+    function escapeHtml(str){
+      return String(str ?? '')
+        .replaceAll('&','&amp;')
+        .replaceAll('<','&lt;')
+        .replaceAll('>','&gt;')
+        .replaceAll('"','&quot;')
+        .replaceAll("'","&#039;");
+    }
+
+    init();
+  </script>
+</body>
+</html>
