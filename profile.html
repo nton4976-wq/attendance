@@ -982,6 +982,92 @@
       border-radius: 50%;
       background: rgba(255,255,255,0.45);
     }
+
+    /* ===================== ADMIN PIN MODAL ===================== */
+.pin-modal .modal-content{
+  background: rgba(15, 23, 42, 0.92);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  backdrop-filter: blur(18px) saturate(160%);
+  overflow: hidden;
+  color: var(--text-primary);
+}
+.pin-modal .modal-header{
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding: 1rem 1.25rem;
+}
+.pin-modal .modal-title{
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  font-size: 1rem;
+  display:flex;
+  align-items:center;
+  gap:.6rem;
+}
+.pin-chip{
+  font-size: .7rem;
+  font-weight: 800;
+  padding: .25rem .6rem;
+  border-radius: 999px;
+  border: 1px solid rgba(99,102,241,0.25);
+  background: rgba(99,102,241,0.12);
+  color: rgba(199,210,254,1);
+}
+.pin-modal .modal-body{ padding: 1.25rem; }
+.pin-help{ color: var(--text-muted); font-size: .85rem; margin-bottom: .85rem; }
+.pin-input{
+  width: 100%;
+  background: rgba(2,6,23,0.6);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--text-primary);
+  border-radius: var(--radius);
+  padding: .85rem 1rem;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: .25em;
+  text-align: center;
+  outline: none;
+}
+.pin-input:focus{
+  border-color: rgba(99,102,241,0.6);
+  box-shadow: 0 0 0 3px rgba(99,102,241,0.18);
+}
+.pin-error{
+  display:none;
+  margin-top: .6rem;
+  color: #fca5a5;
+  font-weight: 700;
+  font-size: .85rem;
+}
+.pin-modal .modal-footer{
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding: .9rem 1.25rem;
+  gap: .5rem;
+}
+.pin-btn{
+  flex:1;
+  border-radius: var(--radius);
+  padding: .75rem 1rem;
+  font-weight: 800;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.06);
+  color: var(--text-primary);
+  transition: transform var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+}
+.pin-btn:hover{
+  background: rgba(255,255,255,0.10);
+  border-color: rgba(99,102,241,0.35);
+  transform: translateY(-1px);
+}
+.pin-btn.primary{
+  background: rgba(79,70,229,0.9);
+  border-color: rgba(79,70,229,0.9);
+}
+.pin-btn.primary:hover{
+  background: rgba(67,56,202,1);
+  border-color: rgba(67,56,202,1);
+}
   </style>
 </head>
 
@@ -1011,9 +1097,11 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="https://script.google.com/macros/s/AKfycbyLsU64MflVmxrwu7JqXWyGwhLQurraonO4bS3kj7Lulwx2OD_-hakoajbPatjBINehMQ/exec?page=register" target="_blank" rel="noopener">
-              <i class="fa-solid fa-user-plus me-2"></i>Registration
-            </a>
+<a class="nav-link" id="registrationLink"
+   href="https://script.google.com/macros/s/AKfycbyLsU64MflVmxrwu7JqXWyGwhLQurraonO4bS3kj7Lulwx2OD_-hakoajbPatjBINehMQ/exec?page=register"
+   target="_blank" rel="noopener">
+  <i class="fa-solid fa-user-plus me-2"></i>Registration
+</a>
           </li>
         </ul>
 
@@ -1195,6 +1283,34 @@
     </div>
   </div>
 
+  <!-- ================= ADMIN PIN MODAL (Registration) ================= -->
+<div class="modal fade pin-modal" id="pinModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fa-solid fa-shield-halved"></i>
+          Admin PIN Required
+          <span class="pin-chip">Registration</span>
+        </div>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="pin-help">Enter admin PIN to open the Registration page.</div>
+        <input id="pinInput" class="pin-input" type="password" inputmode="numeric" maxlength="4" placeholder="• • • •" />
+        <div class="pin-error" id="pinError">Incorrect PIN. Try again.</div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="pin-btn" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="pin-btn primary" id="pinOk">Open</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
@@ -1319,6 +1435,7 @@
 
     async function init() {
       updateClock();
+      setupRegistrationGate();
       document.getElementById('filterStart').value = startOfMonthISO();
       document.getElementById('filterEnd').value = todayISO();
       await loadStudents();
@@ -1547,6 +1664,74 @@
       };
       window.requestAnimationFrame(step);
     }
+
+    /* ===================== REGISTRATION PIN GATE ===================== */
+const ADMIN_PIN = "0143";
+let pinModalInstance = null;
+let pendingRegistrationUrl = null;
+
+function openRegistrationPinModal(url){
+  pendingRegistrationUrl = url;
+
+  const pinInput = document.getElementById('pinInput');
+  const pinError = document.getElementById('pinError');
+
+  pinError.style.display = 'none';
+  pinInput.value = '';
+
+  pinModalInstance = pinModalInstance || new bootstrap.Modal(document.getElementById('pinModal'), {
+    backdrop: 'static',
+    keyboard: false
+  });
+
+  pinModalInstance.show();
+  setTimeout(() => pinInput.focus(), 150);
+}
+
+function setupRegistrationGate(){
+  const link = document.getElementById('registrationLink');
+  if(!link) return;
+
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    openRegistrationPinModal(link.getAttribute('href'));
+  }, { passive:false });
+
+  const pinInput = document.getElementById('pinInput');
+  const pinOk = document.getElementById('pinOk');
+  const pinError = document.getElementById('pinError');
+
+  pinInput.addEventListener('keydown', (e) => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      pinOk.click();
+    }
+  });
+
+  pinOk.addEventListener('click', () => {
+    const entered = String(pinInput.value || '').trim();
+    if(entered !== ADMIN_PIN){
+      pinError.style.display = 'block';
+      pinInput.focus();
+      return;
+    }
+
+    pinError.style.display = 'none';
+    pinInput.value = '';
+    pinModalInstance?.hide();
+
+    if(pendingRegistrationUrl){
+      window.open(pendingRegistrationUrl, '_blank', 'noopener');
+      pendingRegistrationUrl = null;
+    }
+  });
+
+  document.getElementById('pinModal').addEventListener('hidden.bs.modal', () => {
+    pinError.style.display = 'none';
+    pinInput.value = '';
+    pendingRegistrationUrl = null;
+  });
+}
 
     function escapeHtml(str){
       return String(str ?? '')
