@@ -64,7 +64,6 @@
       overflow-x: hidden;
     }
 
-    /* Ambient background (same vibe as index.html) */
     body::before {
       content: '';
       position: fixed;
@@ -76,7 +75,6 @@
       z-index: -2;
     }
 
-    /* Noise texture overlay */
     body::after {
       content: '';
       position: fixed;
@@ -87,7 +85,6 @@
       z-index: -1;
     }
 
-    /* NAVBAR (match index.html) */
     .navbar {
       background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(20px) saturate(180%);
@@ -162,7 +159,6 @@
       border-radius: 2px;
     }
 
-    /* Clock & Session badge (same as index.html) */
     .nav-meta {
       display: flex;
       align-items: center;
@@ -212,7 +208,6 @@
       box-shadow: 0 0 8px var(--warning);
     }
 
-    /* MAIN WRAPPER */
     .main-container {
       padding: 2rem;
       max-width: 1600px;
@@ -222,7 +217,6 @@
       .main-container { padding: 1rem; }
     }
 
-    /* Shared “glass” card */
     .glass-card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
@@ -250,14 +244,9 @@
       gap: 0.75rem;
     }
     .card-header-title i { color: var(--primary-light); }
-    .card-body {
-      padding: 1.5rem;
-    }
+    .card-body { padding: 1.5rem; }
 
-    /* PAGE HEADER */
-    .page-hero {
-      margin-bottom: 1.5rem;
-    }
+    .page-hero { margin-bottom: 1.5rem; }
     .page-hero .title {
       font-size: 1.5rem;
       font-weight: 800;
@@ -269,7 +258,6 @@
       font-size: 0.9375rem;
     }
 
-    /* VIEW TRANSITION */
     .view-section { animation: fadeIn 0.35s ease; }
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
@@ -277,7 +265,6 @@
     }
     .hidden { display: none !important; }
 
-        /* Grid View */
     .students-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -299,14 +286,13 @@
       box-shadow: var(--shadow);
     }
 
-    /* Gradient border effect on hover */
     .profile-card::before {
       content: '';
       position: absolute;
       inset: 0;
       border-radius: var(--radius-xl);
       padding: 1px;
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0), rgba(99, 102, 241, 0)); 
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0), rgba(99, 102, 241, 0));
       -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
       -webkit-mask-composite: xor;
@@ -332,13 +318,13 @@
       overflow: hidden;
     }
 
-    /* Decorative pattern on header */
     .card-header-img::after {
       content: '';
       position: absolute;
       inset: 0;
-      background-image: radial-gradient(circle at 20% 100%, rgba(255,255,255,0.1) 0%, transparent 40%),
-                        radial-gradient(circle at 80% 0%, rgba(255,255,255,0.1) 0%, transparent 40%);
+      background-image:
+        radial-gradient(circle at 20% 100%, rgba(255,255,255,0.1) 0%, transparent 40%),
+        radial-gradient(circle at 80% 0%, rgba(255,255,255,0.1) 0%, transparent 40%);
       opacity: 0.6;
     }
 
@@ -347,7 +333,7 @@
       height: 64px;
       border-radius: 16px;
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      border: 3px solid var(--bg-card); /* Matches card bg to create "cutout" effect */
+      border: 3px solid var(--bg-card);
       color: white;
       display: flex;
       align-items: center;
@@ -355,7 +341,7 @@
       font-size: 1.5rem;
       font-weight: 800;
       position: absolute;
-      top: 48px; /* 80px header - half height (32px) to sit on edge */
+      top: 48px;
       left: 1.5rem;
       box-shadow: 0 4px 12px rgba(0,0,0,0.3);
       z-index: 2;
@@ -366,7 +352,7 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      padding: 2.5rem 1.5rem 1.25rem; /* Top padding large to clear avatar */
+      padding: 2.5rem 1.5rem 1.25rem;
     }
 
     .card-title {
@@ -375,8 +361,7 @@
       margin-bottom: 0.25rem;
       color: var(--text-primary);
       letter-spacing: -0.01em;
-      /* Ensure text doesn't go under the badge */
-      padding-right: 90px; 
+      padding-right: 90px;
       line-height: 1.3;
     }
 
@@ -422,7 +407,7 @@
       flex-shrink: 0;
       font-size: 0.9rem;
     }
-    /* DETAIL VIEW */
+
     .back-btn {
       display: inline-flex;
       align-items: center;
@@ -550,7 +535,6 @@
       font-weight: 700;
     }
 
-    /* Buttons (match index.html) */
     .action-bar {
       display: flex;
       gap: 0.75rem;
@@ -572,10 +556,7 @@
       gap: 0.5rem;
     }
 
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-    }
+    .btn-primary { background: var(--primary); color: white; }
     .btn-primary:hover:not(:disabled) {
       background: var(--primary-dark);
       transform: translateY(-1px);
@@ -592,10 +573,8 @@
       color: var(--text-primary);
       border-color: var(--border-default);
     }
-
     .btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
-    /* Filter inputs styled like index.html controls */
     .form-control-custom {
       background: var(--bg-secondary);
       border: 1px solid var(--border-subtle);
@@ -612,7 +591,6 @@
       box-shadow: var(--shadow-glow);
     }
 
-    /* History Section */
     .history-section {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
@@ -648,17 +626,8 @@
       justify-content: flex-end;
     }
 
-    .table-responsive {
-      max-height: 60vh;
-      overflow: auto;
-    }
-
-    .custom-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.875rem;
-    }
-
+    .table-responsive { max-height: 60vh; overflow: auto; }
+    .custom-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
     .custom-table thead { position: sticky; top: 0; z-index: 10; }
 
     .custom-table th {
@@ -709,32 +678,53 @@
       opacity: 0.3;
     }
 
-    /* Responsive */
-    @media (max-width: 992px) {
-      .nav-meta { display: none !important; }
-    }
-
+    @media (max-width: 992px) { .nav-meta { display: none !important; } }
     @media (max-width: 768px) {
-      .profile-header {
-        flex-direction: column;
-        align-items: flex-start;
-        text-align: left;
-      }
+      .profile-header { flex-direction: column; align-items: flex-start; text-align: left; }
       .hero-avatar { width: 88px; height: 88px; border-radius: 18px; }
       .filter-bar { width: 100%; justify-content: flex-start; }
       .form-control-custom { width: 100%; }
       .filter-bar .btn { width: 100%; }
     }
 
-    /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb {
-      background: var(--text-subtle);
-      border-radius: 3px;
-      opacity: 0.5;
-    }
+    ::-webkit-scrollbar-thumb { background: var(--text-subtle); border-radius: 3px; opacity: 0.5; }
     ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+    /* ✅ QR MODAL STYLES */
+    .modal-content.qr-modal {
+      background: rgba(30, 41, 59, 0.92);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      backdrop-filter: blur(16px) saturate(160%);
+      color: var(--text-primary);
+    }
+    .qr-modal .modal-header {
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .qr-modal .modal-footer {
+      border-top: 1px solid var(--border-subtle);
+    }
+    .qr-box {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.25);
+    }
+    #qrCanvas {
+      width: 240px;
+      height: 240px;
+    }
+    .qr-hint {
+      margin-top: 0.75rem;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
   </style>
 </head>
 
@@ -839,9 +829,10 @@
           </div>
 
           <div class="action-bar">
-            <button class="btn btn-secondary" id="btnCopyCode">
-              <i class="fa-solid fa-copy"></i>
-              Copy QR Code
+            <!-- ✅ CHANGED: Copy button -> View QR Code -->
+            <button class="btn btn-secondary" id="btnViewQR">
+              <i class="fa-solid fa-qrcode"></i>
+              View QR Code
             </button>
           </div>
         </div>
@@ -893,7 +884,41 @@
 
   </div>
 
+  <!-- ✅ QR MODAL (NEW) -->
+  <div class="modal fade" id="qrModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content qr-modal">
+        <div class="modal-header">
+          <div class="d-flex flex-column">
+            <div class="fw-bold" style="font-size:1rem;">
+              <i class="fa-solid fa-qrcode me-2" style="color: var(--primary-light);"></i>
+              QR Code
+            </div>
+            <div class="text-muted" id="qrModalSub" style="font-size:.875rem;"></div>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body text-center">
+          <div class="qr-box mx-auto">
+            <div id="qrCanvas"></div>
+          </div>
+          <div class="qr-hint">Scan this QR in the scanner.</div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- ✅ QR generator (NEW) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbxy75tYNOZPKpX9Axd0RqHOoxjLMW3TzhBZQqEYan1h_lYLNfQaTZ2wG1CrBjlgV0BD3g/exec";
@@ -901,6 +926,7 @@
     let students = [];
     let currentStudent = null;
     let currentLogs = [];
+    let qrModalInstance = null; // ✅ NEW
 
     /* Navbar clock/session (match index.html) */
     function updateClock(){
@@ -975,22 +1001,43 @@
       return mins ? (mins/60) : 0;
     }
 
+    /* ✅ NEW: show QR modal */
+    function openQrModal(){
+      if(!currentStudent) return;
+
+      const code = safe(currentStudent.generated_code);
+      if(code === '-' || !code.trim()) return;
+
+      const sub = document.getElementById('qrModalSub');
+      sub.textContent = safe(currentStudent.student_name);
+
+      const wrap = document.getElementById('qrCanvas');
+      wrap.innerHTML = ''; // clear previous
+
+      // Render QR (white background container already)
+      try{
+        new QRCode(wrap, {
+          text: code,
+          width: 240,
+          height: 240,
+          correctLevel: QRCode.CorrectLevel.M
+        });
+      }catch(e){
+        console.error(e);
+      }
+
+      qrModalInstance = qrModalInstance || new bootstrap.Modal(document.getElementById('qrModal'));
+      qrModalInstance.show();
+    }
+
     async function init() {
       updateClock();
       document.getElementById('filterStart').value = startOfMonthISO();
       document.getElementById('filterEnd').value = todayISO();
       await loadStudents();
 
-      document.getElementById('btnCopyCode').addEventListener('click', async ()=>{
-        if(!currentStudent) return;
-        try{
-          await navigator.clipboard.writeText(safe(currentStudent.generated_code));
-          const btn = document.getElementById('btnCopyCode');
-          const original = btn.innerHTML;
-          btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
-          setTimeout(() => btn.innerHTML = original, 2000);
-        }catch(e){}
-      });
+      // ✅ CHANGED: Copy -> View QR Code
+      document.getElementById('btnViewQR').addEventListener('click', openQrModal);
     }
 
     async function loadStudents(){
