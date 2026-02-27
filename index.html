@@ -21,45 +21,38 @@
       --warning: #f59e0b;
       --danger: #ef4444;
       --info: #0ea5e9;
-      
+
       --bg-primary: #0f172a;
       --bg-secondary: #1e293b;
       --bg-tertiary: #334155;
       --bg-card: rgba(30, 41, 59, 0.7);
-      
+
       --text-primary: #f8fafc;
       --text-secondary: #cbd5e1;
       --text-muted: #94a3b8;
       --text-subtle: #64748b;
-      
+
       --border-subtle: rgba(255, 255, 255, 0.06);
       --border-default: rgba(255, 255, 255, 0.1);
       --border-focus: rgba(99, 102, 241, 0.4);
-      
+
       --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
       --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
       --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
       --shadow-glow: 0 0 0 3px rgba(79, 70, 229, 0.15);
-      
+
       --radius-sm: 8px;
       --radius: 12px;
       --radius-lg: 16px;
       --radius-xl: 24px;
-      
+
       --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
       --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
       --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    * { 
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -72,36 +65,29 @@
       overflow-x: hidden;
     }
 
-    /* Subtle ambient background */
     body::before {
       content: '';
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: 
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background:
         radial-gradient(ellipse 80% 50% at 20% 40%, rgba(79, 70, 229, 0.15) 0%, transparent 50%),
         radial-gradient(ellipse 60% 40% at 80% 60%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
       pointer-events: none;
       z-index: -1;
     }
 
-    /* Noise texture overlay for depth */
     body::after {
       content: '';
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
       background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
       opacity: 0.02;
       pointer-events: none;
       z-index: -1;
     }
 
-    /* Navigation - Clean, minimal, functional */
     .navbar {
       background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(20px) saturate(180%);
@@ -156,28 +142,12 @@
       background: rgba(99, 102, 241, 0.1);
     }
 
-    .nav-link.active::after {
-      content: '';
-      position: absolute;
-      bottom: -0.875rem;
-      left: 1rem;
-      right: 1rem;
-      height: 2px;
-      background: var(--primary-light);
-      border-radius: 2px;
-    }
-
-    /* Clock & Session Badge */
     .nav-meta {
       display: flex;
       align-items: center;
       gap: 1.5rem;
       padding-left: 1.5rem;
       border-left: 1px solid var(--border-subtle);
-    }
-
-    .clock-group {
-      text-align: right;
     }
 
     #clockTime {
@@ -226,14 +196,12 @@
       box-shadow: 0 0 8px var(--warning);
     }
 
-    /* Main Container */
     .main-container {
       padding: 2rem;
       max-width: 1600px;
       margin: 0 auto;
     }
 
-    /* Stats Grid - Clean cards with subtle depth */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -241,14 +209,8 @@
       margin-bottom: 2rem;
     }
 
-    @media (max-width: 1200px) {
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    @media (max-width: 576px) {
-      .stats-grid { grid-template-columns: 1fr; }
-      .main-container { padding: 1rem; }
-    }
+    @media (max-width: 1200px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 576px) { .stats-grid { grid-template-columns: 1fr; } .main-container { padding: 1rem; } }
 
     .stat-card {
       background: var(--bg-card);
@@ -263,83 +225,25 @@
       overflow: hidden;
     }
 
-    .stat-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, currentColor, transparent);
-      opacity: 0.3;
-    }
-
     .stat-card:hover {
       transform: translateY(-2px);
       border-color: var(--border-default);
       box-shadow: var(--shadow-lg);
     }
 
-    .stat-icon {
-      width: 48px;
-      height: 48px;
-      border-radius: var(--radius);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.25rem;
-      flex-shrink: 0;
-    }
+    .stat-icon { width: 48px; height: 48px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; }
+    .stat-icon.blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+    .stat-icon.green { background: rgba(16, 185, 129, 0.15); color: var(--success-light); }
+    .stat-icon.purple { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
+    .stat-icon.orange { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
 
-    .stat-icon.blue { 
-      background: rgba(59, 130, 246, 0.15); 
-      color: #60a5fa; 
-    }
-    .stat-icon.green { 
-      background: rgba(16, 185, 129, 0.15); 
-      color: var(--success-light); 
-    }
-    .stat-icon.purple { 
-      background: rgba(139, 92, 246, 0.15); 
-      color: #a78bfa; 
-    }
-    .stat-icon.orange { 
-      background: rgba(245, 158, 11, 0.15); 
-      color: #fbbf24; 
-    }
+    .stat-content { flex: 1; }
+    .stat-label { font-size: 0.875rem; color: var(--text-muted); font-weight: 500; margin-bottom: 0.25rem; }
+    .stat-value { font-size: 1.875rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; line-height: 1.2; }
 
-    .stat-content {
-      flex: 1;
-    }
+    .content-grid { display: grid; grid-template-columns: 420px 1fr; gap: 1.5rem; align-items: start; }
+    @media (max-width: 1200px) { .content-grid { grid-template-columns: 1fr; } }
 
-    .stat-label {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      font-weight: 500;
-      margin-bottom: 0.25rem;
-    }
-
-    .stat-value {
-      font-size: 1.875rem;
-      font-weight: 800;
-      color: var(--text-primary);
-      letter-spacing: -0.02em;
-      line-height: 1.2;
-    }
-
-    /* Content Grid */
-    .content-grid {
-      display: grid;
-      grid-template-columns: 420px 1fr;
-      gap: 1.5rem;
-      align-items: start;
-    }
-
-    @media (max-width: 1200px) {
-      .content-grid { grid-template-columns: 1fr; }
-    }
-
-    /* Glass Cards - Refined */
     .glass-card {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
@@ -348,147 +252,34 @@
       transition: all var(--transition);
     }
 
-    .glass-card:hover {
-      border-color: var(--border-default);
-    }
+    .card-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; }
+    .card-header-title { font-weight: 700; font-size: 1rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.75rem; }
+    .card-header-title i { color: var(--primary-light); }
 
-    .card-header {
-      padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid var(--border-subtle);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+    .badge-soft { font-size: 0.75rem; font-weight: 600; padding: 0.375rem 0.875rem; border-radius: 100px; background: rgba(99, 102, 241, 0.1); color: var(--primary-light); border: 1px solid rgba(99, 102, 241, 0.2); }
+    .card-body { padding: 1.5rem; }
 
-    .card-header-title {
-      font-weight: 700;
-      font-size: 1rem;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
+    .scanner-wrapper { position: relative; background: var(--bg-primary); border-radius: var(--radius-lg); overflow: hidden; aspect-ratio: 4/3; border: 1px solid var(--border-default); }
+    #reader { width: 100%; height: 100%; object-fit: cover; }
 
-    .card-header-title i {
-      color: var(--primary-light);
-    }
-
-    .badge-soft {
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 0.375rem 0.875rem;
-      border-radius: 100px;
-      background: rgba(99, 102, 241, 0.1);
-      color: var(--primary-light);
-      border: 1px solid rgba(99, 102, 241, 0.2);
-    }
-
-    .card-body {
-      padding: 1.5rem;
-    }
-
-    /* Scanner Section */
-    .scanner-wrapper {
-      position: relative;
-      background: var(--bg-primary);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      aspect-ratio: 4/3;
-      border: 1px solid var(--border-default);
-    }
-
-    #reader {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .scanner-overlay {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .scan-frame {
-      width: 240px;
-      height: 240px;
-      position: relative;
-    }
-
-    .scan-corner {
-      position: absolute;
-      width: 24px;
-      height: 24px;
-      border-color: var(--success);
-      border-style: solid;
-      border-width: 3px;
-      transition: all var(--transition);
-    }
-
+    .scanner-overlay { position: absolute; inset: 0; pointer-events: none; display: flex; align-items: center; justify-content: center; }
+    .scan-frame { width: 240px; height: 240px; position: relative; }
+    .scan-corner { position: absolute; width: 24px; height: 24px; border-color: var(--success); border-style: solid; border-width: 3px; transition: all var(--transition); }
     .scan-corner.tl { top: 0; left: 0; border-right: 0; border-bottom: 0; border-top-left-radius: 12px; }
     .scan-corner.tr { top: 0; right: 0; border-left: 0; border-bottom: 0; border-top-right-radius: 12px; }
     .scan-corner.bl { bottom: 0; left: 0; border-right: 0; border-top: 0; border-bottom-left-radius: 12px; }
     .scan-corner.br { bottom: 0; right: 0; border-left: 0; border-top: 0; border-bottom-right-radius: 12px; }
 
-    .scan-line {
-      position: absolute;
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--success), transparent);
-      box-shadow: 0 0 12px var(--success);
-      opacity: 0;
-      transition: opacity var(--transition);
-    }
+    .scan-line { position: absolute; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--success), transparent); box-shadow: 0 0 12px var(--success); opacity: 0; transition: opacity var(--transition); }
+    .scanning .scan-line { opacity: 1; animation: scan 2.5s linear infinite; }
+    @keyframes scan { 0% { top: 0; opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
 
-    .scanning .scan-line {
-      opacity: 1;
-      animation: scan 2.5s linear infinite;
-    }
+    .scanner-placeholder { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--bg-secondary); color: var(--text-muted); gap: 1rem; }
+    .scanner-placeholder i { font-size: 3rem; opacity: 0.3; }
+    .scanner-placeholder p { font-size: 0.9375rem; font-weight: 500; }
+    .scanner-placeholder small { font-size: 0.8125rem; opacity: 0.7; }
 
-    @keyframes scan {
-      0% { top: 0; opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { top: 100%; opacity: 0; }
-    }
-
-    .scanner-placeholder {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: var(--bg-secondary);
-      color: var(--text-muted);
-      gap: 1rem;
-    }
-
-    .scanner-placeholder i {
-      font-size: 3rem;
-      opacity: 0.3;
-    }
-
-    .scanner-placeholder p {
-      font-size: 0.9375rem;
-      font-weight: 500;
-    }
-
-    .scanner-placeholder small {
-      font-size: 0.8125rem;
-      opacity: 0.7;
-    }
-
-    /* Controls */
-    .controls-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.75rem;
-      margin: 1.25rem 0;
-    }
+    .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin: 1.25rem 0; }
 
     .form-select-custom {
       background: var(--bg-secondary);
@@ -508,132 +299,31 @@
       padding-right: 2.5rem;
     }
 
-    .form-select-custom:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: var(--shadow-glow);
-    }
+    .form-select-custom:focus { outline: none; border-color: var(--primary); box-shadow: var(--shadow-glow); }
 
-    .btn-group {
-      display: flex;
-      gap: 0.75rem;
-    }
+    .btn-group { display: flex; gap: 0.75rem; }
+    .btn { font-weight: 600; font-size: 0.875rem; padding: 0.75rem 1.25rem; border-radius: var(--radius); border: none; cursor: pointer; transition: all var(--transition-fast); display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .btn-primary { background: var(--primary); color: white; flex: 1; }
+    .btn-primary:hover:not(:disabled) { background: var(--primary-dark); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary { background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
+    .btn-secondary:hover:not(:disabled) { background: var(--bg-secondary); color: var(--text-primary); border-color: var(--border-default); }
 
-    .btn {
-      font-weight: 600;
-      font-size: 0.875rem;
-      padding: 0.75rem 1.25rem;
-      border-radius: var(--radius);
-      border: none;
-      cursor: pointer;
-      transition: all var(--transition-fast);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-      flex: 1;
-    }
-
-    .btn-primary:hover:not(:disabled) {
-      background: var(--primary-dark);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
-    }
-
-    .btn-primary:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .btn-secondary {
-      background: var(--bg-tertiary);
-      color: var(--text-secondary);
-      border: 1px solid var(--border-subtle);
-    }
-
-    .btn-secondary:hover:not(:disabled) {
-      background: var(--bg-secondary);
-      color: var(--text-primary);
-      border-color: var(--border-default);
-    }
-
-    .scan-flash {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%);
-      opacity: 0;
-      transition: opacity 150ms ease;
-      z-index: 10;
-    }
-
+    .scan-flash { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%); opacity: 0; transition: opacity 150ms ease; z-index: 10; }
     .scan-flash.on { opacity: 1; }
 
-    /* Table Section */
-    .table-container {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-xl);
-      overflow: hidden;
-    }
+    .table-container { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-xl); overflow: hidden; }
+    .table-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 
-    .table-header {
-      padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid var(--border-subtle);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+    .status-pill { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; font-weight: 600; color: var(--text-secondary); }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); }
+    .status-dot.scanning { background: var(--warning); box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-    .status-pill {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-    }
+    .table-responsive { max-height: 600px; overflow: auto; }
 
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--success);
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-    }
-
-    .status-dot.scanning {
-      background: var(--warning);
-      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    .table-responsive {
-      max-height: 600px;
-      overflow: auto;
-    }
-
-    .custom-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.875rem;
-    }
-
-    .custom-table thead {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
+    .custom-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .custom-table thead { position: sticky; top: 0; z-index: 10; }
 
     .custom-table th {
       background: var(--bg-secondary);
@@ -655,89 +345,20 @@
       vertical-align: middle;
     }
 
-    .custom-table tbody tr {
-      transition: background var(--transition-fast);
-    }
+    .custom-table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
 
-    .custom-table tbody tr:hover {
-      background: rgba(255, 255, 255, 0.02);
-    }
+    .student-cell { display: flex; align-items: center; gap: 0.875rem; }
+    .avatar { width: 40px; height: 40px; border-radius: 10px; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.875rem; flex-shrink: 0; }
+    .student-info { display: flex; flex-direction: column; }
+    .student-name { font-weight: 600; color: var(--text-primary); font-size: 0.9375rem; }
+    .student-meta { font-size: 0.8125rem; color: var(--text-muted); }
 
-    .custom-table tbody tr:last-child td {
-      border-bottom: none;
-    }
+    .time-cell { font-family: 'SF Mono', monospace; font-weight: 500; color: var(--text-secondary); }
+    .hours-cell { font-weight: 700; color: var(--success-light); text-align: right; }
 
-    .student-cell {
-      display: flex;
-      align-items: center;
-      gap: 0.875rem;
-    }
+    .table-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--border-subtle); background: var(--bg-secondary); font-size: 0.875rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem; }
 
-    .avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 0.875rem;
-      flex-shrink: 0;
-    }
-
-    .student-info {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .student-name {
-      font-weight: 600;
-      color: var(--text-primary);
-      font-size: 0.9375rem;
-    }
-
-    .student-meta {
-      font-size: 0.8125rem;
-      color: var(--text-muted);
-    }
-
-    .time-cell {
-      font-family: 'SF Mono', monospace;
-      font-weight: 500;
-      color: var(--text-secondary);
-    }
-
-    .hours-cell {
-      font-weight: 700;
-      color: var(--success-light);
-      text-align: right;
-    }
-
-    /* Footer info */
-    .table-footer {
-      padding: 1rem 1.5rem;
-      border-top: 1px solid var(--border-subtle);
-      background: var(--bg-secondary);
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    /* Toast Notifications - Refined */
-    .toast-container {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      pointer-events: none;
-    }
+    .toast-container { position: fixed; bottom: 2rem; right: 2rem; z-index: 9999; display: flex; flex-direction: column; gap: 0.75rem; pointer-events: none; }
 
     .toast {
       background: var(--bg-secondary);
@@ -756,70 +377,32 @@
       backdrop-filter: blur(12px);
     }
 
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(20px) scale(0.98); }
-      to { opacity: 1; transform: translateX(0) scale(1); }
-    }
-
+    @keyframes slideIn { from { opacity: 0; transform: translateX(20px) scale(0.98); } to { opacity: 1; transform: translateX(0) scale(1); } }
     .toast.success { border-left-color: var(--success); }
     .toast.error { border-left-color: var(--danger); }
     .toast.warning { border-left-color: var(--warning); }
 
-    .toast-icon {
-      width: 36px;
-      height: 36px;
-      border-radius: var(--radius);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
-      flex-shrink: 0;
-    }
-
+    .toast-icon { width: 36px; height: 36px; border-radius: var(--radius); display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
     .toast.success .toast-icon { background: rgba(16, 185, 129, 0.15); color: var(--success); }
     .toast.error .toast-icon { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
     .toast.warning .toast-icon { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+    .toast-content { flex: 1; }
+    .toast-title { font-weight: 600; color: var(--text-primary); font-size: 0.9375rem; margin-bottom: 0.125rem; }
+    .toast-message { font-size: 0.8125rem; color: var(--text-muted); line-height: 1.4; }
 
-    .toast-content {
-      flex: 1;
-    }
-
-    .toast-title {
-      font-weight: 600;
-      color: var(--text-primary);
-      font-size: 0.9375rem;
-      margin-bottom: 0.125rem;
-    }
-
-    .toast-message {
-      font-size: 0.8125rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-
-    /* Scrollbar */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { 
-      background: var(--text-subtle); 
-      border-radius: 3px;
-      opacity: 0.5;
-    }
+    ::-webkit-scrollbar-thumb { background: var(--text-subtle); border-radius: 3px; opacity: 0.5; }
     ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 
-    /* Hide PM/AM columns based on session */
+    /* Hide PM/AM columns based on session filter (works with the JS below) */
     #liveWrapper.show-am .col-pm,
-    #liveWrapper.show-pm .col-am {
-      display: none;
-    }
+    #liveWrapper.show-pm .col-am { display: none; }
 
-    /* Utility */
     .text-success { color: var(--success-light) !important; }
-    .text-warning { color: #fbbf24 !important; }
     .text-danger { color: #f87171 !important; }
     .text-muted { color: var(--text-muted) !important; }
 
-    /* Info tip */
     .info-tip {
       display: flex;
       align-items: center;
@@ -832,10 +415,7 @@
       border-radius: var(--radius);
       border: 1px solid var(--border-subtle);
     }
-
-    .info-tip i {
-      color: var(--primary-light);
-    }
+    .info-tip i { color: var(--primary-light); }
   </style>
 </head>
 
@@ -864,11 +444,11 @@
             </a>
           </li>
           <li class="nav-item">
-          <a class="nav-link"
-            href="https://script.google.com/macros/s/AKfycbyLsU64MflVmxrwu7JqXWyGwhLQurraonO4bS3kj7Lulwx2OD_-hakoajbPatjBINehMQ/exec?page=register"
-            target="_blank" rel="noopener">
-            <i class="fa-solid fa-user-plus me-2"></i>Registration
-          </a>
+            <a class="nav-link"
+              href="https://script.google.com/macros/s/AKfycbyLsU64MflVmxrwu7JqXWyGwhLQurraonO4bS3kj7Lulwx2OD_-hakoajbPatjBINehMQ/exec?page=register"
+              target="_blank" rel="noopener">
+              <i class="fa-solid fa-user-plus me-2"></i>Registration
+            </a>
           </li>
         </ul>
 
@@ -886,7 +466,7 @@
   <div class="main-container">
     <div class="tab-content">
       <div class="tab-pane fade show active" id="scanner">
-        
+
         <!-- Stats Grid -->
         <div class="stats-grid">
           <div class="stat-card">
@@ -930,12 +510,12 @@
               </div>
               <span class="badge-soft" id="scanModeBadge">Auto Mode</span>
             </div>
-            
+
             <div class="card-body">
               <div class="scanner-wrapper" id="scannerContainer">
                 <div id="reader"></div>
                 <div class="scan-flash" id="scanFlash"></div>
-                
+
                 <div class="scanner-overlay" id="scannerOverlay">
                   <div class="scan-frame">
                     <div class="scan-corner tl"></div>
@@ -945,7 +525,7 @@
                     <div class="scan-line"></div>
                   </div>
                 </div>
-                
+
                 <div class="scanner-placeholder" id="scannerPlaceholder">
                   <i class="fa-solid fa-camera-slash"></i>
                   <p>Camera Inactive</p>
@@ -985,12 +565,27 @@
                 <i class="fa-solid fa-list-ul" style="color: var(--primary-light);"></i>
                 Live Activity
               </div>
-              <div class="status-pill">
-                <span class="status-dot" id="systemStatus"></span>
-                <span id="systemStatusText">Online</span>
+
+              <div class="d-flex align-items-center gap-2">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="text-muted" style="font-size:.8125rem;font-weight:600;">View</span>
+                  <select id="liveSessionFilter"
+                          class="form-select-custom"
+                          style="width: 170px; padding: 0.5rem 0.75rem; font-size: 0.8125rem;">
+                    <option value="auto">Auto (Current)</option>
+                    <option value="am">AM Only</option>
+                    <option value="pm">PM Only</option>
+                    <option value="all">All Day</option>
+                  </select>
+                </div>
+
+                <div class="status-pill">
+                  <span class="status-dot" id="systemStatus"></span>
+                  <span id="systemStatusText">Online</span>
+                </div>
               </div>
             </div>
-            
+
             <div id="liveWrapper" class="table-responsive">
               <table class="custom-table">
                 <thead>
@@ -1007,7 +602,7 @@
                 <tbody id="liveLogBody"></tbody>
               </table>
             </div>
-            
+
             <div class="table-footer" id="lastScanInfo">
               <i class="fa-solid fa-circle-notch fa-spin"></i>
               <span>Loading data from sheet...</span>
@@ -1022,571 +617,613 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-  /* ===================== CONFIG ===================== */
-  const API_URL = "https://script.google.com/macros/s/AKfycbxy75tYNOZPKpX9Axd0RqHOoxjLMW3TzhBZQqEYan1h_lYLNfQaTZ2wG1CrBjlgV0BD3g/exec";
-  const AUTO_STOP_ON_SUCCESS = true;
-  const SCAN_DEBOUNCE_MS = 2500;
+  <script>
+    /* ===================== CONFIG ===================== */
+    const API_URL = "https://script.google.com/macros/s/AKfycbxy75tYNOZPKpX9Axd0RqHOoxjLMW3TzhBZQqEYan1h_lYLNfQaTZ2wG1CrBjlgV0BD3g/exec";
+    const AUTO_STOP_ON_SUCCESS = true;
+    const SCAN_DEBOUNCE_MS = 2500;
 
-  /* ✅ Voice + Sound Settings */
-  const VOICE_ENABLED = true;    // set false to disable AI voice
-  const SFX_ENABLED   = true;    // set false to disable extra chime
-  const VOICE_LANG    = "en-US"; // you can change to "en-PH" if you want
+    /* ✅ Voice + Sound Settings */
+    const VOICE_ENABLED = true;    // set false to disable AI voice
+    const SFX_ENABLED   = true;    // set false to disable extra chime
+    const VOICE_LANG    = "en-US"; // you can change to "en-PH" if you want
 
-  /* ===================== STATE ===================== */
-  const state = {
-    scanner: null,
-    scanning: false,
-    cameras: [],
-    lastScan: null,
-    lastScanTime: 0,
-    currentSession: 'morning',
-    busy: false,
-    todaysLogs: []
-  };
-
-  /* ===================== DOM ===================== */
-  const el = {
-    clockTime: document.getElementById('clockTime'),
-    clockDate: document.getElementById('clockDate'),
-    sessionBadge: document.getElementById('sessionBadge'),
-    scanMode: document.getElementById('scanMode'),
-    scanModeBadge: document.getElementById('scanModeBadge'),
-    cameraSelect: document.getElementById('cameraSelect'),
-    btnStart: document.getElementById('btnStart'),
-    btnStop: document.getElementById('btnStop'),
-    systemStatus: document.getElementById('systemStatus'),
-    systemStatusText: document.getElementById('systemStatusText'),
-    liveLogBody: document.getElementById('liveLogBody'),
-    lastScanInfo: document.getElementById('lastScanInfo'),
-    toastContainer: document.getElementById('toastContainer'),
-    scanFlash: document.getElementById('scanFlash'),
-    scannerOverlay: document.getElementById('scannerOverlay'),
-    scannerPlaceholder: document.getElementById('scannerPlaceholder'),
-    liveWrapper: document.getElementById('liveWrapper'),
-    stats: {
-      total: document.getElementById('statTotal'),
-      checkedIn: document.getElementById('statCheckedIn'),
-      checkedOut: document.getElementById('statCheckedOut'),
-      pending: document.getElementById('statPending'),
-    }
-  };
-
-  /* ===================== TOAST ===================== */
-  function showToast(message, type='info', duration=3000){
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    const icons = { success:'fa-check', error:'fa-xmark', warning:'fa-exclamation', info:'fa-info' };
-    const titles = { success:'Success', error:'Error', warning:'Warning', info:'Info' };
-
-    toast.innerHTML = `
-      <div class="toast-icon"><i class="fa-solid ${icons[type] || icons.info}"></i></div>
-      <div class="toast-content">
-        <div class="toast-title">${titles[type] || titles.info}</div>
-        <div class="toast-message">${message}</div>
-      </div>
-    `;
-    el.toastContainer.appendChild(toast);
-
-    setTimeout(() => {
-      toast.style.opacity = '0';
-      toast.style.transform = 'translateX(20px)';
-      setTimeout(() => toast.remove(), 300);
-    }, duration);
-  }
-
-  /* ===================== SCANNER FX ===================== */
-  function flashGreen(){
-    if(!el.scanFlash) return;
-    el.scanFlash.classList.add('on');
-    setTimeout(() => el.scanFlash.classList.remove('on'), 150);
-  }
-
-  let audioCtx = null;
-  function primeAudio(){
-    try{
-      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-      if(audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
-    }catch(e){}
-  }
-
-  function beep(duration=100, freq=880, vol=0.06){
-    try{
-      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-      const o = audioCtx.createOscillator();
-      const g = audioCtx.createGain();
-      o.type = 'sine';
-      o.frequency.value = freq;
-      g.gain.value = vol;
-      o.connect(g);
-      g.connect(audioCtx.destination);
-      o.start();
-      setTimeout(() => o.stop(), duration);
-    }catch(e){}
-  }
-
-  /* ✅ Nice success chime (optional) */
-  function chimeSuccess(){
-    if(!SFX_ENABLED) return;
-    beep(80, 880, 0.06);
-    setTimeout(() => beep(80, 1180, 0.05), 90);
-  }
-
-  /* ===================== AI VOICE (Web Speech API) ===================== */
-  let preferredVoice = null;
-
-  function initVoice(){
-    if(!VOICE_ENABLED) return;
-    if(!('speechSynthesis' in window)) return;
-
-    const pick = () => {
-      const voices = window.speechSynthesis.getVoices() || [];
-      preferredVoice =
-        voices.find(v => /google/i.test(v.name) && /en/i.test(v.lang)) ||
-        voices.find(v => /en/i.test(v.lang)) ||
-        voices[0] ||
-        null;
+    /* ===================== STATE ===================== */
+    const state = {
+      scanner: null,
+      scanning: false,
+      cameras: [],
+      lastScan: null,
+      lastScanTime: 0,
+      currentSession: 'morning',
+      busy: false,
+      todaysLogs: [],
+      liveSessionFilter: 'auto' // ✅ NEW: controls live table view (auto/am/pm/all)
     };
 
-    pick();
-    window.speechSynthesis.onvoiceschanged = pick;
-  }
+    /* ===================== DOM ===================== */
+    const el = {
+      clockTime: document.getElementById('clockTime'),
+      clockDate: document.getElementById('clockDate'),
+      sessionBadge: document.getElementById('sessionBadge'),
+      scanMode: document.getElementById('scanMode'),
+      scanModeBadge: document.getElementById('scanModeBadge'),
+      cameraSelect: document.getElementById('cameraSelect'),
+      btnStart: document.getElementById('btnStart'),
+      btnStop: document.getElementById('btnStop'),
+      systemStatus: document.getElementById('systemStatus'),
+      systemStatusText: document.getElementById('systemStatusText'),
+      liveLogBody: document.getElementById('liveLogBody'),
+      lastScanInfo: document.getElementById('lastScanInfo'),
+      toastContainer: document.getElementById('toastContainer'),
+      scanFlash: document.getElementById('scanFlash'),
+      scannerOverlay: document.getElementById('scannerOverlay'),
+      scannerPlaceholder: document.getElementById('scannerPlaceholder'),
+      liveWrapper: document.getElementById('liveWrapper'),
+      liveSessionFilter: document.getElementById('liveSessionFilter'), // ✅ NEW
+      stats: {
+        total: document.getElementById('statTotal'),
+        checkedIn: document.getElementById('statCheckedIn'),
+        checkedOut: document.getElementById('statCheckedOut'),
+        pending: document.getElementById('statPending'),
+      }
+    };
 
-  function speak(text){
-    if(!VOICE_ENABLED) return;
-    if(!('speechSynthesis' in window)) return;
+    /* ===================== TOAST ===================== */
+    function showToast(message, type='info', duration=3000){
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      const icons = { success:'fa-check', error:'fa-xmark', warning:'fa-exclamation', info:'fa-info' };
+      const titles = { success:'Success', error:'Error', warning:'Warning', info:'Info' };
 
-    try{
-      window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = VOICE_LANG;
-      if(preferredVoice) u.voice = preferredVoice;
-      u.rate = 1.0;
-      u.pitch = 1.0;
-      u.volume = 1.0;
-      window.speechSynthesis.speak(u);
-    }catch(e){}
-  }
+      toast.innerHTML = `
+        <div class="toast-icon"><i class="fa-solid ${icons[type] || icons.info}"></i></div>
+        <div class="toast-content">
+          <div class="toast-title">${titles[type] || titles.info}</div>
+          <div class="toast-message">${message}</div>
+        </div>
+      `;
+      el.toastContainer.appendChild(toast);
 
-  /* ===================== API ===================== */
-  async function api(params){
-    params._ts = Date.now();
-    const qs = new URLSearchParams(params).toString();
-    const res = await fetch(`${API_URL}?${qs}`, { cache: "no-store" });
-    const json = await res.json().catch(() => null);
-    if(!json) throw new Error("Invalid JSON response");
-    return json;
-  }
-
-  /* ===================== DATE/TIME ===================== */
-  function todayISO(){
-    const d = new Date();
-    const yyyy = d.getFullYear();
-    const mm = String(d.getMonth()+1).padStart(2,'0');
-    const dd = String(d.getDate()).padStart(2,'0');
-    return `${yyyy}-${mm}-${dd}`;
-  }
-
-  function nowLocalTime12(){
-    return new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit', hour12:true });
-  }
-
-  function timeDisplay(v){
-    if(!v || v === '-') return '-';
-    const s = String(v).trim();
-    if (/^\d{4}-\d{2}-\d{2}T/.test(s)) {
-      const d = new Date(s);
-      if (!isNaN(d)) return d.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit', hour12:true });
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(20px)';
+        setTimeout(() => toast.remove(), 300);
+      }, duration);
     }
-    return s;
-  }
 
-  /* ===================== SESSION UI ===================== */
-  function updateLiveColumns(){
-    const isAM = state.currentSession === 'morning';
-    if(!el.liveWrapper) return;
-    el.liveWrapper.classList.toggle('show-am', isAM);
-    el.liveWrapper.classList.toggle('show-pm', !isAM);
-  }
+    /* ===================== SCANNER FX ===================== */
+    function flashGreen(){
+      if(!el.scanFlash) return;
+      el.scanFlash.classList.add('on');
+      setTimeout(() => el.scanFlash.classList.remove('on'), 150);
+    }
 
-  function updateClock(){
-    const now = new Date();
-    const h = now.getHours();
+    let audioCtx = null;
+    function primeAudio(){
+      try{
+        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        if(audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
+      }catch(e){}
+    }
 
-    el.clockTime.textContent = now.toLocaleTimeString('en-US', { hour12:true });
-    el.clockDate.textContent = now.toLocaleDateString('en-US', {
-      weekday:'short',
-      month:'short',
-      day:'numeric'
+    function beep(duration=100, freq=880, vol=0.06){
+      try{
+        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = 'sine';
+        o.frequency.value = freq;
+        g.gain.value = vol;
+        o.connect(g);
+        g.connect(audioCtx.destination);
+        o.start();
+        setTimeout(() => o.stop(), duration);
+      }catch(e){}
+    }
+
+    function chimeSuccess(){
+      if(!SFX_ENABLED) return;
+      beep(80, 880, 0.06);
+      setTimeout(() => beep(80, 1180, 0.05), 90);
+    }
+
+    /* ===================== AI VOICE (Web Speech API) ===================== */
+    let preferredVoice = null;
+
+    function initVoice(){
+      if(!VOICE_ENABLED) return;
+      if(!('speechSynthesis' in window)) return;
+
+      const pick = () => {
+        const voices = window.speechSynthesis.getVoices() || [];
+        preferredVoice =
+          voices.find(v => /google/i.test(v.name) && /en/i.test(v.lang)) ||
+          voices.find(v => /en/i.test(v.lang)) ||
+          voices[0] ||
+          null;
+      };
+
+      pick();
+      window.speechSynthesis.onvoiceschanged = pick;
+    }
+
+    function speak(text){
+      if(!VOICE_ENABLED) return;
+      if(!('speechSynthesis' in window)) return;
+
+      try{
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = VOICE_LANG;
+        if(preferredVoice) u.voice = preferredVoice;
+        u.rate = 1.0;
+        u.pitch = 1.0;
+        u.volume = 1.0;
+        window.speechSynthesis.speak(u);
+      }catch(e){}
+    }
+
+    /* ===================== API ===================== */
+    async function api(params){
+      params._ts = Date.now();
+      const qs = new URLSearchParams(params).toString();
+      const res = await fetch(`${API_URL}?${qs}`, { cache: "no-store" });
+      const json = await res.json().catch(() => null);
+      if(!json) throw new Error("Invalid JSON response");
+      return json;
+    }
+
+    /* ===================== DATE/TIME ===================== */
+    function todayISO(){
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const dd = String(d.getDate()).padStart(2,'0');
+      return `${yyyy}-${mm}-${dd}`;
+    }
+
+    function nowLocalTime12(){
+      return new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit', hour12:true });
+    }
+
+    function timeDisplay(v){
+      if(!v || v === '-') return '-';
+      const s = String(v).trim();
+      if (/^\d{4}-\d{2}-\d{2}T/.test(s)) {
+        const d = new Date(s);
+        if (!isNaN(d)) return d.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit', hour12:true });
+      }
+      return s;
+    }
+
+    /* ===================== LIVE VIEW PREF (NEW) ===================== */
+    function loadLiveSessionPref(){
+      try { return localStorage.getItem('liveSessionFilter') || 'auto'; }
+      catch(e){ return 'auto'; }
+    }
+
+    function saveLiveSessionPref(v){
+      try { localStorage.setItem('liveSessionFilter', v); } catch(e){}
+    }
+
+    /* ===================== SESSION UI ===================== */
+    function updateLiveColumns(){
+      if(!el.liveWrapper) return;
+
+      // reset both
+      el.liveWrapper.classList.remove('show-am', 'show-pm');
+
+      const pref = state.liveSessionFilter || 'auto';
+
+      // all = show all columns
+      if(pref === 'all') return;
+
+      // auto = follow clock session, else use manual selection
+      const mode = (pref === 'auto')
+        ? (state.currentSession === 'morning' ? 'am' : 'pm')
+        : pref;
+
+      if(mode === 'am') el.liveWrapper.classList.add('show-am');
+      if(mode === 'pm') el.liveWrapper.classList.add('show-pm');
+    }
+
+    function updateClock(){
+      const now = new Date();
+      const h = now.getHours();
+
+      el.clockTime.textContent = now.toLocaleTimeString('en-US', { hour12:true });
+      el.clockDate.textContent = now.toLocaleDateString('en-US', {
+        weekday:'short',
+        month:'short',
+        day:'numeric'
+      });
+
+      state.currentSession = h < 12 ? 'morning' : 'afternoon';
+
+      const isMorning = state.currentSession === 'morning';
+      el.sessionBadge.textContent = isMorning ? 'Morning Session' : 'Afternoon Session';
+      el.sessionBadge.classList.toggle('afternoon', !isMorning);
+
+      renderScanModeOptions();
+      updateLiveColumns();
+    }
+    setInterval(updateClock, 1000);
+
+    function renderScanModeOptions(){
+      const isAM = state.currentSession === 'morning';
+      const current = el.scanMode.value || 'auto';
+
+      el.scanMode.innerHTML = '';
+      el.scanMode.appendChild(new Option('Auto Detect', 'auto'));
+
+      if (isAM) {
+        el.scanMode.appendChild(new Option('AM Time In', 'am_in'));
+        el.scanMode.appendChild(new Option('AM Time Out', 'am_out'));
+      } else {
+        el.scanMode.appendChild(new Option('PM Time In', 'pm_in'));
+        el.scanMode.appendChild(new Option('PM Time Out', 'pm_out'));
+      }
+
+      const exists = [...el.scanMode.options].some(o => o.value === current);
+      el.scanMode.value = exists ? current : 'auto';
+      el.scanModeBadge.textContent = el.scanMode.options[el.scanMode.selectedIndex].text;
+    }
+
+    el.scanMode.addEventListener('change', () => {
+      el.scanModeBadge.textContent = el.scanMode.options[el.scanMode.selectedIndex].text;
     });
 
-    state.currentSession = h < 12 ? 'morning' : 'afternoon';
+    // ✅ NEW: live table session filter handler
+    if (el.liveSessionFilter) {
+      el.liveSessionFilter.addEventListener('change', () => {
+        const v = el.liveSessionFilter.value;
+        state.liveSessionFilter = v;
+        saveLiveSessionPref(v);
+        updateLiveColumns();
 
-    const isMorning = state.currentSession === 'morning';
-    el.sessionBadge.textContent = isMorning ? 'Morning Session' : 'Afternoon Session';
-    el.sessionBadge.classList.toggle('afternoon', !isMorning);
-
-    renderScanModeOptions();
-    updateLiveColumns();
-  }
-  setInterval(updateClock, 1000);
-
-  function renderScanModeOptions(){
-    const isAM = state.currentSession === 'morning';
-    const current = el.scanMode.value || 'auto';
-
-    el.scanMode.innerHTML = '';
-    el.scanMode.appendChild(new Option('Auto Detect', 'auto'));
-
-    if (isAM) {
-      el.scanMode.appendChild(new Option('AM Time In', 'am_in'));
-      el.scanMode.appendChild(new Option('AM Time Out', 'am_out'));
-    } else {
-      el.scanMode.appendChild(new Option('PM Time In', 'pm_in'));
-      el.scanMode.appendChild(new Option('PM Time Out', 'pm_out'));
+        const label = { auto:'Auto (Current)', am:'AM Only', pm:'PM Only', all:'All Day' }[v] || 'Auto';
+        showToast(`Live table: ${label}`, 'info', 1500);
+      });
     }
 
-    const exists = [...el.scanMode.options].some(o => o.value === current);
-    el.scanMode.value = exists ? current : 'auto';
-    el.scanModeBadge.textContent = el.scanMode.options[el.scanMode.selectedIndex].text;
-  }
-
-  el.scanMode.addEventListener('change', () => {
-    el.scanModeBadge.textContent = el.scanMode.options[el.scanMode.selectedIndex].text;
-  });
-
-  /* ===================== CALCULATIONS ===================== */
-  function parseTimeToMinutes(t){
-    t = String(t||'').trim();
-    if(!t || t === '-') return null;
-    if (/^\d{4}-\d{2}-\d{2}T/.test(t)) {
-      const d = new Date(t);
+    /* ===================== CALCULATIONS ===================== */
+    function parseTimeToMinutes(t){
+      t = String(t||'').trim();
+      if(!t || t === '-') return null;
+      if (/^\d{4}-\d{2}-\d{2}T/.test(t)) {
+        const d = new Date(t);
+        if (isNaN(d)) return null;
+        return d.getHours() * 60 + d.getMinutes();
+      }
+      const d = new Date('1970-01-01 ' + t);
       if (isNaN(d)) return null;
       return d.getHours() * 60 + d.getMinutes();
     }
-    const d = new Date('1970-01-01 ' + t);
-    if (isNaN(d)) return null;
-    return d.getHours() * 60 + d.getMinutes();
-  }
 
-  function calcHours(am_in, am_out, pm_in, pm_out){
-    const a1 = parseTimeToMinutes(am_in), a2 = parseTimeToMinutes(am_out);
-    const p1 = parseTimeToMinutes(pm_in), p2 = parseTimeToMinutes(pm_out);
-    const diff = (x,y) => (x!=null && y!=null && y>x) ? (y-x) : 0;
-    const mins = diff(a1,a2) + diff(p1,p2);
-    return mins ? (mins/60).toFixed(2) : '';
-  }
+    function calcHours(am_in, am_out, pm_in, pm_out){
+      const a1 = parseTimeToMinutes(am_in), a2 = parseTimeToMinutes(am_out);
+      const p1 = parseTimeToMinutes(pm_in), p2 = parseTimeToMinutes(pm_out);
+      const diff = (x,y) => (x!=null && y!=null && y>x) ? (y-x) : 0;
+      const mins = diff(a1,a2) + diff(p1,p2);
+      return mins ? (mins/60).toFixed(2) : '';
+    }
 
-  /* ===================== LOAD DATA ===================== */
-  async function loadTables(date = todayISO()){
-    try{
-      el.lastScanInfo.innerHTML = `
-        <i class="fa-solid fa-circle-notch fa-spin"></i>
-        <span>Loading logs for ${date}...</span>
-      `;
+    /* ===================== LOAD DATA ===================== */
+    async function loadTables(date = todayISO()){
+      try{
+        el.lastScanInfo.innerHTML = `
+          <i class="fa-solid fa-circle-notch fa-spin"></i>
+          <span>Loading logs for ${date}...</span>
+        `;
 
-      const resp = await api({ action:'get_logs', date });
-      el.liveLogBody.innerHTML = '';
+        const resp = await api({ action:'get_logs', date });
+        el.liveLogBody.innerHTML = '';
 
-      if(!resp.success) throw new Error(resp.message || 'get_logs failed');
+        if(!resp.success) throw new Error(resp.message || 'get_logs failed');
 
-      const logs = resp.logs || [];
-      state.todaysLogs = logs;
+        const logs = resp.logs || [];
+        state.todaysLogs = logs;
 
-      el.lastScanInfo.innerHTML = logs.length
-        ? `<i class="fa-solid fa-check text-success"></i><span>Loaded ${logs.length} record(s)</span>`
-        : `<i class="fa-solid fa-inbox"></i><span>No records yet for today</span>`;
+        el.lastScanInfo.innerHTML = logs.length
+          ? `<i class="fa-solid fa-check text-success"></i><span>Loaded ${logs.length} record(s)</span>`
+          : `<i class="fa-solid fa-inbox"></i><span>No records yet for today</span>`;
+
+        logs.forEach(r => {
+          const amIn = timeDisplay(r.am_in);
+          const amOut = timeDisplay(r.am_out);
+          const pmIn = timeDisplay(r.pm_in);
+          const pmOut = timeDisplay(r.pm_out);
+          const total = String(r.total_hours||'').trim() || calcHours(amIn, amOut, pmIn, pmOut);
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>
+              <div class="student-cell">
+                <div class="avatar">${String(r.student_name||'?').charAt(0).toUpperCase()}</div>
+                <div class="student-info">
+                  <div class="student-name">${r.student_name || '-'}</div>
+                  <div class="student-meta">${r.login_type || '-'}</div>
+                </div>
+              </div>
+            </td>
+            <td>${r.date || '-'}</td>
+            <td class="col-am time-cell">${amIn || '-'}</td>
+            <td class="col-am time-cell">${amOut || '-'}</td>
+            <td class="col-pm time-cell">${pmIn || '-'}</td>
+            <td class="col-pm time-cell">${pmOut || '-'}</td>
+            <td class="hours-cell">${total ? total + 'h' : '-'}</td>
+          `;
+          el.liveLogBody.appendChild(tr);
+        });
+
+        updateStatsFromData();
+        updateLiveColumns(); // ✅ keep view consistent after reload
+      }catch(err){
+        console.error(err);
+        el.lastScanInfo.innerHTML = `
+          <i class="fa-solid fa-triangle-exclamation text-danger"></i>
+          <span>Failed to load logs</span>
+        `;
+        showToast('Failed to load logs', 'error', 3000);
+      }
+    }
+
+    function updateStatsFromData(){
+      const logs = state.todaysLogs || [];
+      el.stats.total.textContent = logs.length;
+
+      let checkedIn = 0, checkedOut = 0, pending = 0;
 
       logs.forEach(r => {
-        const amIn = timeDisplay(r.am_in);
-        const amOut = timeDisplay(r.am_out);
-        const pmIn = timeDisplay(r.pm_in);
-        const pmOut = timeDisplay(r.pm_out);
-        const total = String(r.total_hours||'').trim() || calcHours(amIn, amOut, pmIn, pmOut);
+        const amIn = (timeDisplay(r.am_in) || '').trim();
+        const amOut = (timeDisplay(r.am_out) || '').trim();
+        const pmIn = (timeDisplay(r.pm_in) || '').trim();
+        const pmOut = (timeDisplay(r.pm_out) || '').trim();
 
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>
-            <div class="student-cell">
-              <div class="avatar">${String(r.student_name||'?').charAt(0).toUpperCase()}</div>
-              <div class="student-info">
-                <div class="student-name">${r.student_name || '-'}</div>
-                <div class="student-meta">${r.login_type || '-'}</div>
-              </div>
-            </div>
-          </td>
-          <td>${r.date || '-'}</td>
-          <td class="col-am time-cell">${amIn || '-'}</td>
-          <td class="col-am time-cell">${amOut || '-'}</td>
-          <td class="col-pm time-cell">${pmIn || '-'}</td>
-          <td class="col-pm time-cell">${pmOut || '-'}</td>
-          <td class="hours-cell">${total ? total + 'h' : '-'}</td>
-        `;
-        el.liveLogBody.appendChild(tr);
+        if ((amIn && amIn !== '-') || (pmIn && pmIn !== '-')) checkedIn++;
+        if ((amOut && amOut !== '-') || (pmOut && pmOut !== '-')) checkedOut++;
+        if (((amIn && amIn !== '-') && (!amOut || amOut === '-')) ||
+            ((pmIn && pmIn !== '-') && (!pmOut || pmOut === '-'))) pending++;
       });
 
-      updateStatsFromData();
-    }catch(err){
-      console.error(err);
-      el.lastScanInfo.innerHTML = `
-        <i class="fa-solid fa-triangle-exclamation text-danger"></i>
-        <span>Failed to load logs</span>
-      `;
-      showToast('Failed to load logs', 'error', 3000);
-    }
-  }
-
-  function updateStatsFromData(){
-    const logs = state.todaysLogs || [];
-    el.stats.total.textContent = logs.length;
-
-    let checkedIn = 0, checkedOut = 0, pending = 0;
-
-    logs.forEach(r => {
-      const amIn = (timeDisplay(r.am_in) || '').trim();
-      const amOut = (timeDisplay(r.am_out) || '').trim();
-      const pmIn = (timeDisplay(r.pm_in) || '').trim();
-      const pmOut = (timeDisplay(r.pm_out) || '').trim();
-
-      if ((amIn && amIn !== '-') || (pmIn && pmIn !== '-')) checkedIn++;
-      if ((amOut && amOut !== '-') || (pmOut && pmOut !== '-')) checkedOut++;
-      if (((amIn && amIn !== '-') && (!amOut || amOut === '-')) ||
-          ((pmIn && pmIn !== '-') && (!pmOut || pmOut === '-'))) pending++;
-    });
-
-    el.stats.checkedIn.textContent = checkedIn;
-    el.stats.checkedOut.textContent = checkedOut;
-    el.stats.pending.textContent = pending;
-  }
-
-  /* ===================== CAMERA ===================== */
-  async function initCameras(){
-    try{
-      state.cameras = await Html5Qrcode.getCameras();
-      el.cameraSelect.innerHTML = '<option value="">Select Camera...</option>';
-
-      if(!state.cameras.length){
-        showToast('No cameras found. Check permissions.', 'error', 4000);
-        return;
-      }
-
-      state.cameras.forEach((cam, i) => {
-        el.cameraSelect.appendChild(new Option(cam.label || `Camera ${i+1}`, cam.id));
-      });
-
-      const backCam = state.cameras.find(c =>
-        (c.label||'').toLowerCase().includes('back') ||
-        (c.label||'').toLowerCase().includes('rear') ||
-        (c.label||'').toLowerCase().includes('environment')
-      );
-      if(backCam) el.cameraSelect.value = backCam.id;
-
-    }catch(err){
-      console.error(err);
-      showToast('Camera access denied. Check permissions.', 'error', 4000);
-    }
-  }
-
-  /* ===================== SCANNER CONTROL ===================== */
-  async function startScanner(){
-    if(state.scanning) return;
-
-    primeAudio();   // ✅ unlock audio
-    initVoice();    // ✅ load voices (best after user click)
-
-    const cameraId = el.cameraSelect.value;
-    if(!cameraId){
-      showToast('Select a camera first', 'warning');
-      return;
+      el.stats.checkedIn.textContent = checkedIn;
+      el.stats.checkedOut.textContent = checkedOut;
+      el.stats.pending.textContent = pending;
     }
 
-    try{
-      if(!state.scanner) state.scanner = new Html5Qrcode("reader");
+    /* ===================== CAMERA ===================== */
+    async function initCameras(){
+      try{
+        state.cameras = await Html5Qrcode.getCameras();
+        el.cameraSelect.innerHTML = '<option value="">Select Camera...</option>';
 
-      el.scannerPlaceholder.style.display = 'none';
-      el.scannerOverlay.parentElement.classList.add('scanning');
-
-      await state.scanner.start(
-        cameraId,
-        {
-          fps: 30,
-          qrbox: function(viewfinderWidth, viewfinderHeight){
-            const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
-            const size = Math.floor(minEdge * 0.75);
-            return { width: size, height: size };
-          },
-          aspectRatio: 1.0,
-          disableFlip: false,
-          experimentalFeatures: { useBarCodeDetectorIfSupported: true },
-          videoConstraints: {
-            facingMode: "environment",
-            focusMode: "continuous",
-            exposureMode: "continuous",
-            whiteBalanceMode: "continuous"
-          }
-        },
-        onScanSuccess,
-        () => {}
-      );
-
-      state.scanning = true;
-      el.btnStart.disabled = true;
-      el.btnStop.disabled = false;
-      el.systemStatus.classList.add('scanning');
-      el.systemStatusText.textContent = 'Scanning';
-      showToast("Scanner activated", "success", 2000);
-
-    }catch(err){
-      console.error(err);
-      showToast("Camera failed to start", "error", 3000);
-      el.scannerPlaceholder.style.display = 'flex';
-    }
-  }
-
-  function stopScanner(){
-    if(!state.scanner || !state.scanning) return;
-    state.scanner.stop().then(() => {
-      state.scanning = false;
-      el.btnStart.disabled = false;
-      el.btnStop.disabled = true;
-      el.scannerOverlay.parentElement.classList.remove('scanning');
-      el.scannerPlaceholder.style.display = 'flex';
-      el.systemStatus.classList.remove('scanning');
-      el.systemStatusText.textContent = 'Online';
-    }).catch(console.error);
-  }
-
-  /* ===================== SCAN LOGIC ===================== */
-  function pickLogTypeAuto(existingRow){
-    const isAM = state.currentSession === 'morning';
-    if (!existingRow) return isAM ? 'am_in' : 'pm_in';
-
-    if (isAM) {
-      if (!existingRow.am_in) return 'am_in';
-      if (existingRow.am_in && !existingRow.am_out) return 'am_out';
-      return null;
-    } else {
-      if (!existingRow.pm_in) return 'pm_in';
-      if (existingRow.pm_in && !existingRow.pm_out) return 'pm_out';
-      return null;
-    }
-  }
-
-  function findExistingRow(student_id, date){
-    const logs = state.todaysLogs || [];
-    const row = logs.find(r =>
-      String(r.student_id||'').trim() === String(student_id||'').trim() &&
-      String(r.date||'').trim() === String(date||'').trim()
-    );
-    if(!row) return null;
-
-    const norm = (v) => {
-      const t = timeDisplay(v);
-      return (t && t !== '-') ? t : '';
-    };
-
-    return {
-      am_in: norm(row.am_in),
-      am_out: norm(row.am_out),
-      pm_in: norm(row.pm_in),
-      pm_out: norm(row.pm_out),
-    };
-  }
-
-  async function onScanSuccess(decodedText){
-    const now = Date.now();
-    if(state.busy) return;
-    if(state.lastScan === decodedText && (now - state.lastScanTime) < SCAN_DEBOUNCE_MS) return;
-
-    state.lastScan = decodedText;
-    state.lastScanTime = now;
-    state.busy = true;
-
-    try{
-      await processAttendance(decodedText);
-    } finally {
-      state.busy = false;
-    }
-  }
-
-  async function processAttendance(generated_code){
-    const date = todayISO();
-    el.lastScanInfo.innerHTML = `
-      <i class="fa-solid fa-circle-notch fa-spin text-primary"></i>
-      <span>Processing: ${generated_code}...</span>
-    `;
-
-    try {
-      const found = await api({ action:'find_student', generated_code });
-      if(!found.success){
-        beep(120, 220, 0.08);
-        showToast('Student not found', 'error', 3000);
-        el.lastScanInfo.innerHTML = `<i class="fa-solid fa-xmark text-danger"></i><span>Invalid code</span>`;
-        return;
-      }
-
-      // ✅ Only speak “Successfully scanned” when student exists
-      speak("Successfully scanned");
-
-      const student = found.student;
-      await loadTables(date);
-      const existing = findExistingRow(student.student_id, date);
-
-      let log_type = el.scanMode.value;
-      if (log_type === 'auto') {
-        log_type = pickLogTypeAuto(existing);
-        if(!log_type){
-          beep(120, 260, 0.06);
-          showToast("Session already completed", 'warning', 2500);
+        if(!state.cameras.length){
+          showToast('No cameras found. Check permissions.', 'error', 4000);
           return;
         }
+
+        state.cameras.forEach((cam, i) => {
+          el.cameraSelect.appendChild(new Option(cam.label || `Camera ${i+1}`, cam.id));
+        });
+
+        const backCam = state.cameras.find(c =>
+          (c.label||'').toLowerCase().includes('back') ||
+          (c.label||'').toLowerCase().includes('rear') ||
+          (c.label||'').toLowerCase().includes('environment')
+        );
+        if(backCam) el.cameraSelect.value = backCam.id;
+
+      }catch(err){
+        console.error(err);
+        showToast('Camera access denied. Check permissions.', 'error', 4000);
       }
+    }
 
-      const time = nowLocalTime12();
-      const resp = await api({ action:'log', generated_code, log_type, date, time });
+    /* ===================== SCANNER CONTROL ===================== */
+    async function startScanner(){
+      if(state.scanning) return;
 
-      if(!resp.success){
-        beep(120, 260, 0.06);
-        showToast(resp.message || 'Not recorded', 'warning', 3000);
-        el.lastScanInfo.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-warning"></i><span>${student.student_name} • ${resp.message || 'Not recorded'}</span>`;
+      primeAudio();
+      initVoice();
+
+      const cameraId = el.cameraSelect.value;
+      if(!cameraId){
+        showToast('Select a camera first', 'warning');
         return;
       }
 
-      // ✅ Attendance saved to sheet
-      flashGreen();
-      chimeSuccess();
+      try{
+        if(!state.scanner) state.scanner = new Html5Qrcode("reader");
 
-      if (log_type.endsWith('_in'))  speak("Time In Successfully");
-      if (log_type.endsWith('_out')) speak("Time Out Successfully");
+        el.scannerPlaceholder.style.display = 'none';
+        el.scannerOverlay.parentElement.classList.add('scanning');
 
-      showToast(`${student.student_name} • ${log_type.toUpperCase().replace('_', ' ')} at ${time}`, 'success', 3000);
-      el.lastScanInfo.innerHTML = `<i class="fa-solid fa-check text-success"></i><span>${student.student_name} recorded</span>`;
+        await state.scanner.start(
+          cameraId,
+          {
+            fps: 30,
+            qrbox: function(viewfinderWidth, viewfinderHeight){
+              const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+              const size = Math.floor(minEdge * 0.75);
+              return { width: size, height: size };
+            },
+            aspectRatio: 1.0,
+            disableFlip: false,
+            experimentalFeatures: { useBarCodeDetectorIfSupported: true },
+            videoConstraints: {
+              facingMode: "environment",
+              focusMode: "continuous",
+              exposureMode: "continuous",
+              whiteBalanceMode: "continuous"
+            }
+          },
+          onScanSuccess,
+          () => {}
+        );
 
-      await loadTables(date);
+        state.scanning = true;
+        el.btnStart.disabled = true;
+        el.btnStop.disabled = false;
+        el.systemStatus.classList.add('scanning');
+        el.systemStatusText.textContent = 'Scanning';
+        showToast("Scanner activated", "success", 2000);
 
-      if (AUTO_STOP_ON_SUCCESS && state.scanning) {
-        setTimeout(() => stopScanner(), 300);
+      }catch(err){
+        console.error(err);
+        showToast("Camera failed to start", "error", 3000);
+        el.scannerPlaceholder.style.display = 'flex';
       }
-
-    } catch(err){
-      console.error(err);
-      beep(120, 220, 0.08);
-      showToast('Network error', 'error', 4000);
-      el.lastScanInfo.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-danger"></i><span>Connection error</span>`;
     }
-  }
 
-  /* ===================== INIT ===================== */
-  el.btnStart.addEventListener('click', startScanner);
-  el.btnStop.addEventListener('click', stopScanner);
+    function stopScanner(){
+      if(!state.scanner || !state.scanning) return;
+      state.scanner.stop().then(() => {
+        state.scanning = false;
+        el.btnStart.disabled = false;
+        el.btnStop.disabled = true;
+        el.scannerOverlay.parentElement.classList.remove('scanning');
+        el.scannerPlaceholder.style.display = 'flex';
+        el.systemStatus.classList.remove('scanning');
+        el.systemStatusText.textContent = 'Online';
+      }).catch(console.error);
+    }
 
-  document.addEventListener('DOMContentLoaded', async () => {
-    initVoice();         // ✅ load voices early (some browsers delay it)
-    updateClock();
-    updateLiveColumns();
-    await initCameras();
-    await loadTables(todayISO());
-  });
-</script>
+    /* ===================== SCAN LOGIC ===================== */
+    function pickLogTypeAuto(existingRow){
+      const isAM = state.currentSession === 'morning';
+      if (!existingRow) return isAM ? 'am_in' : 'pm_in';
+
+      if (isAM) {
+        if (!existingRow.am_in) return 'am_in';
+        if (existingRow.am_in && !existingRow.am_out) return 'am_out';
+        return null;
+      } else {
+        if (!existingRow.pm_in) return 'pm_in';
+        if (existingRow.pm_in && !existingRow.pm_out) return 'pm_out';
+        return null;
+      }
+    }
+
+    function findExistingRow(student_id, date){
+      const logs = state.todaysLogs || [];
+      const row = logs.find(r =>
+        String(r.student_id||'').trim() === String(student_id||'').trim() &&
+        String(r.date||'').trim() === String(date||'').trim()
+      );
+      if(!row) return null;
+
+      const norm = (v) => {
+        const t = timeDisplay(v);
+        return (t && t !== '-') ? t : '';
+      };
+
+      return {
+        am_in: norm(row.am_in),
+        am_out: norm(row.am_out),
+        pm_in: norm(row.pm_in),
+        pm_out: norm(row.pm_out),
+      };
+    }
+
+    async function onScanSuccess(decodedText){
+      const now = Date.now();
+      if(state.busy) return;
+      if(state.lastScan === decodedText && (now - state.lastScanTime) < SCAN_DEBOUNCE_MS) return;
+
+      state.lastScan = decodedText;
+      state.lastScanTime = now;
+      state.busy = true;
+
+      try{
+        await processAttendance(decodedText);
+      } finally {
+        state.busy = false;
+      }
+    }
+
+    async function processAttendance(generated_code){
+      const date = todayISO();
+      el.lastScanInfo.innerHTML = `
+        <i class="fa-solid fa-circle-notch fa-spin text-primary"></i>
+        <span>Processing: ${generated_code}...</span>
+      `;
+
+      try {
+        const found = await api({ action:'find_student', generated_code });
+        if(!found.success){
+          beep(120, 220, 0.08);
+          showToast('Student not found', 'error', 3000);
+          el.lastScanInfo.innerHTML = `<i class="fa-solid fa-xmark text-danger"></i><span>Invalid code</span>`;
+          return;
+        }
+
+        speak("Successfully scanned");
+
+        const student = found.student;
+        await loadTables(date);
+        const existing = findExistingRow(student.student_id, date);
+
+        let log_type = el.scanMode.value;
+        if (log_type === 'auto') {
+          log_type = pickLogTypeAuto(existing);
+          if(!log_type){
+            beep(120, 260, 0.06);
+            showToast("Session already completed", 'warning', 2500);
+            return;
+          }
+        }
+
+        const time = nowLocalTime12();
+        const resp = await api({ action:'log', generated_code, log_type, date, time });
+
+        if(!resp.success){
+          beep(120, 260, 0.06);
+          showToast(resp.message || 'Not recorded', 'warning', 3000);
+          el.lastScanInfo.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-warning"></i><span>${student.student_name} • ${resp.message || 'Not recorded'}</span>`;
+          return;
+        }
+
+        flashGreen();
+        chimeSuccess();
+
+        if (log_type.endsWith('_in'))  speak("Time In Successfully");
+        if (log_type.endsWith('_out')) speak("Time Out Successfully");
+
+        showToast(`${student.student_name} • ${log_type.toUpperCase().replace('_', ' ')} at ${time}`, 'success', 3000);
+        el.lastScanInfo.innerHTML = `<i class="fa-solid fa-check text-success"></i><span>${student.student_name} recorded</span>`;
+
+        await loadTables(date);
+
+        if (AUTO_STOP_ON_SUCCESS && state.scanning) {
+          setTimeout(() => stopScanner(), 300);
+        }
+
+      } catch(err){
+        console.error(err);
+        beep(120, 220, 0.08);
+        showToast('Network error', 'error', 4000);
+        el.lastScanInfo.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-danger"></i><span>Connection error</span>`;
+      }
+    }
+
+    /* ===================== INIT ===================== */
+    el.btnStart.addEventListener('click', startScanner);
+    el.btnStop.addEventListener('click', stopScanner);
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      initVoice();
+
+      // ✅ NEW: restore Live Activity view preference
+      const pref = loadLiveSessionPref();
+      state.liveSessionFilter = pref;
+      if (el.liveSessionFilter) el.liveSessionFilter.value = pref;
+
+      updateClock();
+      updateLiveColumns();
+      await initCameras();
+      await loadTables(todayISO());
+    });
+  </script>
 </body>
 </html>
