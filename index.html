@@ -224,17 +224,8 @@
       margin: 0 auto;
     }
 
-    @media (min-width: 768px) {
-      .main-container {
-        padding: 1.5rem;
-      }
-    }
-
-    @media (min-width: 1200px) {
-      .main-container {
-        padding: 2rem;
-      }
-    }
+    @media (min-width: 768px) { .main-container { padding: 1.5rem; } }
+    @media (min-width: 1200px) { .main-container { padding: 2rem; } }
 
     .stats-grid {
       display: grid;
@@ -242,20 +233,8 @@
       gap: 0.75rem;
       margin-bottom: 1.5rem;
     }
-
-    @media (min-width: 576px) {
-      .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
-      }
-    }
-
-    @media (min-width: 992px) {
-      .stats-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1.25rem;
-      }
-    }
+    @media (min-width: 576px) { .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; } }
+    @media (min-width: 992px) { .stats-grid { grid-template-columns: repeat(4, 1fr); gap: 1.25rem; } }
 
     .stat-card {
       background: var(--bg-card);
@@ -269,20 +248,10 @@
       position: relative;
       overflow: hidden;
     }
-
     @media (min-width: 768px) {
-      .stat-card {
-        padding: 1.25rem;
-        border-radius: var(--radius-lg);
-        gap: 1rem;
-      }
+      .stat-card { padding: 1.25rem; border-radius: var(--radius-lg); gap: 1rem; }
     }
-
-    .stat-card:hover {
-      transform: translateY(-2px);
-      border-color: var(--border-default);
-      box-shadow: var(--shadow-lg);
-    }
+    .stat-card:hover { transform: translateY(-2px); border-color: var(--border-default); box-shadow: var(--shadow-lg); }
 
     .stat-icon {
       width: 40px;
@@ -294,14 +263,7 @@
       font-size: 1rem;
       flex-shrink: 0;
     }
-
-    @media (min-width: 768px) {
-      .stat-icon {
-        width: 48px;
-        height: 48px;
-        font-size: 1.25rem;
-      }
-    }
+    @media (min-width: 768px) { .stat-icon { width: 48px; height: 48px; font-size: 1.25rem; } }
 
     .stat-icon.blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
     .stat-icon.green { background: rgba(16, 185, 129, 0.15); color: var(--success-light); }
@@ -309,60 +271,17 @@
     .stat-icon.orange { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
 
     .stat-content { flex: 1; min-width: 0; }
-    .stat-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      font-weight: 500;
-      margin-bottom: 0.125rem;
-    }
+    .stat-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; margin-bottom: 0.125rem; }
+    @media (min-width: 768px) { .stat-label { font-size: 0.875rem; margin-bottom: 0.25rem; } }
 
-    @media (min-width: 768px) {
-      .stat-label {
-        font-size: 0.875rem;
-        margin-bottom: 0.25rem;
-      }
-    }
+    .stat-value { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; line-height: 1.2; }
+    @media (min-width: 768px) { .stat-value { font-size: 1.875rem; } }
 
-    .stat-value {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--text-primary);
-      letter-spacing: -0.02em;
-      line-height: 1.2;
-    }
+    .content-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+    @media (min-width: 1200px) { .content-grid { grid-template-columns: 420px 1fr; gap: 1.5rem; } }
 
-    @media (min-width: 768px) {
-      .stat-value {
-        font-size: 1.875rem;
-      }
-    }
-
-    .content-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-
-    @media (min-width: 1200px) {
-      .content-grid {
-        grid-template-columns: 420px 1fr;
-        gap: 1.5rem;
-      }
-    }
-
-    .glass-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      transition: all var(--transition);
-    }
-
-    @media (min-width: 768px) {
-      .glass-card {
-        border-radius: var(--radius-xl);
-      }
-    }
+    .glass-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); overflow: hidden; transition: all var(--transition); }
+    @media (min-width: 768px) { .glass-card { border-radius: var(--radius-xl); } }
 
     .card-header {
       padding: 1rem;
@@ -373,29 +292,10 @@
       flex-wrap: wrap;
       gap: 0.5rem;
     }
+    @media (min-width: 768px) { .card-header { padding: 1.25rem 1.5rem; } }
 
-    @media (min-width: 768px) {
-      .card-header {
-        padding: 1.25rem 1.5rem;
-      }
-    }
-
-    .card-header-title {
-      font-weight: 700;
-      font-size: 0.9375rem;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    @media (min-width: 768px) {
-      .card-header-title {
-        font-size: 1rem;
-        gap: 0.75rem;
-      }
-    }
-
+    .card-header-title { font-weight: 700; font-size: 0.9375rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; }
+    @media (min-width: 768px) { .card-header-title { font-size: 1rem; gap: 0.75rem; } }
     .card-header-title i { color: var(--primary-light); }
 
     .badge-soft {
@@ -407,21 +307,10 @@
       color: var(--primary-light);
       border: 1px solid rgba(99, 102, 241, 0.2);
     }
-
-    @media (min-width: 768px) {
-      .badge-soft {
-        font-size: 0.75rem;
-        padding: 0.375rem 0.875rem;
-      }
-    }
+    @media (min-width: 768px) { .badge-soft { font-size: 0.75rem; padding: 0.375rem 0.875rem; } }
 
     .card-body { padding: 1rem; }
-
-    @media (min-width: 768px) {
-      .card-body {
-        padding: 1.5rem;
-      }
-    }
+    @media (min-width: 768px) { .card-body { padding: 1.5rem; } }
 
     .scanner-wrapper {
       position: relative;
@@ -431,13 +320,7 @@
       aspect-ratio: 4/3;
       border: 1px solid var(--border-default);
     }
-
-    @media (min-width: 768px) {
-      .scanner-wrapper {
-        border-radius: var(--radius-lg);
-      }
-    }
-
+    @media (min-width: 768px) { .scanner-wrapper { border-radius: var(--radius-lg); } }
     #reader { width: 100%; height: 100%; object-fit: cover; }
 
     .scanner-overlay {
@@ -449,42 +332,12 @@
       justify-content: center;
     }
 
-    .scan-frame {
-      width: 160px;
-      height: 160px;
-      position: relative;
-    }
+    .scan-frame { width: 160px; height: 160px; position: relative; }
+    @media (min-width: 576px) { .scan-frame { width: 200px; height: 200px; } }
+    @media (min-width: 768px) { .scan-frame { width: 240px; height: 240px; } }
 
-    @media (min-width: 576px) {
-      .scan-frame {
-        width: 200px;
-        height: 200px;
-      }
-    }
-
-    @media (min-width: 768px) {
-      .scan-frame {
-        width: 240px;
-        height: 240px;
-      }
-    }
-
-    .scan-corner {
-      position: absolute;
-      width: 20px;
-      height: 20px;
-      border-color: var(--success);
-      border-style: solid;
-      border-width: 3px;
-      transition: all var(--transition);
-    }
-
-    @media (min-width: 768px) {
-      .scan-corner {
-        width: 24px;
-        height: 24px;
-      }
-    }
+    .scan-corner { position: absolute; width: 20px; height: 20px; border-color: var(--success); border-style: solid; border-width: 3px; transition: all var(--transition); }
+    @media (min-width: 768px) { .scan-corner { width: 24px; height: 24px; } }
 
     .scan-corner.tl { top: 0; left: 0; border-right: 0; border-bottom: 0; border-top-left-radius: 8px; }
     .scan-corner.tr { top: 0; right: 0; border-left: 0; border-bottom: 0; border-top-right-radius: 8px; }
@@ -508,10 +361,7 @@
       transition: opacity var(--transition);
     }
 
-    .scanning .scan-line {
-      opacity: 1;
-      animation: scan 2.5s linear infinite;
-    }
+    .scanning .scan-line { opacity: 1; animation: scan 2.5s linear infinite; }
 
     @keyframes scan {
       0% { top: 0; opacity: 0; }
@@ -533,53 +383,11 @@
       text-align: center;
       padding: 1rem;
     }
+    .scanner-placeholder i { font-size: 2rem; opacity: 0.3; }
+    @media (min-width: 768px) { .scanner-placeholder i { font-size: 3rem; } }
 
-    .scanner-placeholder i {
-      font-size: 2rem;
-      opacity: 0.3;
-    }
-
-    @media (min-width: 768px) {
-      .scanner-placeholder i {
-        font-size: 3rem;
-      }
-    }
-
-    .scanner-placeholder p {
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-
-    @media (min-width: 768px) {
-      .scanner-placeholder p {
-        font-size: 0.9375rem;
-      }
-    }
-
-    .scanner-placeholder small {
-      font-size: 0.75rem;
-      opacity: 0.7;
-    }
-
-    @media (min-width: 768px) {
-      .scanner-placeholder small {
-        font-size: 0.8125rem;
-      }
-    }
-
-    .controls-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 0.5rem;
-      margin: 1rem 0;
-    }
-
-    @media (min-width: 576px) {
-      .controls-grid {
-        grid-template-columns: 1fr 1fr;
-        gap: 0.75rem;
-      }
-    }
+    .controls-grid { display: grid; grid-template-columns: 1fr; gap: 0.5rem; margin: 1rem 0; }
+    @media (min-width: 576px) { .controls-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; } }
 
     .form-select-custom {
       background: var(--bg-secondary);
@@ -598,25 +406,10 @@
       background-size: 1rem;
       width: 100%;
     }
+    .form-select-custom:focus { outline: none; border-color: var(--primary); box-shadow: var(--shadow-glow); }
 
-    .form-select-custom:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: var(--shadow-glow);
-    }
-
-    .btn-group {
-      display: flex;
-      gap: 0.5rem;
-      flex-direction: column;
-    }
-
-    @media (min-width: 576px) {
-      .btn-group {
-        flex-direction: row;
-        gap: 0.75rem;
-      }
-    }
+    .btn-group { display: flex; gap: 0.5rem; flex-direction: column; }
+    @media (min-width: 576px) { .btn-group { flex-direction: row; gap: 0.75rem; } }
 
     .btn {
       font-weight: 600;
@@ -632,42 +425,18 @@
       gap: 0.5rem;
       width: 100%;
     }
+    @media (min-width: 576px) { .btn { padding: 0.75rem 1.25rem; width: auto; } }
 
-    @media (min-width: 576px) {
-      .btn {
-        padding: 0.75rem 1.25rem;
-        width: auto;
-      }
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-      flex: 1;
-    }
-
+    .btn-primary { background: var(--primary); color: white; flex: 1; }
     .btn-primary:hover:not(:disabled) {
       background: var(--primary-dark);
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
     }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .btn-primary:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .btn-secondary {
-      background: var(--bg-tertiary);
-      color: var(--text-secondary);
-      border: 1px solid var(--border-subtle);
-    }
-
-    .btn-secondary:hover:not(:disabled) {
-      background: var(--bg-secondary);
-      color: var(--text-primary);
-      border-color: var(--border-default);
-    }
+    .btn-secondary { background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
+    .btn-secondary:hover:not(:disabled) { background: var(--bg-secondary); color: var(--text-primary); border-color: var(--border-default); }
 
     .scan-flash {
       position: absolute;
@@ -678,7 +447,6 @@
       transition: opacity 150ms ease;
       z-index: 10;
     }
-
     .scan-flash.on { opacity: 1; }
 
     .table-container {
@@ -691,13 +459,7 @@
       height: auto;
       max-height: none;
     }
-
-    @media (min-width: 1200px) {
-      .table-container {
-        border-radius: var(--radius-xl);
-        max-height: calc(100vh - 200px);
-      }
-    }
+    @media (min-width: 1200px) { .table-container { border-radius: var(--radius-xl); max-height: calc(100vh - 200px); } }
 
     .table-header {
       padding: 1rem;
@@ -707,80 +469,22 @@
       gap: 0.75rem;
       flex-shrink: 0;
     }
-
     @media (min-width: 576px) {
-      .table-header {
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-      }
+      .table-header { flex-direction: row; align-items: center; justify-content: space-between; gap: 1rem; }
     }
+    @media (min-width: 768px) { .table-header { padding: 1.25rem 1.5rem; } }
 
-    @media (min-width: 768px) {
-      .table-header {
-        padding: 1.25rem 1.5rem;
-      }
-    }
+    .status-pill { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); }
+    .status-dot.scanning { background: var(--warning); box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-    .status-pill {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-size: 0.8125rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-    }
+    .table-responsive { flex: 1; overflow: auto; max-height: 400px; }
+    @media (min-width: 1200px) { .table-responsive { max-height: none; } }
 
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--success);
-      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-    }
-
-    .status-dot.scanning {
-      background: var(--warning);
-      box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.5; }
-    }
-
-    .table-responsive {
-      flex: 1;
-      overflow: auto;
-      max-height: 400px;
-    }
-
-    @media (min-width: 1200px) {
-      .table-responsive {
-        max-height: none;
-      }
-    }
-
-    .custom-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.8125rem;
-      min-width: 600px;
-    }
-
-    @media (min-width: 768px) {
-      .custom-table {
-        font-size: 0.875rem;
-      }
-    }
-
-    .custom-table thead {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
+    .custom-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; min-width: 600px; }
+    @media (min-width: 768px) { .custom-table { font-size: 0.875rem; } }
+    .custom-table thead { position: sticky; top: 0; z-index: 10; }
 
     .custom-table th {
       background: var(--bg-secondary);
@@ -794,57 +498,18 @@
       border-bottom: 1px solid var(--border-subtle);
       white-space: nowrap;
     }
+    @media (min-width: 768px) { .custom-table th { font-size: 0.6875rem; padding: 1rem 1.25rem; } }
 
-    @media (min-width: 768px) {
-      .custom-table th {
-        font-size: 0.6875rem;
-        padding: 1rem 1.25rem;
-      }
-    }
+    .custom-table td { padding: 0.75rem 0.75rem; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); vertical-align: middle; }
+    @media (min-width: 768px) { .custom-table td { padding: 1rem 1.25rem; } }
 
-    .custom-table td {
-      padding: 0.75rem 0.75rem;
-      border-bottom: 1px solid var(--border-subtle);
-      color: var(--text-secondary);
-      vertical-align: middle;
-    }
+    .custom-table tbody tr { transition: background var(--transition-fast); }
+    .custom-table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
+    .custom-table tbody tr.latest-entry { background: rgba(79, 70, 229, 0.1); animation: highlightNew 2s ease-out; }
+    @keyframes highlightNew { 0% { background: rgba(79, 70, 229, 0.3); } 100% { background: rgba(79, 70, 229, 0.1); } }
 
-    @media (min-width: 768px) {
-      .custom-table td {
-        padding: 1rem 1.25rem;
-      }
-    }
-
-    .custom-table tbody tr {
-      transition: background var(--transition-fast);
-    }
-
-    .custom-table tbody tr:hover {
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    /* Latest entry highlight */
-    .custom-table tbody tr.latest-entry {
-      background: rgba(79, 70, 229, 0.1);
-      animation: highlightNew 2s ease-out;
-    }
-
-    @keyframes highlightNew {
-      0% { background: rgba(79, 70, 229, 0.3); }
-      100% { background: rgba(79, 70, 229, 0.1); }
-    }
-
-    .student-cell {
-      display: flex;
-      align-items: center;
-      gap: 0.625rem;
-    }
-
-    @media (min-width: 768px) {
-      .student-cell {
-        gap: 0.875rem;
-      }
-    }
+    .student-cell { display: flex; align-items: center; gap: 0.625rem; }
+    @media (min-width: 768px) { .student-cell { gap: 0.875rem; } }
 
     .avatar {
       width: 32px;
@@ -859,60 +524,16 @@
       font-size: 0.75rem;
       flex-shrink: 0;
     }
+    @media (min-width: 768px) { .avatar { width: 40px; height: 40px; font-size: 0.875rem; } }
 
-    @media (min-width: 768px) {
-      .avatar {
-        width: 40px;
-        height: 40px;
-        font-size: 0.875rem;
-      }
-    }
+    .student-info { display: flex; flex-direction: column; min-width: 0; }
+    .student-name { font-weight: 600; color: var(--text-primary); font-size: 0.8125rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    @media (min-width: 768px) { .student-name { font-size: 0.9375rem; } }
+    .student-meta { font-size: 0.6875rem; color: var(--text-muted); }
+    @media (min-width: 768px) { .student-meta { font-size: 0.8125rem; } }
 
-    .student-info {
-      display: flex;
-      flex-direction: column;
-      min-width: 0;
-    }
-
-    .student-name {
-      font-weight: 600;
-      color: var(--text-primary);
-      font-size: 0.8125rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    @media (min-width: 768px) {
-      .student-name {
-        font-size: 0.9375rem;
-      }
-    }
-
-    .student-meta {
-      font-size: 0.6875rem;
-      color: var(--text-muted);
-    }
-
-    @media (min-width: 768px) {
-      .student-meta {
-        font-size: 0.8125rem;
-      }
-    }
-
-    .time-cell {
-      font-family: 'SF Mono', monospace;
-      font-weight: 500;
-      color: var(--text-secondary);
-      white-space: nowrap;
-    }
-
-    .hours-cell {
-      font-weight: 700;
-      color: var(--success-light);
-      text-align: right;
-      white-space: nowrap;
-    }
+    .time-cell { font-family: 'SF Mono', monospace; font-weight: 500; color: var(--text-secondary); white-space: nowrap; }
+    .hours-cell { font-weight: 700; color: var(--success-light); text-align: right; white-space: nowrap; }
 
     .table-footer {
       padding: 0.75rem 1rem;
@@ -925,13 +546,7 @@
       gap: 0.5rem;
       flex-shrink: 0;
     }
-
-    @media (min-width: 768px) {
-      .table-footer {
-        padding: 1rem 1.5rem;
-        font-size: 0.875rem;
-      }
-    }
+    @media (min-width: 768px) { .table-footer { padding: 1rem 1.5rem; font-size: 0.875rem; } }
 
     .toast-container {
       position: fixed;
@@ -944,22 +559,8 @@
       gap: 0.5rem;
       pointer-events: none;
     }
-
-    @media (min-width: 576px) {
-      .toast-container {
-        bottom: 1.5rem;
-        right: 1.5rem;
-        left: auto;
-      }
-    }
-
-    @media (min-width: 768px) {
-      .toast-container {
-        bottom: 2rem;
-        right: 2rem;
-        gap: 0.75rem;
-      }
-    }
+    @media (min-width: 576px) { .toast-container { bottom: 1.5rem; right: 1.5rem; left: auto; } }
+    @media (min-width: 768px) { .toast-container { bottom: 2rem; right: 2rem; gap: 0.75rem; } }
 
     .toast {
       background: var(--bg-secondary);
@@ -975,74 +576,24 @@
       animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       backdrop-filter: blur(12px);
     }
-
-    @media (min-width: 576px) {
-      .toast {
-        padding: 1rem 1.25rem;
-        gap: 0.875rem;
-        min-width: 300px;
-        max-width: 400px;
-      }
-    }
-
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(20px) scale(0.98); }
-      to { opacity: 1; transform: translateX(0) scale(1); }
-    }
+    @media (min-width: 576px) { .toast { padding: 1rem 1.25rem; gap: 0.875rem; min-width: 300px; max-width: 400px; } }
+    @keyframes slideIn { from { opacity: 0; transform: translateX(20px) scale(0.98); } to { opacity: 1; transform: translateX(0) scale(1); } }
 
     .toast.success { border-left-color: var(--success); }
     .toast.error { border-left-color: var(--danger); }
     .toast.warning { border-left-color: var(--warning); }
 
-    .toast-icon {
-      width: 32px;
-      height: 32px;
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.875rem;
-      flex-shrink: 0;
-    }
-
-    @media (min-width: 576px) {
-      .toast-icon {
-        width: 36px;
-        height: 36px;
-        font-size: 1rem;
-      }
-    }
-
+    .toast-icon { width: 32px; height: 32px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 0.875rem; flex-shrink: 0; }
+    @media (min-width: 576px) { .toast-icon { width: 36px; height: 36px; font-size: 1rem; } }
     .toast.success .toast-icon { background: rgba(16, 185, 129, 0.15); color: var(--success); }
     .toast.error .toast-icon { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
     .toast.warning .toast-icon { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
 
     .toast-content { flex: 1; min-width: 0; }
-
-    .toast-title {
-      font-weight: 600;
-      color: var(--text-primary);
-      font-size: 0.875rem;
-      margin-bottom: 0.125rem;
-    }
-
-    @media (min-width: 576px) {
-      .toast-title {
-        font-size: 0.9375rem;
-      }
-    }
-
-    .toast-message {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-
-    @media (min-width: 576px) {
-      .toast-message {
-        font-size: 0.8125rem;
-      }
-    }
+    .toast-title { font-weight: 600; color: var(--text-primary); font-size: 0.875rem; margin-bottom: 0.125rem; }
+    @media (min-width: 576px) { .toast-title { font-size: 0.9375rem; } }
+    .toast-message { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
+    @media (min-width: 576px) { .toast-message { font-size: 0.8125rem; } }
 
     ::-webkit-scrollbar { width: 4px; height: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
@@ -1068,57 +619,99 @@
       border-radius: var(--radius);
       border: 1px solid var(--border-subtle);
     }
+    @media (min-width: 768px) { .info-tip { font-size: 0.8125rem; margin-top: 1rem; padding: 0.75rem; align-items: center; } }
+    .info-tip i { color: var(--primary-light); flex-shrink: 0; margin-top: 0.125rem; }
+    @media (min-width: 768px) { .info-tip i { margin-top: 0; } }
 
-    @media (min-width: 768px) {
-      .info-tip {
-        font-size: 0.8125rem;
-        margin-top: 1rem;
-        padding: 0.75rem;
-        align-items: center;
-      }
-    }
-
-    .info-tip i {
-      color: var(--primary-light);
-      flex-shrink: 0;
-      margin-top: 0.125rem;
-    }
-
-    @media (min-width: 768px) {
-      .info-tip i {
-        margin-top: 0;
-      }
-    }
-
-    /* Mobile-specific optimizations */
     @media (max-width: 575px) {
-      .table-header .d-flex.align-items-center.gap-2 {
-        width: 100%;
-        justify-content: space-between;
-      }
-
-      #liveSessionFilter {
-        flex: 1;
-        min-width: 0;
-      }
+      .table-header .d-flex.align-items-center.gap-2 { width: 100%; justify-content: space-between; }
+      #liveSessionFilter { flex: 1; min-width: 0; }
     }
 
-    /* Touch-friendly improvements */
     @media (hover: none) {
-      .btn:active {
-        transform: scale(0.98);
-      }
-
-      .stat-card:active {
-        transform: scale(0.99);
-      }
+      .btn:active { transform: scale(0.98); }
+      .stat-card:active { transform: scale(0.99); }
     }
 
-    /* Prevent text selection on mobile */
-    .stat-card, .btn, .nav-link {
-      user-select: none;
-      -webkit-user-select: none;
+    .stat-card, .btn, .nav-link { user-select: none; -webkit-user-select: none; }
+
+    /* ===================== PIN MODAL (NEW) ===================== */
+    .pin-modal .modal-content{
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      backdrop-filter: blur(18px) saturate(160%);
+      overflow: hidden;
     }
+    .pin-modal .modal-header{
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding: 1rem 1.25rem;
+    }
+    .pin-modal .modal-title{
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      font-size: 1rem;
+      display:flex;
+      align-items:center;
+      gap:.6rem;
+    }
+    .pin-chip{
+      font-size: .7rem;
+      font-weight: 800;
+      padding: .25rem .6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(99,102,241,0.25);
+      background: rgba(99,102,241,0.12);
+      color: rgba(199,210,254,1);
+    }
+    .pin-modal .modal-body{ padding: 1.25rem; }
+    .pin-help{ color: var(--text-muted); font-size: .85rem; margin-bottom: .85rem; }
+    .pin-input{
+      width: 100%;
+      background: rgba(2,6,23,0.6);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--text-primary);
+      border-radius: var(--radius);
+      padding: .85rem 1rem;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: .25em;
+      text-align: center;
+      outline: none;
+    }
+    .pin-input:focus{
+      border-color: rgba(99,102,241,0.6);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.18);
+    }
+    .pin-error{
+      display:none;
+      margin-top: .6rem;
+      color: #fca5a5;
+      font-weight: 700;
+      font-size: .85rem;
+    }
+    .pin-modal .modal-footer{
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: .9rem 1.25rem;
+      gap: .5rem;
+    }
+    .pin-btn{
+      flex:1;
+      border-radius: var(--radius);
+      padding: .75rem 1rem;
+      font-weight: 800;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.06);
+      color: var(--text-primary);
+      transition: transform var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+    }
+    .pin-btn:hover{ background: rgba(255,255,255,0.10); border-color: rgba(99,102,241,0.35); transform: translateY(-1px); }
+    .pin-btn.primary{
+      background: rgba(79,70,229,0.9);
+      border-color: rgba(79,70,229,0.9);
+    }
+    .pin-btn.primary:hover{ background: rgba(67,56,202,1); border-color: rgba(67,56,202,1); }
   </style>
 </head>
 
@@ -1148,7 +741,10 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="https://script.google.com/macros/s/AKfycbyLsU64MflVmxrwu7JqXWyGwhLQurraonO4bS3kj7Lulwx2OD_-hakoajbPatjBINehMQ/exec?page=register" target="_blank" rel="noopener">
+            <!-- NEW: ID to intercept + PIN -->
+            <a class="nav-link" id="registrationLink"
+              href="https://script.google.com/macros/s/AKfycbyLsU64MflVmxrwu7JqXWyGwhLQurraonO4bS3kj7Lulwx2OD_-hakoajbPatjBINehMQ/exec?page=register"
+              target="_blank" rel="noopener">
               <i class="fa-solid fa-user-plus me-2"></i>Registration
             </a>
           </li>
@@ -1169,7 +765,6 @@
     <div class="tab-content">
       <div class="tab-pane fade show active" id="scanner">
 
-        <!-- Stats Grid -->
         <div class="stats-grid">
           <div class="stat-card">
             <div class="stat-icon blue"><i class="fa-solid fa-users"></i></div>
@@ -1201,9 +796,7 @@
           </div>
         </div>
 
-        <!-- Main Content Grid -->
         <div class="content-grid">
-          <!-- Scanner Card -->
           <div class="glass-card">
             <div class="card-header">
               <div class="card-header-title">
@@ -1260,7 +853,6 @@
             </div>
           </div>
 
-          <!-- Live Activity Table -->
           <div class="table-container">
             <div class="table-header">
               <div class="card-header-title" style="border: none; padding: 0;">
@@ -1313,6 +905,31 @@
     </div>
   </div>
 
+  <!-- ================= PIN MODAL ================= -->
+  <div class="modal fade pin-modal" id="pinModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title">
+            <i class="fa-solid fa-shield-halved"></i>
+            Admin PIN Required
+            <span class="pin-chip" id="pinChip">Time In</span>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="pin-help" id="pinHelp">Enter admin PIN to continue.</div>
+          <input id="pinInput" class="pin-input" type="password" inputmode="numeric" maxlength="4" placeholder="• • • •" />
+          <div class="pin-error" id="pinError">Incorrect PIN. Try again.</div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="pin-btn" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="pin-btn primary" id="pinOk">Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="toast-container" id="toastContainer"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1322,6 +939,9 @@
     const API_URL = "https://script.google.com/macros/s/AKfycbxy75tYNOZPKpX9Axd0RqHOoxjLMW3TzhBZQqEYan1h_lYLNfQaTZ2wG1CrBjlgV0BD3g/exec";
     const AUTO_STOP_ON_SUCCESS = true;
     const SCAN_DEBOUNCE_MS = 2500;
+
+    // Admin PIN (as requested)
+    const ADMIN_PIN = "0143";
 
     /* Voice + Sound Settings */
     const VOICE_ENABLED = true;
@@ -1336,9 +956,16 @@
       lastScan: null,
       lastScanTime: 0,
       currentSession: 'morning',
+      prevSession: 'morning',
       busy: false,
       todaysLogs: [],
-      liveSessionFilter: 'auto'
+      liveSessionFilter: 'auto',
+
+      // PIN flags:
+      timeInPinGranted: false, // granted for current "Time In" scanning cycle
+      pinModal: null,
+      pinResolve: null,
+      pinPurpose: 'timein' // 'timein' | 'registration'
     };
 
     /* ===================== DOM ===================== */
@@ -1361,6 +988,16 @@
       scannerPlaceholder: document.getElementById('scannerPlaceholder'),
       liveWrapper: document.getElementById('liveWrapper'),
       liveSessionFilter: document.getElementById('liveSessionFilter'),
+      registrationLink: document.getElementById('registrationLink'),
+
+      // PIN modal
+      pinModalEl: document.getElementById('pinModal'),
+      pinChip: document.getElementById('pinChip'),
+      pinHelp: document.getElementById('pinHelp'),
+      pinInput: document.getElementById('pinInput'),
+      pinError: document.getElementById('pinError'),
+      pinOk: document.getElementById('pinOk'),
+
       stats: {
         total: document.getElementById('statTotal'),
         checkedIn: document.getElementById('statCheckedIn'),
@@ -1392,7 +1029,7 @@
       }, duration);
     }
 
-    /* ===================== SCANNER FX ===================== */
+    /* ===================== FX ===================== */
     function flashGreen(){
       if(!el.scanFlash) return;
       el.scanFlash.classList.add('on');
@@ -1407,7 +1044,7 @@
       }catch(e){}
     }
 
-    function beep(duration=100, freq=880, vol=0.06){
+    function beep(duration=90, freq=880, vol=0.06){
       try{
         audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
         const o = audioCtx.createOscillator();
@@ -1428,9 +1065,8 @@
       setTimeout(() => beep(80, 1180, 0.05), 90);
     }
 
-    /* ===================== AI VOICE ===================== */
+    /* ===================== VOICE ===================== */
     let preferredVoice = null;
-
     function initVoice(){
       if(!VOICE_ENABLED) return;
       if(!('speechSynthesis' in window)) return;
@@ -1440,10 +1076,8 @@
         preferredVoice =
           voices.find(v => /google/i.test(v.name) && /en/i.test(v.lang)) ||
           voices.find(v => /en/i.test(v.lang)) ||
-          voices[0] ||
-          null;
+          voices[0] || null;
       };
-
       pick();
       window.speechSynthesis.onvoiceschanged = pick;
     }
@@ -1451,15 +1085,11 @@
     function speak(text){
       if(!VOICE_ENABLED) return;
       if(!('speechSynthesis' in window)) return;
-
       try{
         window.speechSynthesis.cancel();
         const u = new SpeechSynthesisUtterance(text);
         u.lang = VOICE_LANG;
         if(preferredVoice) u.voice = preferredVoice;
-        u.rate = 1.0;
-        u.pitch = 1.0;
-        u.volume = 1.0;
         window.speechSynthesis.speak(u);
       }catch(e){}
     }
@@ -1477,10 +1107,7 @@
     /* ===================== DATE/TIME ===================== */
     function todayISO(){
       const d = new Date();
-      const yyyy = d.getFullYear();
-      const mm = String(d.getMonth()+1).padStart(2,'0');
-      const dd = String(d.getDate()).padStart(2,'0');
-      return `${yyyy}-${mm}-${dd}`;
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     }
 
     function nowLocalTime12(){
@@ -1497,12 +1124,69 @@
       return s;
     }
 
-    /* ===================== LIVE VIEW PREF ===================== */
+    /* ===================== PIN MODAL (CORE) ===================== */
+    function initPinModal(){
+      state.pinModal = new bootstrap.Modal(el.pinModalEl, { backdrop:'static', keyboard:false });
+
+      el.pinInput.addEventListener('keydown', (e) => {
+        if(e.key === 'Enter'){ e.preventDefault(); el.pinOk.click(); }
+      });
+
+      el.pinOk.addEventListener('click', () => {
+        const pin = String(el.pinInput.value || '').trim();
+        if(pin !== ADMIN_PIN){
+          el.pinError.style.display = 'block';
+          beep(90, 220, 0.08);
+          el.pinInput.focus();
+          return;
+        }
+        el.pinError.style.display = 'none';
+        el.pinInput.value = '';
+        state.pinModal.hide();
+        if(state.pinResolve){ const r = state.pinResolve; state.pinResolve = null; r(true); }
+      });
+
+      el.pinModalEl.addEventListener('hidden.bs.modal', () => {
+        el.pinError.style.display = 'none';
+        el.pinInput.value = '';
+        if(state.pinResolve){ const r = state.pinResolve; state.pinResolve = null; r(false); }
+      });
+    }
+
+    function askAdminPin(purpose, labelText){
+      state.pinPurpose = purpose;
+
+      if(purpose === 'registration'){
+        el.pinChip.textContent = 'Registration';
+        el.pinHelp.textContent = 'Enter admin PIN to open the Registration page.';
+      } else {
+        el.pinChip.textContent = 'Time In';
+        el.pinHelp.textContent = `Enter admin PIN to allow ${labelText || 'Time In'} scanning.`;
+      }
+
+      el.pinError.style.display = 'none';
+      el.pinInput.value = '';
+      state.pinModal.show();
+      setTimeout(() => el.pinInput.focus(), 150);
+
+      return new Promise(resolve => { state.pinResolve = resolve; });
+    }
+
+    function isTimeInLogType(log_type){
+      return log_type === 'am_in' || log_type === 'pm_in';
+    }
+
+    // Only ask PIN on Start if selected mode is explicitly a Time In
+    function startModeNeedsPin(){
+      const mode = el.scanMode.value || 'auto';
+      return (mode === 'am_in' || mode === 'pm_in');
+    }
+
+    /* ===================== LIVE PREF ===================== */
     function loadLiveSessionPref(){
       try { return localStorage.getItem('liveSessionFilter') || 'auto'; }
       catch(e){ return 'auto'; }
     }
-
     function saveLiveSessionPref(v){
       try { localStorage.setItem('liveSessionFilter', v); } catch(e){}
     }
@@ -1518,35 +1202,12 @@
       if(mode === 'pm') el.liveWrapper.classList.add('show-pm');
     }
 
-    function updateClock(){
-      const now = new Date();
-      const h = now.getHours();
-
-      el.clockTime.textContent = now.toLocaleTimeString('en-US', { hour12:true });
-      el.clockDate.textContent = now.toLocaleDateString('en-US', {
-        weekday:'short',
-        month:'short',
-        day:'numeric'
-      });
-
-      state.currentSession = h < 12 ? 'morning' : 'afternoon';
-
-      const isMorning = state.currentSession === 'morning';
-      el.sessionBadge.textContent = isMorning ? 'Morning' : 'Afternoon';
-      el.sessionBadge.classList.toggle('afternoon', !isMorning);
-
-      renderScanModeOptions();
-      updateLiveColumns();
-    }
-    setInterval(updateClock, 1000);
-
     function renderScanModeOptions(){
       const isAM = state.currentSession === 'morning';
       const current = el.scanMode.value || 'auto';
 
       el.scanMode.innerHTML = '';
       el.scanMode.appendChild(new Option('Auto Detect', 'auto'));
-
       if (isAM) {
         el.scanMode.appendChild(new Option('AM Time In', 'am_in'));
         el.scanMode.appendChild(new Option('AM Time Out', 'am_out'));
@@ -1560,8 +1221,34 @@
       el.scanModeBadge.textContent = el.scanMode.options[el.scanMode.selectedIndex].text;
     }
 
+    function updateClock(){
+      const now = new Date();
+      const h = now.getHours();
+
+      el.clockTime.textContent = now.toLocaleTimeString('en-US', { hour12:true });
+      el.clockDate.textContent = now.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
+
+      state.prevSession = state.currentSession;
+      state.currentSession = h < 12 ? 'morning' : 'afternoon';
+
+      const isMorning = state.currentSession === 'morning';
+      el.sessionBadge.textContent = isMorning ? 'Morning' : 'Afternoon';
+      el.sessionBadge.classList.toggle('afternoon', !isMorning);
+
+      // If session changed (AM -> PM), require PIN again for PM Time In
+      if(state.prevSession !== state.currentSession){
+        state.timeInPinGranted = false;
+      }
+
+      renderScanModeOptions();
+      updateLiveColumns();
+    }
+    setInterval(updateClock, 1000);
+
     el.scanMode.addEventListener('change', () => {
       el.scanModeBadge.textContent = el.scanMode.options[el.scanMode.selectedIndex].text;
+      // Switching modes resets time-in PIN grant (safer)
+      state.timeInPinGranted = false;
     });
 
     if (el.liveSessionFilter) {
@@ -1575,7 +1262,7 @@
       });
     }
 
-    /* ===================== CALCULATIONS ===================== */
+    /* ===================== CALCS ===================== */
     function parseTimeToMinutes(t){
       t = String(t||'').trim();
       if(!t || t === '-') return null;
@@ -1597,17 +1284,12 @@
       return mins ? (mins/60).toFixed(2) : '';
     }
 
-    /* ===================== LOAD DATA ===================== */
+    /* ===================== LOAD TABLE ===================== */
     async function loadTables(date = todayISO()){
       try{
-        el.lastScanInfo.innerHTML = `
-          <i class="fa-solid fa-circle-notch fa-spin"></i>
-          <span>Loading logs for ${date}...</span>
-        `;
-
+        el.lastScanInfo.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Loading logs for ${date}...</span>`;
         const resp = await api({ action:'get_logs', date });
         el.liveLogBody.innerHTML = '';
-
         if(!resp.success) throw new Error(resp.message || 'get_logs failed');
 
         const logs = resp.logs || [];
@@ -1617,7 +1299,6 @@
           ? `<i class="fa-solid fa-check text-success"></i><span>Loaded ${logs.length} record(s)</span>`
           : `<i class="fa-solid fa-inbox"></i><span>No records yet for today</span>`;
 
-        // Sort by latest time entry first
         const sortedLogs = logs.slice().sort((a, b) => {
           const getLatestTime = (r) => {
             const times = [r.am_in, r.am_out, r.pm_in, r.pm_out].filter(t => t && t !== '-');
@@ -1662,10 +1343,7 @@
         updateLiveColumns();
       }catch(err){
         console.error(err);
-        el.lastScanInfo.innerHTML = `
-          <i class="fa-solid fa-triangle-exclamation text-danger"></i>
-          <span>Failed to load logs</span>
-        `;
+        el.lastScanInfo.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-danger"></i><span>Failed to load logs</span>`;
         showToast('Failed to load logs', 'error', 3000);
       }
     }
@@ -1736,6 +1414,17 @@
         return;
       }
 
+      // PIN on Start Scanner IF mode is AM Time In or PM Time In
+      if(startModeNeedsPin() && !state.timeInPinGranted){
+        const label = el.scanMode.options[el.scanMode.selectedIndex]?.text || 'Time In';
+        const ok = await askAdminPin('timein', label);
+        if(!ok){
+          showToast('Admin PIN required for Time In.', 'warning', 2500);
+          return;
+        }
+        state.timeInPinGranted = true;
+      }
+
       try{
         if(!state.scanner) state.scanner = new Html5Qrcode("reader");
 
@@ -1789,6 +1478,9 @@
         el.scannerPlaceholder.style.display = 'flex';
         el.systemStatus.classList.remove('scanning');
         el.systemStatusText.textContent = 'Online';
+
+        // Reset PIN grant when scanner stops
+        state.timeInPinGranted = false;
       }).catch(console.error);
     }
 
@@ -1864,7 +1556,10 @@
         speak("Successfully scanned");
 
         const student = found.student;
+
+        // Ensure we have the latest table to determine auto log type accurately
         await loadTables(date);
+
         const existing = findExistingRow(student.student_id, date);
 
         let log_type = el.scanMode.value;
@@ -1875,6 +1570,17 @@
             showToast("Session already completed", 'warning', 2500);
             return;
           }
+        }
+
+        // PIN ONLY for Time In (AM In / PM In). Time Out has NO PIN.
+        if(isTimeInLogType(log_type) && !state.timeInPinGranted){
+          const label = log_type.toUpperCase().replace('_',' ');
+          const ok = await askAdminPin('timein', label);
+          if(!ok){
+            showToast('Admin PIN required for Time In.', 'warning', 2500);
+            return;
+          }
+          state.timeInPinGranted = true;
         }
 
         const time = nowLocalTime12();
@@ -1910,12 +1616,32 @@
       }
     }
 
+    /* ===================== REGISTRATION PIN (NEW) ===================== */
+    function setupRegistrationGate(){
+      if(!el.registrationLink) return;
+
+      el.registrationLink.addEventListener('click', async (e) => {
+        e.preventDefault();
+
+        const ok = await askAdminPin('registration', 'Registration');
+        if(!ok){
+          showToast('Admin PIN required to open Registration.', 'warning', 2500);
+          return;
+        }
+
+        const url = el.registrationLink.getAttribute('href');
+        window.open(url, '_blank', 'noopener');
+      }, { passive:false });
+    }
+
     /* ===================== INIT ===================== */
     el.btnStart.addEventListener('click', startScanner);
     el.btnStop.addEventListener('click', stopScanner);
 
     document.addEventListener('DOMContentLoaded', async () => {
       initVoice();
+      initPinModal();
+      setupRegistrationGate();
 
       const pref = loadLiveSessionPref();
       state.liveSessionFilter = pref;
