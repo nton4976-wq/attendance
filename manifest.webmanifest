@@ -1,8 +1,8 @@
 {
   "name": "Smart Attendance",
   "short_name": "SmartAttendance",
-  "start_url": "/nton4976-wq/index.html",
-  "scope": "/nton4976-wq/",
+  "start_url": "/index.html",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0f172a",
   "theme_color": "#0b5d1e",
