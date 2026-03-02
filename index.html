@@ -13,9 +13,9 @@
   <style>
     :root {
       /* ===================== GREENFOREST THEME (ACCENTS ONLY) ===================== */
-      --primary: #0b5d1e;          /* forest green */
-      --primary-light: #22c55e;    /* bright leaf */
-      --primary-dark: #064117;     /* deep forest */
+      --primary: #0b5d1e;
+      --primary-light: #22c55e;
+      --primary-dark: #064117;
       --success: #16a34a;
       --success-light: #34d399;
       --warning: #f59e0b;
@@ -31,7 +31,6 @@
       --text-primary: #f8fafc;
       --text-secondary: #cbd5e1;
       --text-muted: #94a3b8;
-      --text-subtle: #64748b;
 
       --border-subtle: rgba(255, 255, 255, 0.06);
       --border-default: rgba(255, 255, 255, 0.1);
@@ -39,7 +38,6 @@
       --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
       --shadow-glow: 0 0 0 3px rgba(34, 197, 94, 0.16);
 
-      --radius-sm: 8px;
       --radius: 12px;
       --radius-lg: 16px;
       --radius-xl: 24px;
@@ -63,7 +61,7 @@
       touch-action: manipulation;
     }
 
-    /* Background stays same (do NOT tie to --primary so it doesn't change) */
+    /* Background stays same */
     body::before {
       content: '';
       position: fixed;
@@ -95,27 +93,30 @@
       top: 0;
       z-index: 1000;
     }
+
     .navbar-brand {
       font-weight: 800;
       font-size: 1.25rem;
       color: var(--text-primary);
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.75rem;
       letter-spacing: -0.02em;
       text-decoration: none;
     }
-    .navbar-brand i {
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.875rem;
-      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.22);
+
+    /* ✅ NEW LOGO STYLE (BIG + CLEAR) */
+    .brand-logo {
+      width: 46px;
+      height: 46px;
+      object-fit: contain;
+      flex-shrink: 0;
+      filter: drop-shadow(0 6px 18px rgba(34, 197, 94, 0.18));
     }
+    @media (min-width: 576px){
+      .brand-logo { width: 54px; height: 54px; }
+    }
+
     .navbar-toggler {
       border: 1px solid var(--border-subtle);
       padding: 0.5rem;
@@ -148,21 +149,10 @@
     @media (min-width: 992px) {
       .nav-meta { padding-left: 1.5rem; border-left: 1px solid var(--border-subtle); border-top: none; margin-top: 0; }
     }
-    #clockTime {
-      font-family: 'Plus Jakarta Sans', monospace;
-      font-weight: 700;
-      font-size: 1rem;
-      color: var(--text-primary);
-      letter-spacing: -0.02em;
-      line-height: 1.2;
-    }
-    #clockDate {
-      font-size: 0.6875rem;
-      color: var(--text-muted);
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
+
+    #clockTime { font-weight: 700; font-size: 1rem; color: var(--text-primary); }
+    #clockDate { font-size: 0.6875rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+
     .session-badge {
       font-size: 0.6875rem;
       font-weight: 700;
@@ -209,20 +199,16 @@
       align-items: flex-start;
       gap: 0.75rem;
       transition: all var(--transition);
-      position: relative;
-      overflow: hidden;
     }
     .stat-card:hover { transform: translateY(-2px); border-color: var(--border-default); box-shadow: var(--shadow-lg); }
 
     .stat-icon {
       width: 40px; height: 40px;
-      border-radius: var(--radius-sm);
+      border-radius: 10px;
       display: flex; align-items: center; justify-content: center;
       font-size: 1rem;
       flex-shrink: 0;
     }
-
-    /* Forest theme accent icons */
     .stat-icon.blue   { background: rgba(34, 197, 94, 0.12); color: var(--primary-light); }
     .stat-icon.green  { background: rgba(22, 163, 74, 0.14); color: var(--success-light); }
     .stat-icon.purple { background: rgba(11, 93, 30, 0.20); color: rgba(167, 243, 208, 1); }
@@ -230,23 +216,21 @@
 
     .stat-content { flex: 1; min-width: 0; }
     .stat-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; margin-bottom: 0.125rem; }
-    .stat-value { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; line-height: 1.2; }
+    .stat-value { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); }
 
-    /* Layout: do NOT stretch left; table adjusts only */
     .content-grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 1rem;
-      align-items: start;
+      align-items: start; /* table adjusts only */
     }
     @media (min-width: 1200px) { .content-grid { grid-template-columns: 420px 1fr; gap: 1.5rem; } }
 
-    .glass-card {
+    .glass-card, .table-container {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
       border-radius: var(--radius-xl);
       overflow: hidden;
-      transition: all var(--transition);
     }
 
     .card-header {
@@ -260,18 +244,17 @@
     }
 
     .card-header-title {
-      font-weight: 800;
-      font-size: 0.98rem;
-      color: var(--text-primary);
+      font-weight: 900;
+      font-size: 1rem;
       display: flex;
       align-items: center;
-      gap: 0.65rem;
+      gap: 0.6rem;
     }
     .card-header-title i { color: var(--primary-light); }
 
     .badge-soft {
       font-size: 0.75rem;
-      font-weight: 800;
+      font-weight: 900;
       padding: 0.35rem 0.9rem;
       border-radius: 999px;
       background: rgba(34, 197, 94, 0.10);
@@ -347,8 +330,8 @@
       color: var(--text-primary);
       border-radius: var(--radius);
       padding: 0.65rem 2.5rem 0.65rem 0.95rem;
-      font-size: 0.875rem;
-      font-weight: 650;
+      font-size: 0.9rem;
+      font-weight: 800;
       cursor: pointer;
       transition: all var(--transition-fast);
       appearance: none;
@@ -360,10 +343,10 @@
     }
     .form-select-custom:focus { outline: none; border-color: rgba(34,197,94,0.55); box-shadow: var(--shadow-glow); }
 
-    .btn-group { display: flex; gap: 0.75rem; flex-direction: row; }
+    .btn-group { display: flex; gap: 0.75rem; }
     .btn {
       font-weight: 900;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       padding: 0.85rem 1rem;
       border-radius: var(--radius);
       border: none;
@@ -375,27 +358,20 @@
       gap: 0.5rem;
       width: 100%;
     }
-
     .btn-primary {
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
       color: white;
       flex: 1;
       box-shadow: 0 12px 30px rgba(34,197,94,0.16);
     }
-    .btn-primary:hover:not(:disabled) {
-      filter: brightness(1.02);
-      transform: translateY(-1px);
-      box-shadow: 0 16px 38px rgba(34,197,94,0.22);
-    }
+    .btn-primary:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 16px 38px rgba(34,197,94,0.22); }
     .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-
     .btn-secondary {
       background: var(--bg-tertiary);
       color: var(--text-secondary);
       border: 1px solid rgba(255,255,255,0.10);
       flex: 0.75;
     }
-    .btn-secondary:hover:not(:disabled) { background: var(--bg-secondary); color: var(--text-primary); }
 
     .scan-flash {
       position: absolute;
@@ -408,32 +384,37 @@
     }
     .scan-flash.on { opacity: 1; }
 
-    /* RIGHT PANEL */
-    .table-container {
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-xl);
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      height: auto; /* JS sets height to match left */
-    }
-
+    /* ===================== LIVE TABLE HEADER (STACKED DROPDOWNS) ===================== */
     .table-header {
       padding: 1rem 1.25rem;
       border-bottom: 1px solid var(--border-subtle);
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.9rem;
       flex-shrink: 0;
     }
     @media (min-width: 576px) {
-      .table-header { flex-direction: row; align-items: center; justify-content: space-between; gap: 1rem; }
+      .table-header {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+    }
+
+    .table-title-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      min-width: 220px;
     }
 
     .status-pill {
-      display: flex; align-items: center; gap: 0.6rem;
-      font-size: 0.85rem; font-weight: 900;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.9rem;
+      font-weight: 900;
       color: var(--text-secondary);
       white-space: nowrap;
     }
@@ -449,10 +430,29 @@
     }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.55} }
 
-    .table-responsive { flex: 1; overflow: auto; }
-    .custom-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; min-width: 680px; }
-    .custom-table thead { position: sticky; top: 0; z-index: 10; }
+    /* ✅ stacked controls */
+    .table-controls {
+      display: flex;
+      flex-direction: column;       /* STACK */
+      gap: 0.65rem;
+      width: 100%;
+    }
+    @media (min-width: 576px){
+      .table-controls { width: 380px; align-items: stretch; }
+    }
+    .control-label {
+      font-size: 0.78rem;
+      font-weight: 900;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+      letter-spacing: 0.02em;
+      text-transform: none;
+    }
+    .control-block { width: 100%; }
 
+    .table-responsive { flex: 1; overflow: auto; }
+    .custom-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; min-width: 680px; }
+    .custom-table thead { position: sticky; top: 0; z-index: 10; }
     .custom-table th {
       background: var(--bg-secondary);
       color: var(--text-muted);
@@ -505,63 +505,7 @@
     #liveWrapper.show-am .col-pm,
     #liveWrapper.show-pm .col-am { display: none; }
 
-    .toast-container {
-      position: fixed;
-      bottom: 1rem;
-      right: 1rem;
-      left: 1rem;
-      z-index: 9999;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      pointer-events: none;
-    }
-    @media (min-width: 576px) { .toast-container { bottom: 1.5rem; right: 1.5rem; left: auto; } }
-
-    .toast {
-      background: var(--bg-secondary);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-left: 3px solid var(--primary-light);
-      border-radius: var(--radius);
-      padding: 1rem 1.1rem;
-      box-shadow: var(--shadow-lg), 0 0 0 1px rgba(0,0,0,0.2);
-      display: flex;
-      align-items: center;
-      gap: 0.875rem;
-      pointer-events: auto;
-      animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      backdrop-filter: blur(12px);
-      min-width: 280px;
-      max-width: 420px;
-    }
-    @keyframes slideIn { from { opacity: 0; transform: translateX(20px) scale(0.98); } to { opacity: 1; transform: translateX(0) scale(1); } }
-
-    .toast.success { border-left-color: var(--success); }
-    .toast.error { border-left-color: var(--danger); }
-    .toast.warning { border-left-color: var(--warning); }
-
-    .toast-icon { width: 36px; height: 36px; border-radius: 12px; display:flex; align-items:center; justify-content:center; }
-    .toast.success .toast-icon { background: rgba(22,163,74,0.15); color: var(--success); }
-    .toast.error .toast-icon { background: rgba(239,68,68,0.15); color: var(--danger); }
-    .toast.warning .toast-icon { background: rgba(245,158,11,0.15); color: var(--warning); }
-    .toast.info .toast-icon { background: rgba(34,197,94,0.12); color: var(--primary-light); }
-
-    .toast-title { font-weight: 900; color: var(--text-primary); font-size: 0.95rem; margin-bottom: 0.15rem; }
-    .toast-message { font-size: 0.85rem; color: var(--text-muted); line-height: 1.35; }
-
-    .info-tip {
-      display:flex; align-items:center; gap:.6rem;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 1rem;
-      padding: 0.85rem 0.9rem;
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: var(--radius);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-    }
-    .info-tip i { color: var(--primary-light); }
-
-    /* ===================== SUCCESS CENTER POPUP (NEW) ===================== */
+    /* ===================== CENTER POPUP ===================== */
     .center-pop {
       position: fixed;
       inset: 0;
@@ -604,27 +548,11 @@
       color: rgba(187,247,208,1);
       flex-shrink: 0;
     }
-    .center-pop-title {
-      font-weight: 900;
-      letter-spacing: -0.02em;
-      font-size: 1rem;
-      color: var(--text-primary);
-      line-height: 1.2;
-    }
-    .center-pop-body {
-      padding: 14px 16px 16px;
-      color: var(--text-secondary);
-      font-weight: 650;
-      font-size: 0.92rem;
-    }
-    .center-pop-sub {
-      margin-top: 4px;
-      color: var(--text-muted);
-      font-weight: 600;
-      font-size: 0.82rem;
-    }
+    .center-pop-title { font-weight: 900; font-size: 1rem; color: var(--text-primary); line-height: 1.2; }
+    .center-pop-body { padding: 14px 16px 16px; color: var(--text-secondary); font-weight: 650; font-size: 0.92rem; }
+    .center-pop-sub { margin-top: 4px; color: var(--text-muted); font-weight: 600; font-size: 0.82rem; }
 
-    /* PIN MODAL */
+    /* ===================== PIN MODAL ===================== */
     .pin-modal .modal-content{
       background: rgba(15, 23, 42, 0.92);
       border: 1px solid rgba(255,255,255,0.12);
@@ -636,7 +564,6 @@
     .pin-modal .modal-header{ border-bottom: 1px solid rgba(255,255,255,0.08); padding: 1rem 1.25rem; }
     .pin-modal .modal-title{
       font-weight: 900;
-      letter-spacing: -0.02em;
       font-size: 1rem;
       display:flex;
       align-items:center;
@@ -688,10 +615,6 @@
     .pin-btn:hover{ background: rgba(255,255,255,0.10); border-color: rgba(34,197,94,0.25); transform: translateY(-1px); }
     .pin-btn.primary{ background: rgba(11,93,30,0.92); border-color: rgba(11,93,30,0.92); }
     .pin-btn.primary:hover{ background: rgba(6,65,23,1); border-color: rgba(6,65,23,1); }
-
-    @media (max-width: 575px) {
-      #liveSessionFilter, #dateSelect { flex: 1; min-width: 0; }
-    }
   </style>
 </head>
 
@@ -699,7 +622,8 @@
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid px-3 px-md-4">
       <a class="navbar-brand" href="#">
-        <i class="fa-solid fa-qrcode"></i>
+        <!-- ✅ NEW LOGO (transparent) -->
+        <img class="brand-logo" src="rsu_logo_transparent.png" alt="RSU Logo" />
         <span class="d-none d-sm-inline">SmartAttendance Pro</span>
         <span class="d-sm-none">SmartAttend</span>
       </a>
@@ -825,44 +749,39 @@
                   <span>Stop</span>
                 </button>
               </div>
-
-              <div class="info-tip">
-                <i class="fa-solid fa-bolt"></i>
-                <span>Ultra-fast scan mode enabled. Position QR code within frame.</span>
-              </div>
             </div>
           </div>
 
           <!-- RIGHT -->
           <div class="table-container" id="tableCard">
             <div class="table-header">
-              <div class="card-header-title" style="border: none; padding: 0;">
-                <i class="fa-solid fa-list-ul"></i>
-                Live Activity
+              <div class="table-title-wrap">
+                <div class="card-header-title" style="padding:0;border:none;">
+                  <i class="fa-solid fa-list-ul"></i>
+                  Live Activity
+                </div>
+                <div class="status-pill">
+                  <span class="status-dot" id="systemStatus"></span>
+                  <span id="systemStatusText">Online</span>
+                </div>
               </div>
 
-              <div class="d-flex align-items-center gap-2 flex-wrap">
-                <div class="d-flex align-items-center gap-2 flex-fill">
-                  <span class="text-muted d-none d-sm-inline" style="font-size:.9rem;font-weight:900;">Date</span>
-
-                  <select id="dateSelect" class="form-select-custom"
-                          style="min-width: 260px; padding: 0.55rem 0.85rem; font-size: 0.9rem;">
+              <!-- ✅ STACKED CONTROLS -->
+              <div class="table-controls">
+                <div class="control-block">
+                  <div class="control-label">Date</div>
+                  <select id="dateSelect" class="form-select-custom">
                     <option value="">Loading dates...</option>
                   </select>
-
-                  <span class="text-muted d-none d-sm-inline" style="font-size:.9rem;font-weight:900;">View</span>
-                  <select id="liveSessionFilter" class="form-select-custom"
-                          style="min-width: 160px; padding: 0.55rem 0.85rem; font-size: 0.9rem;">
+                </div>
+                <div class="control-block">
+                  <div class="control-label">View</div>
+                  <select id="liveSessionFilter" class="form-select-custom">
                     <option value="auto">Auto (Current)</option>
                     <option value="am">AM Only</option>
                     <option value="pm">PM Only</option>
                     <option value="all">All Day</option>
                   </select>
-                </div>
-
-                <div class="status-pill">
-                  <span class="status-dot" id="systemStatus"></span>
-                  <span id="systemStatusText">Online</span>
                 </div>
               </div>
             </div>
@@ -901,8 +820,8 @@
       <div class="center-pop-top">
         <div class="center-pop-icon"><i class="fa-solid fa-circle-check"></i></div>
         <div>
-          <div class="center-pop-title" id="centerPopTitle">Recorded Successfully</div>
-          <div class="center-pop-sub" id="centerPopSub">Attendance saved to sheet.</div>
+          <div class="center-pop-title" id="centerPopTitle">Processed Successfully</div>
+          <div class="center-pop-sub" id="centerPopSub">Saved to sheet</div>
         </div>
       </div>
       <div class="center-pop-body" id="centerPopBody">
@@ -941,7 +860,6 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    /* ===================== CONFIG ===================== */
     const API_URL = "https://script.google.com/macros/s/AKfycbxy75tYNOZPKpX9Axd0RqHOoxjLMW3TzhBZQqEYan1h_lYLNfQaTZ2wG1CrBjlgV0BD3g/exec";
     const AUTO_STOP_ON_SUCCESS = true;
     const SCAN_DEBOUNCE_MS = 2500;
@@ -951,7 +869,6 @@
     const SFX_ENABLED = true;
     const VOICE_LANG = "en-US";
 
-    /* ===================== STATE ===================== */
     const state = {
       scanner: null,
       scanning: false,
@@ -963,7 +880,6 @@
       busy: false,
       todaysLogs: [],
       liveSessionFilter: 'auto',
-
       selectedDate: null,
 
       dropdownStudentId: null,
@@ -972,13 +888,11 @@
       timeInPinGranted: false,
       pinModal: null,
       pinResolve: null,
-      pinPurpose: 'timein',
 
       _syncTimer: null,
       _centerPopTimer: null,
     };
 
-    /* ===================== DOM ===================== */
     const el = {
       clockTime: document.getElementById('clockTime'),
       clockDate: document.getElementById('clockDate'),
@@ -1008,13 +922,11 @@
       scannerCard: document.getElementById('scannerCard'),
       tableCard: document.getElementById('tableCard'),
 
-      // Center popup
       centerPop: document.getElementById('centerPop'),
       centerPopTitle: document.getElementById('centerPopTitle'),
       centerPopSub: document.getElementById('centerPopSub'),
       centerPopBody: document.getElementById('centerPopBody'),
 
-      // PIN modal
       pinModalEl: document.getElementById('pinModal'),
       pinChip: document.getElementById('pinChip'),
       pinHelp: document.getElementById('pinHelp'),
@@ -1030,7 +942,6 @@
       }
     };
 
-    /* ===================== TABLE ADJUST ONLY ===================== */
     function syncTableHeightToScanner(){
       if(!el.scannerCard || !el.tableCard) return;
       if(window.innerWidth < 1200){
@@ -1046,10 +957,8 @@
       state._syncTimer = setTimeout(syncTableHeightToScanner, 120);
     });
 
-    /* ===================== CENTER POPUP (NEW) ===================== */
     function showCenterPop({ title, sub, body, duration = 1700 } = {}){
       clearTimeout(state._centerPopTimer);
-
       if(title) el.centerPopTitle.textContent = title;
       if(sub) el.centerPopSub.textContent = sub;
       if(body) el.centerPopBody.textContent = body;
@@ -1063,7 +972,6 @@
       }, duration);
     }
 
-    /* ===================== TOAST ===================== */
     function showToast(message, type='info', duration=3000){
       const toast = document.createElement('div');
       toast.className = `toast ${type}`;
@@ -1086,7 +994,6 @@
       }, duration);
     }
 
-    /* ===================== FX + SOUND ===================== */
     function flashGreen(){
       if(!el.scanFlash) return;
       el.scanFlash.classList.add('on');
@@ -1100,7 +1007,6 @@
         if(audioCtx.state === 'suspended') audioCtx.resume().catch(()=>{});
       }catch(e){}
     }
-
     function beep(duration=90, freq=880, vol=0.06){
       if(!SFX_ENABLED) return;
       try{
@@ -1116,15 +1022,11 @@
         setTimeout(() => o.stop(), duration);
       }catch(e){}
     }
-
-    // ✅ NEW: scan sound (quick double chirp)
     function sfxScanned(){
       if(!SFX_ENABLED) return;
       beep(55, 1040, 0.05);
       setTimeout(() => beep(55, 1320, 0.045), 70);
     }
-
-    // ✅ NEW: record success sound (pleasant 3-note)
     function sfxRecorded(){
       if(!SFX_ENABLED) return;
       beep(75, 880, 0.06);
@@ -1132,12 +1034,10 @@
       setTimeout(() => beep(90, 1320, 0.05), 180);
     }
 
-    /* ===================== VOICE ===================== */
     let preferredVoice = null;
     function initVoice(){
       if(!VOICE_ENABLED) return;
       if(!('speechSynthesis' in window)) return;
-
       const pick = () => {
         const voices = window.speechSynthesis.getVoices() || [];
         preferredVoice =
@@ -1148,7 +1048,6 @@
       pick();
       window.speechSynthesis.onvoiceschanged = pick;
     }
-
     function speak(text){
       if(!VOICE_ENABLED) return;
       if(!('speechSynthesis' in window)) return;
@@ -1161,7 +1060,6 @@
       }catch(e){}
     }
 
-    /* ===================== API ===================== */
     async function api(params){
       params._ts = Date.now();
       const qs = new URLSearchParams(params).toString();
@@ -1171,16 +1069,13 @@
       return json;
     }
 
-    /* ===================== DATE/TIME ===================== */
     function todayISO(){
       const d = new Date();
       return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
     }
-
     function nowLocalTime12(){
       return new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit', hour12:true });
     }
-
     function timeDisplay(v){
       if(!v || v === '-') return '-';
       const s = String(v).trim();
@@ -1190,18 +1085,15 @@
       }
       return s;
     }
-
     function formatDateLabel(iso){
       const d = new Date(iso + "T00:00:00");
       if(isNaN(d)) return iso;
       return d.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'short', day:'numeric' });
     }
-
     function populateDateSelect(logs, activeDate){
       const dates = new Set();
       (logs || []).forEach(r => { if(r && r.date) dates.add(String(r.date).trim()); });
       if(activeDate) dates.add(String(activeDate).trim());
-
       const arr = Array.from(dates).filter(Boolean).sort((a,b)=> (a>b ? -1 : 1));
       el.dateSelect.innerHTML = '';
       arr.forEach(d => {
@@ -1213,7 +1105,6 @@
       el.dateSelect.value = (arr.includes(activeDate) ? activeDate : (arr[0] || activeDate || ''));
     }
 
-    /* ===================== PIN MODAL ===================== */
     function initPinModal(){
       state.pinModal = new bootstrap.Modal(el.pinModalEl, { backdrop:'static', keyboard:false });
 
@@ -1243,8 +1134,6 @@
     }
 
     function askAdminPin(purpose, labelText){
-      state.pinPurpose = purpose;
-
       if(purpose === 'registration'){
         el.pinChip.textContent = 'Registration';
         el.pinHelp.textContent = 'Enter admin PIN to open the Registration page.';
@@ -1265,7 +1154,6 @@
       return log_type === 'am_in' || log_type === 'pm_in';
     }
 
-    /* ===================== LIVE PREF ===================== */
     function loadLiveSessionPref(){
       try { return localStorage.getItem('liveSessionFilter') || 'auto'; }
       catch(e){ return 'auto'; }
@@ -1273,7 +1161,6 @@
     function saveLiveSessionPref(v){
       try { localStorage.setItem('liveSessionFilter', v); } catch(e){}
     }
-
     function loadDatePref(){
       try { return localStorage.getItem('selectedDate') || ''; }
       catch(e){ return ''; }
@@ -1282,7 +1169,6 @@
       try { localStorage.setItem('selectedDate', v); } catch(e){}
     }
 
-    /* ===================== SESSION UI ===================== */
     function updateLiveColumns(){
       if(!el.liveWrapper) return;
       el.liveWrapper.classList.remove('show-am', 'show-pm');
@@ -1293,7 +1179,6 @@
       if(mode === 'pm') el.liveWrapper.classList.add('show-pm');
     }
 
-    /* ===================== DROPDOWN HIDE LOGIC ===================== */
     function clearScanModeContext(){
       state.dropdownStudentId = null;
       state.dropdownExisting = null;
@@ -1397,7 +1282,6 @@
       loadTables(d);
     });
 
-    /* ===================== CALCS ===================== */
     function parseTimeToMinutes(t){
       t = String(t||'').trim();
       if(!t || t === '-') return null;
@@ -1419,7 +1303,6 @@
       return mins ? (mins/60).toFixed(2) : '';
     }
 
-    /* ===================== LOAD TABLE ===================== */
     async function loadTables(date = todayISO()){
       try{
         state.selectedDate = date;
@@ -1498,7 +1381,6 @@
       el.stats.total.textContent = logs.length;
 
       let checkedIn = 0, checkedOut = 0, pending = 0;
-
       logs.forEach(r => {
         const amIn = (timeDisplay(r.am_in) || '').trim();
         const amOut = (timeDisplay(r.am_out) || '').trim();
@@ -1516,17 +1398,14 @@
       el.stats.pending.textContent = pending;
     }
 
-    /* ===================== CAMERA ===================== */
     async function initCameras(){
       try{
         state.cameras = await Html5Qrcode.getCameras();
         el.cameraSelect.innerHTML = '<option value="">Select Camera...</option>';
-
         if(!state.cameras.length){
           showToast('No cameras found. Check permissions.', 'error', 4000);
           return;
         }
-
         state.cameras.forEach((cam, i) => {
           const label = cam.label || `Camera ${i+1}`;
           const shortLabel = label.length > 30 ? label.substring(0, 30) + '...' : label;
@@ -1546,12 +1425,11 @@
       }
     }
 
-    /* ===================== SCANNER CONTROL ===================== */
     async function startScanner(){
       if(state.scanning) return;
 
       clearScanModeContext();
-      primeAudio(); // unlock audio
+      primeAudio();
       initVoice();
 
       const cameraId = el.cameraSelect.value;
@@ -1560,7 +1438,6 @@
         return;
       }
 
-      // PIN BEFORE scanning if Time In selected
       const mode = el.scanMode.value || 'auto';
       if(mode === 'am_in' || mode === 'pm_in'){
         const label = el.scanMode.options[el.scanMode.selectedIndex]?.text || 'Time In';
@@ -1611,7 +1488,6 @@
         showToast("Scanner activated", "success", 2000);
 
         syncTableHeightToScanner();
-
       }catch(err){
         console.error(err);
         showToast("Camera failed to start", "error", 3000);
@@ -1633,12 +1509,10 @@
 
         state.timeInPinGranted = false;
         clearScanModeContext();
-
         syncTableHeightToScanner();
       }).catch(console.error);
     }
 
-    /* ===================== SCAN LOGIC ===================== */
     function pickLogTypeAuto(existingRow){
       const isAM = state.currentSession === 'morning';
       if (!existingRow) return isAM ? 'am_in' : 'pm_in';
@@ -1704,8 +1578,7 @@
         <span>Processing: ${generated_code}...</span>
       `;
 
-      try {
-        // quick feedback that scanner read something
+      try{
         sfxScanned();
 
         const found = await api({ action:'find_student', generated_code });
@@ -1717,8 +1590,6 @@
         }
 
         const student = found.student;
-
-        // optional voice
         speak("Successfully scanned");
 
         await loadTables(date);
@@ -1727,7 +1598,7 @@
         setScanModeContextForStudent(student.student_id, date);
 
         let log_type = el.scanMode.value;
-        if (log_type === 'auto') {
+        if(log_type === 'auto'){
           log_type = pickLogTypeAuto(existing);
           if(!log_type){
             beep(120, 260, 0.06);
@@ -1736,7 +1607,6 @@
           }
         }
 
-        // NO PIN AFTER SCAN
         if(isTimeInLogType(log_type) && !state.timeInPinGranted){
           beep(120, 260, 0.06);
           showToast('Admin PIN required for Time In. Select AM/PM Time In then Start Scanner.', 'warning', 3500);
@@ -1754,19 +1624,15 @@
           return;
         }
 
-        // ✅ SUCCESS SOUND + POPUP + TOAST (NEW)
         flashGreen();
         sfxRecorded();
 
-        const label = log_type.toUpperCase().replace('_', ' ');
+        const label = log_type.toUpperCase().replace('_',' ');
         showCenterPop({
           title: "Processed Successfully",
           sub: `${label} saved`,
           body: `${student.student_name} • ${label} at ${time}`
         });
-
-        if (log_type.endsWith('_in'))  speak("Time In Successfully");
-        if (log_type.endsWith('_out')) speak("Time Out Successfully");
 
         showToast(`${student.student_name} • ${label} at ${time}`, 'success', 3000);
         el.lastScanInfo.innerHTML = `<i class="fa-solid fa-check" style="color:var(--success)"></i><span>${student.student_name} recorded</span>`;
@@ -1774,7 +1640,7 @@
         await loadTables(date);
         setScanModeContextForStudent(student.student_id, date);
 
-        if (AUTO_STOP_ON_SUCCESS && state.scanning) {
+        if(AUTO_STOP_ON_SUCCESS && state.scanning){
           setTimeout(() => stopScanner(), 300);
         }
 
@@ -1788,26 +1654,21 @@
       }
     }
 
-    /* ===================== REGISTRATION PIN ===================== */
     function setupRegistrationGate(){
       if(!el.registrationLink) return;
-
       el.registrationLink.addEventListener('click', async (e) => {
         e.preventDefault();
-
-        primeAudio(); // allow sound for modal click too
+        primeAudio();
         const ok = await askAdminPin('registration', 'Registration');
         if(!ok){
           showToast('Admin PIN required to open Registration.', 'warning', 2500);
           return;
         }
-
         const url = el.registrationLink.getAttribute('href');
         window.open(url, '_blank', 'noopener');
       }, { passive:false });
     }
 
-    /* ===================== INIT ===================== */
     el.btnStart.addEventListener('click', startScanner);
     el.btnStop.addEventListener('click', stopScanner);
 
