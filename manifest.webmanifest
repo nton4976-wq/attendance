@@ -1,7 +1,7 @@
 {
   "start_url": "/attendance/index.html",
   "scope": "/attendance/",
-  "display": "standalone",
+  "display": "fullscreen",
   "name": "Smart Attendance Pro",
   "short_name": "SmartAttend",
   "theme_color": "#0b5d1e",
