@@ -1717,14 +1717,13 @@
   </script>
 
   <script>
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./sw.js").catch(console.error);
-    });
-  }
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js");
+}}
 </script>
 </body>
 </html>
+
 
 
 
