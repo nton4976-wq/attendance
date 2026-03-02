@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <title>Smart Attendance</title>
+  <title>Smart Attendance Pro</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -12,15 +12,17 @@
 
   <style>
     :root {
-      --primary: #4f46e5;
-      --primary-light: #6366f1;
-      --primary-dark: #4338ca;
-      --success: #10b981;
+      /* ===================== GREENFOREST THEME (ACCENTS ONLY) ===================== */
+      --primary: #0b5d1e;          /* forest green */
+      --primary-light: #22c55e;    /* bright leaf */
+      --primary-dark: #064117;     /* deep forest */
+      --success: #16a34a;
       --success-light: #34d399;
       --warning: #f59e0b;
       --danger: #ef4444;
       --info: #0ea5e9;
 
+      /* Background colors (NOT changed) */
       --bg-primary: #0f172a;
       --bg-secondary: #1e293b;
       --bg-tertiary: #334155;
@@ -33,12 +35,9 @@
 
       --border-subtle: rgba(255, 255, 255, 0.06);
       --border-default: rgba(255, 255, 255, 0.1);
-      --border-focus: rgba(99, 102, 241, 0.4);
 
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
       --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
-      --shadow-glow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+      --shadow-glow: 0 0 0 3px rgba(34, 197, 94, 0.16);
 
       --radius-sm: 8px;
       --radius: 12px;
@@ -47,7 +46,6 @@
 
       --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
       --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -65,6 +63,7 @@
       touch-action: manipulation;
     }
 
+    /* Background stays same (do NOT tie to --primary so it doesn't change) */
     body::before {
       content: '';
       position: fixed;
@@ -76,7 +75,6 @@
       pointer-events: none;
       z-index: -1;
     }
-
     body::after {
       content: '';
       position: fixed;
@@ -97,7 +95,6 @@
       top: 0;
       z-index: 1000;
     }
-
     .navbar-brand {
       font-weight: 800;
       font-size: 1.25rem;
@@ -108,7 +105,6 @@
       letter-spacing: -0.02em;
       text-decoration: none;
     }
-
     .navbar-brand i {
       width: 32px;
       height: 32px;
@@ -118,19 +114,15 @@
       align-items: center;
       justify-content: center;
       font-size: 0.875rem;
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+      box-shadow: 0 4px 12px rgba(34, 197, 94, 0.22);
     }
-
     .navbar-toggler {
       border: 1px solid var(--border-subtle);
       padding: 0.5rem;
       border-radius: var(--radius);
       color: var(--text-primary);
     }
-
-    .navbar-toggler:focus {
-      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
-    }
+    .navbar-toggler:focus { box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18); }
 
     .nav-link {
       font-weight: 600;
@@ -142,16 +134,8 @@
       margin: 0.25rem 0;
       position: relative;
     }
-
-    .nav-link:hover {
-      color: var(--text-secondary) !important;
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .nav-link.active {
-      color: var(--text-primary) !important;
-      background: rgba(99, 102, 241, 0.1);
-    }
+    .nav-link:hover { color: var(--text-secondary) !important; background: rgba(255, 255, 255, 0.03); }
+    .nav-link.active { color: var(--text-primary) !important; background: rgba(34, 197, 94, 0.10); }
 
     .nav-meta {
       display: flex;
@@ -161,16 +145,9 @@
       border-top: 1px solid var(--border-subtle);
       margin-top: 0.5rem;
     }
-
     @media (min-width: 992px) {
-      .nav-meta {
-        padding-left: 1.5rem;
-        border-left: 1px solid var(--border-subtle);
-        border-top: none;
-        margin-top: 0;
-      }
+      .nav-meta { padding-left: 1.5rem; border-left: 1px solid var(--border-subtle); border-top: none; margin-top: 0; }
     }
-
     #clockTime {
       font-family: 'Plus Jakarta Sans', monospace;
       font-weight: 700;
@@ -179,7 +156,6 @@
       letter-spacing: -0.02em;
       line-height: 1.2;
     }
-
     #clockDate {
       font-size: 0.6875rem;
       color: var(--text-muted);
@@ -187,7 +163,6 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
-
     .session-badge {
       font-size: 0.6875rem;
       font-weight: 700;
@@ -203,27 +178,16 @@
       gap: 0.375rem;
       white-space: nowrap;
     }
-
     .session-badge::before {
       content: '';
-      width: 5px;
-      height: 5px;
+      width: 5px; height: 5px;
       border-radius: 50%;
       background: var(--success);
       box-shadow: 0 0 6px var(--success);
     }
+    .session-badge.afternoon::before { background: var(--warning); box-shadow: 0 0 6px var(--warning); }
 
-    .session-badge.afternoon::before {
-      background: var(--warning);
-      box-shadow: 0 0 6px var(--warning);
-    }
-
-    .main-container {
-      padding: 1rem;
-      max-width: 1600px;
-      margin: 0 auto;
-    }
-
+    .main-container { padding: 1rem; max-width: 1600px; margin: 0 auto; }
     @media (min-width: 768px) { .main-container { padding: 1.5rem; } }
     @media (min-width: 1200px) { .main-container { padding: 2rem; } }
 
@@ -248,40 +212,42 @@
       position: relative;
       overflow: hidden;
     }
-    @media (min-width: 768px) {
-      .stat-card { padding: 1.25rem; border-radius: var(--radius-lg); gap: 1rem; }
-    }
     .stat-card:hover { transform: translateY(-2px); border-color: var(--border-default); box-shadow: var(--shadow-lg); }
 
     .stat-icon {
-      width: 40px;
-      height: 40px;
+      width: 40px; height: 40px;
       border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       font-size: 1rem;
       flex-shrink: 0;
     }
-    @media (min-width: 768px) { .stat-icon { width: 48px; height: 48px; font-size: 1.25rem; } }
 
-    .stat-icon.blue { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
-    .stat-icon.green { background: rgba(16, 185, 129, 0.15); color: var(--success-light); }
-    .stat-icon.purple { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
+    /* Forest theme accent icons */
+    .stat-icon.blue   { background: rgba(34, 197, 94, 0.12); color: var(--primary-light); }
+    .stat-icon.green  { background: rgba(22, 163, 74, 0.14); color: var(--success-light); }
+    .stat-icon.purple { background: rgba(11, 93, 30, 0.20); color: rgba(167, 243, 208, 1); }
     .stat-icon.orange { background: rgba(245, 158, 11, 0.15); color: #fbbf24; }
 
     .stat-content { flex: 1; min-width: 0; }
     .stat-label { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; margin-bottom: 0.125rem; }
-    @media (min-width: 768px) { .stat-label { font-size: 0.875rem; margin-bottom: 0.25rem; } }
-
     .stat-value { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); letter-spacing: -0.02em; line-height: 1.2; }
-    @media (min-width: 768px) { .stat-value { font-size: 1.875rem; } }
 
-    .content-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+    /* Layout: do NOT stretch left; table adjusts only */
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
     @media (min-width: 1200px) { .content-grid { grid-template-columns: 420px 1fr; gap: 1.5rem; } }
 
-    .glass-card { background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); overflow: hidden; transition: all var(--transition); }
-    @media (min-width: 768px) { .glass-card { border-radius: var(--radius-xl); } }
+    .glass-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      transition: all var(--transition);
+    }
 
     .card-header {
       padding: 1rem;
@@ -292,35 +258,37 @@
       flex-wrap: wrap;
       gap: 0.5rem;
     }
-    @media (min-width: 768px) { .card-header { padding: 1.25rem 1.5rem; } }
 
-    .card-header-title { font-weight: 700; font-size: 0.9375rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; }
-    @media (min-width: 768px) { .card-header-title { font-size: 1rem; gap: 0.75rem; } }
+    .card-header-title {
+      font-weight: 800;
+      font-size: 0.98rem;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
     .card-header-title i { color: var(--primary-light); }
 
     .badge-soft {
-      font-size: 0.6875rem;
-      font-weight: 600;
-      padding: 0.25rem 0.625rem;
-      border-radius: 100px;
-      background: rgba(99, 102, 241, 0.1);
-      color: var(--primary-light);
-      border: 1px solid rgba(99, 102, 241, 0.2);
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      background: rgba(34, 197, 94, 0.10);
+      color: rgba(187, 247, 208, 1);
+      border: 1px solid rgba(34, 197, 94, 0.22);
     }
-    @media (min-width: 768px) { .badge-soft { font-size: 0.75rem; padding: 0.375rem 0.875rem; } }
 
-    .card-body { padding: 1rem; }
-    @media (min-width: 768px) { .card-body { padding: 1.5rem; } }
+    .card-body { padding: 1.25rem; }
 
     .scanner-wrapper {
       position: relative;
       background: var(--bg-primary);
-      border-radius: var(--radius);
+      border-radius: var(--radius-lg);
       overflow: hidden;
       aspect-ratio: 4/3;
-      border: 1px solid var(--border-default);
+      border: 1px solid rgba(255,255,255,0.10);
     }
-    @media (min-width: 768px) { .scanner-wrapper { border-radius: var(--radius-lg); } }
     #reader { width: 100%; height: 100%; object-fit: cover; }
 
     .scanner-overlay {
@@ -331,25 +299,12 @@
       align-items: center;
       justify-content: center;
     }
-
-    .scan-frame { width: 160px; height: 160px; position: relative; }
-    @media (min-width: 576px) { .scan-frame { width: 200px; height: 200px; } }
-    @media (min-width: 768px) { .scan-frame { width: 240px; height: 240px; } }
-
-    .scan-corner { position: absolute; width: 20px; height: 20px; border-color: var(--success); border-style: solid; border-width: 3px; transition: all var(--transition); }
-    @media (min-width: 768px) { .scan-corner { width: 24px; height: 24px; } }
-
-    .scan-corner.tl { top: 0; left: 0; border-right: 0; border-bottom: 0; border-top-left-radius: 8px; }
-    .scan-corner.tr { top: 0; right: 0; border-left: 0; border-bottom: 0; border-top-right-radius: 8px; }
-    .scan-corner.bl { bottom: 0; left: 0; border-right: 0; border-top: 0; border-bottom-left-radius: 8px; }
-    .scan-corner.br { bottom: 0; right: 0; border-left: 0; border-top: 0; border-bottom-right-radius: 8px; }
-
-    @media (min-width: 768px) {
-      .scan-corner.tl { border-top-left-radius: 12px; }
-      .scan-corner.tr { border-top-right-radius: 12px; }
-      .scan-corner.bl { border-bottom-left-radius: 12px; }
-      .scan-corner.br { border-bottom-right-radius: 12px; }
-    }
+    .scan-frame { width: 220px; height: 220px; position: relative; }
+    .scan-corner { position: absolute; width: 24px; height: 24px; border-color: var(--success); border-style: solid; border-width: 3px; }
+    .scan-corner.tl { top: 0; left: 0; border-right: 0; border-bottom: 0; border-top-left-radius: 12px; }
+    .scan-corner.tr { top: 0; right: 0; border-left: 0; border-bottom: 0; border-top-right-radius: 12px; }
+    .scan-corner.bl { bottom: 0; left: 0; border-right: 0; border-top: 0; border-bottom-left-radius: 12px; }
+    .scan-corner.br { bottom: 0; right: 0; border-left: 0; border-top: 0; border-bottom-right-radius: 12px; }
 
     .scan-line {
       position: absolute;
@@ -360,9 +315,7 @@
       opacity: 0;
       transition: opacity var(--transition);
     }
-
     .scanning .scan-line { opacity: 1; animation: scan 2.5s linear infinite; }
-
     @keyframes scan {
       0% { top: 0; opacity: 0; }
       10% { opacity: 1; }
@@ -383,38 +336,35 @@
       text-align: center;
       padding: 1rem;
     }
-    .scanner-placeholder i { font-size: 2rem; opacity: 0.3; }
-    @media (min-width: 768px) { .scanner-placeholder i { font-size: 3rem; } }
+    .scanner-placeholder i { font-size: 3rem; opacity: 0.25; }
 
-    .controls-grid { display: grid; grid-template-columns: 1fr; gap: 0.5rem; margin: 1rem 0; }
-    @media (min-width: 576px) { .controls-grid { grid-template-columns: 1fr 1fr; gap: 0.75rem; } }
+    .controls-grid { display: grid; grid-template-columns: 1fr; gap: 0.75rem; margin: 1rem 0; }
+    @media (min-width: 576px) { .controls-grid { grid-template-columns: 1fr 1fr; } }
 
     .form-select-custom {
       background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
+      border: 1px solid rgba(255,255,255,0.10);
       color: var(--text-primary);
       border-radius: var(--radius);
-      padding: 0.625rem 2.5rem 0.625rem 0.875rem;
+      padding: 0.65rem 2.5rem 0.65rem 0.95rem;
       font-size: 0.875rem;
-      font-weight: 500;
+      font-weight: 650;
       cursor: pointer;
       transition: all var(--transition-fast);
       appearance: none;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
       background-repeat: no-repeat;
-      background-position: right 0.625rem center;
+      background-position: right 0.75rem center;
       background-size: 1rem;
       width: 100%;
     }
-    .form-select-custom:focus { outline: none; border-color: var(--primary); box-shadow: var(--shadow-glow); }
+    .form-select-custom:focus { outline: none; border-color: rgba(34,197,94,0.55); box-shadow: var(--shadow-glow); }
 
-    .btn-group { display: flex; gap: 0.5rem; flex-direction: column; }
-    @media (min-width: 576px) { .btn-group { flex-direction: row; gap: 0.75rem; } }
-
+    .btn-group { display: flex; gap: 0.75rem; flex-direction: row; }
     .btn {
-      font-weight: 600;
-      font-size: 0.875rem;
-      padding: 0.75rem 1rem;
+      font-weight: 900;
+      font-size: 0.9rem;
+      padding: 0.85rem 1rem;
       border-radius: var(--radius);
       border: none;
       cursor: pointer;
@@ -425,44 +375,52 @@
       gap: 0.5rem;
       width: 100%;
     }
-    @media (min-width: 576px) { .btn { padding: 0.75rem 1.25rem; width: auto; } }
 
-    .btn-primary { background: var(--primary); color: white; flex: 1; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: white;
+      flex: 1;
+      box-shadow: 0 12px 30px rgba(34,197,94,0.16);
+    }
     .btn-primary:hover:not(:disabled) {
-      background: var(--primary-dark);
+      filter: brightness(1.02);
       transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+      box-shadow: 0 16px 38px rgba(34,197,94,0.22);
     }
     .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
-    .btn-secondary { background: var(--bg-tertiary); color: var(--text-secondary); border: 1px solid var(--border-subtle); }
-    .btn-secondary:hover:not(:disabled) { background: var(--bg-secondary); color: var(--text-primary); border-color: var(--border-default); }
+    .btn-secondary {
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      border: 1px solid rgba(255,255,255,0.10);
+      flex: 0.75;
+    }
+    .btn-secondary:hover:not(:disabled) { background: var(--bg-secondary); color: var(--text-primary); }
 
     .scan-flash {
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.3) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(34, 197, 94, 0.28) 0%, transparent 70%);
       opacity: 0;
       transition: opacity 150ms ease;
       z-index: 10;
     }
     .scan-flash.on { opacity: 1; }
 
+    /* RIGHT PANEL */
     .table-container {
       background: var(--bg-card);
       border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
+      border-radius: var(--radius-xl);
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      height: auto;
-      max-height: none;
+      height: auto; /* JS sets height to match left */
     }
-    @media (min-width: 1200px) { .table-container { border-radius: var(--radius-xl); max-height: calc(100vh - 200px); } }
 
     .table-header {
-      padding: 1rem;
+      padding: 1rem 1.25rem;
       border-bottom: 1px solid var(--border-subtle);
       display: flex;
       flex-direction: column;
@@ -472,81 +430,80 @@
     @media (min-width: 576px) {
       .table-header { flex-direction: row; align-items: center; justify-content: space-between; gap: 1rem; }
     }
-    @media (min-width: 768px) { .table-header { padding: 1.25rem 1.5rem; } }
 
-    .status-pill { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8125rem; font-weight: 600; color: var(--text-secondary); }
-    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2); }
-    .status-dot.scanning { background: var(--warning); box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2); animation: pulse 2s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    .status-pill {
+      display: flex; align-items: center; gap: 0.6rem;
+      font-size: 0.85rem; font-weight: 900;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .status-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 0 4px rgba(22,163,74,0.18);
+    }
+    .status-dot.scanning {
+      background: var(--warning);
+      box-shadow: 0 0 0 4px rgba(245,158,11,0.18);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.55} }
 
-    .table-responsive { flex: 1; overflow: auto; max-height: 400px; }
-    @media (min-width: 1200px) { .table-responsive { max-height: none; } }
-
-    .custom-table { width: 100%; border-collapse: collapse; font-size: 0.8125rem; min-width: 600px; }
-    @media (min-width: 768px) { .custom-table { font-size: 0.875rem; } }
+    .table-responsive { flex: 1; overflow: auto; }
+    .custom-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; min-width: 680px; }
     .custom-table thead { position: sticky; top: 0; z-index: 10; }
 
     .custom-table th {
       background: var(--bg-secondary);
       color: var(--text-muted);
-      font-weight: 600;
+      font-weight: 900;
       text-transform: uppercase;
-      font-size: 0.625rem;
+      font-size: 0.7rem;
       letter-spacing: 0.08em;
-      padding: 0.75rem 0.75rem;
+      padding: 1rem 1.25rem;
       text-align: left;
-      border-bottom: 1px solid var(--border-subtle);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
       white-space: nowrap;
     }
-    @media (min-width: 768px) { .custom-table th { font-size: 0.6875rem; padding: 1rem 1.25rem; } }
+    .custom-table td {
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: var(--text-secondary);
+      vertical-align: middle;
+    }
+    .custom-table tbody tr:hover { background: rgba(255,255,255,0.02); }
 
-    .custom-table td { padding: 0.75rem 0.75rem; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); vertical-align: middle; }
-    @media (min-width: 768px) { .custom-table td { padding: 1rem 1.25rem; } }
-
-    .custom-table tbody tr { transition: background var(--transition-fast); }
-    .custom-table tbody tr:hover { background: rgba(255, 255, 255, 0.02); }
-    .custom-table tbody tr.latest-entry { background: rgba(79, 70, 229, 0.1); animation: highlightNew 2s ease-out; }
-    @keyframes highlightNew { 0% { background: rgba(79, 70, 229, 0.3); } 100% { background: rgba(79, 70, 229, 0.1); } }
-
-    .student-cell { display: flex; align-items: center; gap: 0.625rem; }
-    @media (min-width: 768px) { .student-cell { gap: 0.875rem; } }
-
+    .student-cell { display:flex; align-items:center; gap: 0.875rem; }
     .avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
+      width: 42px; height: 42px;
+      border-radius: 12px;
       background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 0.75rem;
+      color: #fff;
+      display:flex; align-items:center; justify-content:center;
+      font-weight: 900;
       flex-shrink: 0;
     }
-    @media (min-width: 768px) { .avatar { width: 40px; height: 40px; font-size: 0.875rem; } }
+    .student-info { display:flex; flex-direction:column; min-width:0; }
+    .student-name { font-weight: 900; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .student-meta { font-size: 0.85rem; color: var(--text-muted); }
 
-    .student-info { display: flex; flex-direction: column; min-width: 0; }
-    .student-name { font-weight: 600; color: var(--text-primary); font-size: 0.8125rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    @media (min-width: 768px) { .student-name { font-size: 0.9375rem; } }
-    .student-meta { font-size: 0.6875rem; color: var(--text-muted); }
-    @media (min-width: 768px) { .student-meta { font-size: 0.8125rem; } }
-
-    .time-cell { font-family: 'SF Mono', monospace; font-weight: 500; color: var(--text-secondary); white-space: nowrap; }
-    .hours-cell { font-weight: 700; color: var(--success-light); text-align: right; white-space: nowrap; }
+    .time-cell { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-weight: 800; }
+    .hours-cell { font-weight: 1000; color: var(--success-light); text-align: right; white-space: nowrap; }
 
     .table-footer {
-      padding: 0.75rem 1rem;
-      border-top: 1px solid var(--border-subtle);
-      background: var(--bg-secondary);
-      font-size: 0.8125rem;
+      padding: 0.9rem 1.25rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      background: rgba(15, 23, 42, 0.35);
+      font-size: 0.9rem;
       color: var(--text-muted);
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.6rem;
       flex-shrink: 0;
     }
-    @media (min-width: 768px) { .table-footer { padding: 1rem 1.5rem; font-size: 0.875rem; } }
+
+    #liveWrapper.show-am .col-pm,
+    #liveWrapper.show-pm .col-am { display: none; }
 
     .toast-container {
       position: fixed;
@@ -560,96 +517,125 @@
       pointer-events: none;
     }
     @media (min-width: 576px) { .toast-container { bottom: 1.5rem; right: 1.5rem; left: auto; } }
-    @media (min-width: 768px) { .toast-container { bottom: 2rem; right: 2rem; gap: 0.75rem; } }
 
     .toast {
       background: var(--bg-secondary);
-      border: 1px solid var(--border-default);
-      border-left: 3px solid var(--primary);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-left: 3px solid var(--primary-light);
       border-radius: var(--radius);
-      padding: 0.875rem;
+      padding: 1rem 1.1rem;
       box-shadow: var(--shadow-lg), 0 0 0 1px rgba(0,0,0,0.2);
       display: flex;
       align-items: center;
-      gap: 0.625rem;
+      gap: 0.875rem;
       pointer-events: auto;
       animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       backdrop-filter: blur(12px);
+      min-width: 280px;
+      max-width: 420px;
     }
-    @media (min-width: 576px) { .toast { padding: 1rem 1.25rem; gap: 0.875rem; min-width: 300px; max-width: 400px; } }
     @keyframes slideIn { from { opacity: 0; transform: translateX(20px) scale(0.98); } to { opacity: 1; transform: translateX(0) scale(1); } }
 
     .toast.success { border-left-color: var(--success); }
     .toast.error { border-left-color: var(--danger); }
     .toast.warning { border-left-color: var(--warning); }
 
-    .toast-icon { width: 32px; height: 32px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 0.875rem; flex-shrink: 0; }
-    @media (min-width: 576px) { .toast-icon { width: 36px; height: 36px; font-size: 1rem; } }
-    .toast.success .toast-icon { background: rgba(16, 185, 129, 0.15); color: var(--success); }
-    .toast.error .toast-icon { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
-    .toast.warning .toast-icon { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+    .toast-icon { width: 36px; height: 36px; border-radius: 12px; display:flex; align-items:center; justify-content:center; }
+    .toast.success .toast-icon { background: rgba(22,163,74,0.15); color: var(--success); }
+    .toast.error .toast-icon { background: rgba(239,68,68,0.15); color: var(--danger); }
+    .toast.warning .toast-icon { background: rgba(245,158,11,0.15); color: var(--warning); }
+    .toast.info .toast-icon { background: rgba(34,197,94,0.12); color: var(--primary-light); }
 
-    .toast-content { flex: 1; min-width: 0; }
-    .toast-title { font-weight: 600; color: var(--text-primary); font-size: 0.875rem; margin-bottom: 0.125rem; }
-    @media (min-width: 576px) { .toast-title { font-size: 0.9375rem; } }
-    .toast-message { font-size: 0.75rem; color: var(--text-muted); line-height: 1.4; }
-    @media (min-width: 576px) { .toast-message { font-size: 0.8125rem; } }
-
-    ::-webkit-scrollbar { width: 4px; height: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: var(--text-subtle); border-radius: 2px; }
-    ::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
-
-    #liveWrapper.show-am .col-pm,
-    #liveWrapper.show-pm .col-am { display: none; }
-
-    .text-success { color: var(--success-light) !important; }
-    .text-danger { color: #f87171 !important; }
-    .text-muted { color: var(--text-muted) !important; }
+    .toast-title { font-weight: 900; color: var(--text-primary); font-size: 0.95rem; margin-bottom: 0.15rem; }
+    .toast-message { font-size: 0.85rem; color: var(--text-muted); line-height: 1.35; }
 
     .info-tip {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.5rem;
-      font-size: 0.75rem;
+      display:flex; align-items:center; gap:.6rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
-      margin-top: 0.875rem;
-      padding: 0.625rem;
+      margin-top: 1rem;
+      padding: 0.85rem 0.9rem;
       background: rgba(255, 255, 255, 0.02);
       border-radius: var(--radius);
-      border: 1px solid var(--border-subtle);
+      border: 1px solid rgba(255, 255, 255, 0.06);
     }
-    @media (min-width: 768px) { .info-tip { font-size: 0.8125rem; margin-top: 1rem; padding: 0.75rem; align-items: center; } }
-    .info-tip i { color: var(--primary-light); flex-shrink: 0; margin-top: 0.125rem; }
-    @media (min-width: 768px) { .info-tip i { margin-top: 0; } }
+    .info-tip i { color: var(--primary-light); }
 
-    @media (max-width: 575px) {
-      .table-header .d-flex.align-items-center.gap-2 { width: 100%; justify-content: space-between; }
-      #liveSessionFilter { flex: 1; min-width: 0; }
+    /* ===================== SUCCESS CENTER POPUP (NEW) ===================== */
+    .center-pop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 99999;
+      pointer-events: none;
+    }
+    .center-pop.show { display: flex; }
+    .center-pop-card {
+      pointer-events: auto;
+      min-width: 300px;
+      max-width: 92vw;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background: rgba(15, 23, 42, 0.88);
+      backdrop-filter: blur(18px) saturate(160%);
+      box-shadow: 0 25px 70px rgba(0,0,0,.55);
+      overflow: hidden;
+      transform: translateY(8px) scale(0.98);
+      opacity: 0;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+    .center-pop.show .center-pop-card { opacity: 1; transform: translateY(0) scale(1); }
+    .center-pop-top {
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(135deg, rgba(11, 93, 30, 0.45), rgba(34, 197, 94, 0.18));
+    }
+    .center-pop-icon {
+      width: 40px; height: 40px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(34,197,94,0.18);
+      border: 1px solid rgba(34,197,94,0.22);
+      color: rgba(187,247,208,1);
+      flex-shrink: 0;
+    }
+    .center-pop-title {
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      font-size: 1rem;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+    .center-pop-body {
+      padding: 14px 16px 16px;
+      color: var(--text-secondary);
+      font-weight: 650;
+      font-size: 0.92rem;
+    }
+    .center-pop-sub {
+      margin-top: 4px;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.82rem;
     }
 
-    @media (hover: none) {
-      .btn:active { transform: scale(0.98); }
-      .stat-card:active { transform: scale(0.99); }
-    }
-
-    .stat-card, .btn, .nav-link { user-select: none; -webkit-user-select: none; }
-
-    /* ===================== PIN MODAL (NEW) ===================== */
+    /* PIN MODAL */
     .pin-modal .modal-content{
       background: rgba(15, 23, 42, 0.92);
       border: 1px solid rgba(255,255,255,0.12);
       border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-xl);
+      box-shadow: 0 20px 60px rgba(0,0,0,.45);
       backdrop-filter: blur(18px) saturate(160%);
       overflow: hidden;
     }
-    .pin-modal .modal-header{
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      padding: 1rem 1.25rem;
-    }
+    .pin-modal .modal-header{ border-bottom: 1px solid rgba(255,255,255,0.08); padding: 1rem 1.25rem; }
     .pin-modal .modal-title{
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: -0.02em;
       font-size: 1rem;
       display:flex;
@@ -657,61 +643,55 @@
       gap:.6rem;
     }
     .pin-chip{
-      font-size: .7rem;
-      font-weight: 800;
+      font-size: .72rem;
+      font-weight: 900;
       padding: .25rem .6rem;
       border-radius: 999px;
-      border: 1px solid rgba(99,102,241,0.25);
-      background: rgba(99,102,241,0.12);
-      color: rgba(199,210,254,1);
+      border: 1px solid rgba(34,197,94,0.22);
+      background: rgba(34,197,94,0.10);
+      color: rgba(187,247,208,1);
     }
     .pin-modal .modal-body{ padding: 1.25rem; }
-    .pin-help{ color: var(--text-muted); font-size: .85rem; margin-bottom: .85rem; }
+    .pin-help{ color: var(--text-muted); font-size: .9rem; margin-bottom: .85rem; }
     .pin-input{
       width: 100%;
       background: rgba(2,6,23,0.6);
       border: 1px solid rgba(255,255,255,0.12);
       color: var(--text-primary);
       border-radius: var(--radius);
-      padding: .85rem 1rem;
+      padding: .9rem 1rem;
       font-size: 1.1rem;
-      font-weight: 800;
+      font-weight: 900;
       letter-spacing: .25em;
       text-align: center;
       outline: none;
     }
-    .pin-input:focus{
-      border-color: rgba(99,102,241,0.6);
-      box-shadow: 0 0 0 3px rgba(99,102,241,0.18);
-    }
+    .pin-input:focus{ border-color: rgba(34,197,94,0.55); box-shadow: 0 0 0 3px rgba(34,197,94,0.16); }
     .pin-error{
       display:none;
       margin-top: .6rem;
       color: #fca5a5;
-      font-weight: 700;
-      font-size: .85rem;
+      font-weight: 800;
+      font-size: .9rem;
     }
-    .pin-modal .modal-footer{
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding: .9rem 1.25rem;
-      gap: .5rem;
-    }
+    .pin-modal .modal-footer{ border-top: 1px solid rgba(255,255,255,0.08); padding: .9rem 1.25rem; gap: .5rem; }
     .pin-btn{
       flex:1;
       border-radius: var(--radius);
-      padding: .75rem 1rem;
-      font-weight: 800;
+      padding: .8rem 1rem;
+      font-weight: 900;
       border: 1px solid rgba(255,255,255,0.10);
       background: rgba(255,255,255,0.06);
       color: var(--text-primary);
       transition: transform var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
     }
-    .pin-btn:hover{ background: rgba(255,255,255,0.10); border-color: rgba(99,102,241,0.35); transform: translateY(-1px); }
-    .pin-btn.primary{
-      background: rgba(79,70,229,0.9);
-      border-color: rgba(79,70,229,0.9);
+    .pin-btn:hover{ background: rgba(255,255,255,0.10); border-color: rgba(34,197,94,0.25); transform: translateY(-1px); }
+    .pin-btn.primary{ background: rgba(11,93,30,0.92); border-color: rgba(11,93,30,0.92); }
+    .pin-btn.primary:hover{ background: rgba(6,65,23,1); border-color: rgba(6,65,23,1); }
+
+    @media (max-width: 575px) {
+      #liveSessionFilter, #dateSelect { flex: 1; min-width: 0; }
     }
-    .pin-btn.primary:hover{ background: rgba(67,56,202,1); border-color: rgba(67,56,202,1); }
   </style>
 </head>
 
@@ -720,8 +700,8 @@
     <div class="container-fluid px-3 px-md-4">
       <a class="navbar-brand" href="#">
         <i class="fa-solid fa-qrcode"></i>
-        <span class="d-none d-sm-inline">CARES Attendance</span>
-        <span class="d-sm-none">CARES Attendance</span>
+        <span class="d-none d-sm-inline">SmartAttendance Pro</span>
+        <span class="d-sm-none">SmartAttend</span>
       </a>
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
@@ -741,7 +721,6 @@
             </a>
           </li>
           <li class="nav-item">
-            <!-- NEW: ID to intercept + PIN -->
             <a class="nav-link" id="registrationLink"
               href="https://script.google.com/macros/s/AKfycbyLsU64MflVmxrwu7JqXWyGwhLQurraonO4bS3kj7Lulwx2OD_-hakoajbPatjBINehMQ/exec?page=register"
               target="_blank" rel="noopener">
@@ -797,13 +776,14 @@
         </div>
 
         <div class="content-grid">
-          <div class="glass-card">
+          <!-- LEFT -->
+          <div class="glass-card" id="scannerCard">
             <div class="card-header">
               <div class="card-header-title">
                 <i class="fa-solid fa-camera"></i>
                 QR Scanner
               </div>
-              <span class="badge-soft" id="scanModeBadge">Auto Mode</span>
+              <span class="badge-soft" id="scanModeBadge">Auto Detect</span>
             </div>
 
             <div class="card-body">
@@ -823,7 +803,7 @@
 
                 <div class="scanner-placeholder" id="scannerPlaceholder">
                   <i class="fa-solid fa-camera-slash"></i>
-                  <p>Camera Inactive</p>
+                  <p style="font-weight:900; font-size:1.05rem;">Camera Inactive</p>
                   <small>Click Start to begin scanning</small>
                 </div>
               </div>
@@ -853,17 +833,26 @@
             </div>
           </div>
 
-          <div class="table-container">
+          <!-- RIGHT -->
+          <div class="table-container" id="tableCard">
             <div class="table-header">
               <div class="card-header-title" style="border: none; padding: 0;">
-                <i class="fa-solid fa-list-ul" style="color: var(--primary-light);"></i>
+                <i class="fa-solid fa-list-ul"></i>
                 Live Activity
               </div>
 
               <div class="d-flex align-items-center gap-2 flex-wrap">
                 <div class="d-flex align-items-center gap-2 flex-fill">
-                  <span class="text-muted d-none d-sm-inline" style="font-size:.8125rem;font-weight:600;">View</span>
-                  <select id="liveSessionFilter" class="form-select-custom" style="min-width: 120px; padding: 0.5rem 0.75rem; font-size: 0.8125rem;">
+                  <span class="text-muted d-none d-sm-inline" style="font-size:.9rem;font-weight:900;">Date</span>
+
+                  <select id="dateSelect" class="form-select-custom"
+                          style="min-width: 260px; padding: 0.55rem 0.85rem; font-size: 0.9rem;">
+                    <option value="">Loading dates...</option>
+                  </select>
+
+                  <span class="text-muted d-none d-sm-inline" style="font-size:.9rem;font-weight:900;">View</span>
+                  <select id="liveSessionFilter" class="form-select-custom"
+                          style="min-width: 160px; padding: 0.55rem 0.85rem; font-size: 0.9rem;">
                     <option value="auto">Auto (Current)</option>
                     <option value="am">AM Only</option>
                     <option value="pm">PM Only</option>
@@ -901,11 +890,28 @@
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </div>
 
-  <!-- ================= PIN MODAL ================= -->
+  <!-- SUCCESS CENTER POPUP -->
+  <div class="center-pop" id="centerPop" aria-hidden="true">
+    <div class="center-pop-card" role="dialog" aria-modal="true" aria-label="Success message">
+      <div class="center-pop-top">
+        <div class="center-pop-icon"><i class="fa-solid fa-circle-check"></i></div>
+        <div>
+          <div class="center-pop-title" id="centerPopTitle">Recorded Successfully</div>
+          <div class="center-pop-sub" id="centerPopSub">Attendance saved to sheet.</div>
+        </div>
+      </div>
+      <div class="center-pop-body" id="centerPopBody">
+        ✅ Process completed successfully.
+      </div>
+    </div>
+  </div>
+
+  <!-- PIN MODAL -->
   <div class="modal fade pin-modal" id="pinModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
       <div class="modal-content">
@@ -939,11 +945,8 @@
     const API_URL = "https://script.google.com/macros/s/AKfycbxy75tYNOZPKpX9Axd0RqHOoxjLMW3TzhBZQqEYan1h_lYLNfQaTZ2wG1CrBjlgV0BD3g/exec";
     const AUTO_STOP_ON_SUCCESS = true;
     const SCAN_DEBOUNCE_MS = 2500;
-
-    // Admin PIN (as requested)
     const ADMIN_PIN = "0143";
 
-    /* Voice + Sound Settings */
     const VOICE_ENABLED = true;
     const SFX_ENABLED = true;
     const VOICE_LANG = "en-US";
@@ -961,11 +964,18 @@
       todaysLogs: [],
       liveSessionFilter: 'auto',
 
-      // PIN flags:
-      timeInPinGranted: false, // granted for current "Time In" scanning cycle
+      selectedDate: null,
+
+      dropdownStudentId: null,
+      dropdownExisting: null,
+
+      timeInPinGranted: false,
       pinModal: null,
       pinResolve: null,
-      pinPurpose: 'timein' // 'timein' | 'registration'
+      pinPurpose: 'timein',
+
+      _syncTimer: null,
+      _centerPopTimer: null,
     };
 
     /* ===================== DOM ===================== */
@@ -973,22 +983,36 @@
       clockTime: document.getElementById('clockTime'),
       clockDate: document.getElementById('clockDate'),
       sessionBadge: document.getElementById('sessionBadge'),
+
       scanMode: document.getElementById('scanMode'),
       scanModeBadge: document.getElementById('scanModeBadge'),
       cameraSelect: document.getElementById('cameraSelect'),
       btnStart: document.getElementById('btnStart'),
       btnStop: document.getElementById('btnStop'),
+
       systemStatus: document.getElementById('systemStatus'),
       systemStatusText: document.getElementById('systemStatusText'),
       liveLogBody: document.getElementById('liveLogBody'),
       lastScanInfo: document.getElementById('lastScanInfo'),
       toastContainer: document.getElementById('toastContainer'),
+
       scanFlash: document.getElementById('scanFlash'),
       scannerOverlay: document.getElementById('scannerOverlay'),
       scannerPlaceholder: document.getElementById('scannerPlaceholder'),
+
       liveWrapper: document.getElementById('liveWrapper'),
       liveSessionFilter: document.getElementById('liveSessionFilter'),
+      dateSelect: document.getElementById('dateSelect'),
       registrationLink: document.getElementById('registrationLink'),
+
+      scannerCard: document.getElementById('scannerCard'),
+      tableCard: document.getElementById('tableCard'),
+
+      // Center popup
+      centerPop: document.getElementById('centerPop'),
+      centerPopTitle: document.getElementById('centerPopTitle'),
+      centerPopSub: document.getElementById('centerPopSub'),
+      centerPopBody: document.getElementById('centerPopBody'),
 
       // PIN modal
       pinModalEl: document.getElementById('pinModal'),
@@ -1005,6 +1029,39 @@
         pending: document.getElementById('statPending'),
       }
     };
+
+    /* ===================== TABLE ADJUST ONLY ===================== */
+    function syncTableHeightToScanner(){
+      if(!el.scannerCard || !el.tableCard) return;
+      if(window.innerWidth < 1200){
+        el.tableCard.style.height = '';
+        return;
+      }
+      const leftH = Math.round(el.scannerCard.getBoundingClientRect().height);
+      if(leftH > 0) el.tableCard.style.height = leftH + 'px';
+    }
+
+    window.addEventListener('resize', () => {
+      clearTimeout(state._syncTimer);
+      state._syncTimer = setTimeout(syncTableHeightToScanner, 120);
+    });
+
+    /* ===================== CENTER POPUP (NEW) ===================== */
+    function showCenterPop({ title, sub, body, duration = 1700 } = {}){
+      clearTimeout(state._centerPopTimer);
+
+      if(title) el.centerPopTitle.textContent = title;
+      if(sub) el.centerPopSub.textContent = sub;
+      if(body) el.centerPopBody.textContent = body;
+
+      el.centerPop.classList.add('show');
+      el.centerPop.setAttribute('aria-hidden', 'false');
+
+      state._centerPopTimer = setTimeout(() => {
+        el.centerPop.classList.remove('show');
+        el.centerPop.setAttribute('aria-hidden', 'true');
+      }, duration);
+    }
 
     /* ===================== TOAST ===================== */
     function showToast(message, type='info', duration=3000){
@@ -1029,7 +1086,7 @@
       }, duration);
     }
 
-    /* ===================== FX ===================== */
+    /* ===================== FX + SOUND ===================== */
     function flashGreen(){
       if(!el.scanFlash) return;
       el.scanFlash.classList.add('on');
@@ -1045,6 +1102,7 @@
     }
 
     function beep(duration=90, freq=880, vol=0.06){
+      if(!SFX_ENABLED) return;
       try{
         audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
         const o = audioCtx.createOscillator();
@@ -1059,10 +1117,19 @@
       }catch(e){}
     }
 
-    function chimeSuccess(){
+    // ✅ NEW: scan sound (quick double chirp)
+    function sfxScanned(){
       if(!SFX_ENABLED) return;
-      beep(80, 880, 0.06);
-      setTimeout(() => beep(80, 1180, 0.05), 90);
+      beep(55, 1040, 0.05);
+      setTimeout(() => beep(55, 1320, 0.045), 70);
+    }
+
+    // ✅ NEW: record success sound (pleasant 3-note)
+    function sfxRecorded(){
+      if(!SFX_ENABLED) return;
+      beep(75, 880, 0.06);
+      setTimeout(() => beep(75, 1108, 0.055), 90);
+      setTimeout(() => beep(90, 1320, 0.05), 180);
     }
 
     /* ===================== VOICE ===================== */
@@ -1124,7 +1191,29 @@
       return s;
     }
 
-    /* ===================== PIN MODAL (CORE) ===================== */
+    function formatDateLabel(iso){
+      const d = new Date(iso + "T00:00:00");
+      if(isNaN(d)) return iso;
+      return d.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'short', day:'numeric' });
+    }
+
+    function populateDateSelect(logs, activeDate){
+      const dates = new Set();
+      (logs || []).forEach(r => { if(r && r.date) dates.add(String(r.date).trim()); });
+      if(activeDate) dates.add(String(activeDate).trim());
+
+      const arr = Array.from(dates).filter(Boolean).sort((a,b)=> (a>b ? -1 : 1));
+      el.dateSelect.innerHTML = '';
+      arr.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d;
+        opt.textContent = formatDateLabel(d);
+        el.dateSelect.appendChild(opt);
+      });
+      el.dateSelect.value = (arr.includes(activeDate) ? activeDate : (arr[0] || activeDate || ''));
+    }
+
+    /* ===================== PIN MODAL ===================== */
     function initPinModal(){
       state.pinModal = new bootstrap.Modal(el.pinModalEl, { backdrop:'static', keyboard:false });
 
@@ -1176,12 +1265,6 @@
       return log_type === 'am_in' || log_type === 'pm_in';
     }
 
-    // Only ask PIN on Start if selected mode is explicitly a Time In
-    function startModeNeedsPin(){
-      const mode = el.scanMode.value || 'auto';
-      return (mode === 'am_in' || mode === 'pm_in');
-    }
-
     /* ===================== LIVE PREF ===================== */
     function loadLiveSessionPref(){
       try { return localStorage.getItem('liveSessionFilter') || 'auto'; }
@@ -1189,6 +1272,14 @@
     }
     function saveLiveSessionPref(v){
       try { localStorage.setItem('liveSessionFilter', v); } catch(e){}
+    }
+
+    function loadDatePref(){
+      try { return localStorage.getItem('selectedDate') || ''; }
+      catch(e){ return ''; }
+    }
+    function saveDatePref(v){
+      try { localStorage.setItem('selectedDate', v); } catch(e){}
     }
 
     /* ===================== SESSION UI ===================== */
@@ -1202,19 +1293,44 @@
       if(mode === 'pm') el.liveWrapper.classList.add('show-pm');
     }
 
-    function renderScanModeOptions(){
-      const isAM = state.currentSession === 'morning';
+    /* ===================== DROPDOWN HIDE LOGIC ===================== */
+    function clearScanModeContext(){
+      state.dropdownStudentId = null;
+      state.dropdownExisting = null;
+      renderScanModeOptions(null);
+    }
+
+    function setScanModeContextForStudent(studentId, date){
+      const existing = findExistingRow(studentId, date);
+      state.dropdownStudentId = studentId;
+      state.dropdownExisting = existing;
+      renderScanModeOptions(existing);
+    }
+
+    function renderScanModeOptions(existingRow = null){
       const current = el.scanMode.value || 'auto';
+      const hasContext = !!existingRow;
+      const has = (k) => !!(existingRow && String(existingRow[k] || '').trim());
+
+      const allowAmIn  = !hasContext || !has('am_in');
+      const allowAmOut = !hasContext ? true : (has('am_in') && !has('am_out'));
+      const allowPmIn  = !hasContext || !has('pm_in');
+      const allowPmOut = !hasContext ? true : (has('pm_in') && !has('pm_out'));
 
       el.scanMode.innerHTML = '';
       el.scanMode.appendChild(new Option('Auto Detect', 'auto'));
-      if (isAM) {
-        el.scanMode.appendChild(new Option('AM Time In', 'am_in'));
-        el.scanMode.appendChild(new Option('AM Time Out', 'am_out'));
-      } else {
-        el.scanMode.appendChild(new Option('PM Time In', 'pm_in'));
-        el.scanMode.appendChild(new Option('PM Time Out', 'pm_out'));
-      }
+
+      const ogAm = document.createElement('optgroup');
+      ogAm.label = 'AM';
+      if(allowAmIn)  ogAm.appendChild(new Option('AM Time In', 'am_in'));
+      if(allowAmOut) ogAm.appendChild(new Option('AM Time Out', 'am_out'));
+      if(ogAm.children.length) el.scanMode.appendChild(ogAm);
+
+      const ogPm = document.createElement('optgroup');
+      ogPm.label = 'PM';
+      if(allowPmIn)  ogPm.appendChild(new Option('PM Time In', 'pm_in'));
+      if(allowPmOut) ogPm.appendChild(new Option('PM Time Out', 'pm_out'));
+      if(ogPm.children.length) el.scanMode.appendChild(ogPm);
 
       const exists = [...el.scanMode.options].some(o => o.value === current);
       el.scanMode.value = exists ? current : 'auto';
@@ -1235,32 +1351,51 @@
       el.sessionBadge.textContent = isMorning ? 'Morning' : 'Afternoon';
       el.sessionBadge.classList.toggle('afternoon', !isMorning);
 
-      // If session changed (AM -> PM), require PIN again for PM Time In
       if(state.prevSession !== state.currentSession){
         state.timeInPinGranted = false;
+        clearScanModeContext();
       }
 
-      renderScanModeOptions();
+      renderScanModeOptions(state.dropdownExisting || null);
       updateLiveColumns();
     }
     setInterval(updateClock, 1000);
 
-    el.scanMode.addEventListener('change', () => {
+    el.scanMode.addEventListener('change', async () => {
       el.scanModeBadge.textContent = el.scanMode.options[el.scanMode.selectedIndex].text;
-      // Switching modes resets time-in PIN grant (safer)
       state.timeInPinGranted = false;
+
+      const mode = el.scanMode.value || 'auto';
+      if(state.scanning && (mode === 'am_in' || mode === 'pm_in')){
+        const label = el.scanMode.options[el.scanMode.selectedIndex]?.text || 'Time In';
+        const ok = await askAdminPin('timein', label);
+        if(!ok){
+          el.scanMode.value = 'auto';
+          el.scanModeBadge.textContent = el.scanMode.options[el.scanMode.selectedIndex].text;
+          showToast('PIN required for Time In. Mode reset to Auto.', 'warning', 2500);
+          state.timeInPinGranted = false;
+          return;
+        }
+        state.timeInPinGranted = true;
+        showToast('Time In unlocked for this scan session.', 'success', 1800);
+      }
     });
 
-    if (el.liveSessionFilter) {
-      el.liveSessionFilter.addEventListener('change', () => {
-        const v = el.liveSessionFilter.value;
-        state.liveSessionFilter = v;
-        saveLiveSessionPref(v);
-        updateLiveColumns();
-        const label = { auto:'Auto (Current)', am:'AM Only', pm:'PM Only', all:'All Day' }[v] || 'Auto';
-        showToast(`Live table: ${label}`, 'info', 1500);
-      });
-    }
+    el.liveSessionFilter.addEventListener('change', () => {
+      const v = el.liveSessionFilter.value;
+      state.liveSessionFilter = v;
+      saveLiveSessionPref(v);
+      updateLiveColumns();
+      const label = { auto:'Auto (Current)', am:'AM Only', pm:'PM Only', all:'All Day' }[v] || 'Auto';
+      showToast(`Live table: ${label}`, 'info', 1500);
+    });
+
+    el.dateSelect.addEventListener('change', () => {
+      const d = el.dateSelect.value || todayISO();
+      state.selectedDate = d;
+      saveDatePref(d);
+      loadTables(d);
+    });
 
     /* ===================== CALCS ===================== */
     function parseTimeToMinutes(t){
@@ -1287,6 +1422,8 @@
     /* ===================== LOAD TABLE ===================== */
     async function loadTables(date = todayISO()){
       try{
+        state.selectedDate = date;
+
         el.lastScanInfo.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Loading logs for ${date}...</span>`;
         const resp = await api({ action:'get_logs', date });
         el.liveLogBody.innerHTML = '';
@@ -1295,9 +1432,11 @@
         const logs = resp.logs || [];
         state.todaysLogs = logs;
 
+        populateDateSelect(logs, date);
+
         el.lastScanInfo.innerHTML = logs.length
-          ? `<i class="fa-solid fa-check text-success"></i><span>Loaded ${logs.length} record(s)</span>`
-          : `<i class="fa-solid fa-inbox"></i><span>No records yet for today</span>`;
+          ? `<i class="fa-solid fa-check" style="color:var(--success)"></i><span>Loaded ${logs.length} record(s)</span>`
+          : `<i class="fa-solid fa-inbox"></i><span>No records for ${formatDateLabel(date)}</span>`;
 
         const sortedLogs = logs.slice().sort((a, b) => {
           const getLatestTime = (r) => {
@@ -1309,7 +1448,7 @@
           return getLatestTime(b) - getLatestTime(a);
         });
 
-        sortedLogs.forEach((r, index) => {
+        sortedLogs.forEach((r) => {
           const amIn = timeDisplay(r.am_in);
           const amOut = timeDisplay(r.am_out);
           const pmIn = timeDisplay(r.pm_in);
@@ -1317,8 +1456,6 @@
           const total = String(r.total_hours||'').trim() || calcHours(amIn, amOut, pmIn, pmOut);
 
           const tr = document.createElement('tr');
-          if (index === 0) tr.classList.add('latest-entry');
-
           tr.innerHTML = `
             <td>
               <div class="student-cell">
@@ -1341,10 +1478,18 @@
 
         updateStatsFromData();
         updateLiveColumns();
+
+        if(state.dropdownStudentId){
+          setScanModeContextForStudent(state.dropdownStudentId, date);
+        }
+
+        syncTableHeightToScanner();
+
       }catch(err){
         console.error(err);
-        el.lastScanInfo.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-danger"></i><span>Failed to load logs</span>`;
+        el.lastScanInfo.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:var(--danger)"></i><span>Failed to load logs</span>`;
         showToast('Failed to load logs', 'error', 3000);
+        syncTableHeightToScanner();
       }
     }
 
@@ -1405,7 +1550,8 @@
     async function startScanner(){
       if(state.scanning) return;
 
-      primeAudio();
+      clearScanModeContext();
+      primeAudio(); // unlock audio
       initVoice();
 
       const cameraId = el.cameraSelect.value;
@@ -1414,15 +1560,18 @@
         return;
       }
 
-      // PIN on Start Scanner IF mode is AM Time In or PM Time In
-      if(startModeNeedsPin() && !state.timeInPinGranted){
+      // PIN BEFORE scanning if Time In selected
+      const mode = el.scanMode.value || 'auto';
+      if(mode === 'am_in' || mode === 'pm_in'){
         const label = el.scanMode.options[el.scanMode.selectedIndex]?.text || 'Time In';
         const ok = await askAdminPin('timein', label);
         if(!ok){
-          showToast('Admin PIN required for Time In.', 'warning', 2500);
+          showToast('Admin PIN is required for Time In.', 'warning', 2500);
           return;
         }
         state.timeInPinGranted = true;
+      } else {
+        state.timeInPinGranted = false;
       }
 
       try{
@@ -1461,10 +1610,13 @@
         el.systemStatusText.textContent = 'Scanning';
         showToast("Scanner activated", "success", 2000);
 
+        syncTableHeightToScanner();
+
       }catch(err){
         console.error(err);
         showToast("Camera failed to start", "error", 3000);
         el.scannerPlaceholder.style.display = 'flex';
+        syncTableHeightToScanner();
       }
     }
 
@@ -1479,8 +1631,10 @@
         el.systemStatus.classList.remove('scanning');
         el.systemStatusText.textContent = 'Online';
 
-        // Reset PIN grant when scanner stops
         state.timeInPinGranted = false;
+        clearScanModeContext();
+
+        syncTableHeightToScanner();
       }).catch(console.error);
     }
 
@@ -1539,28 +1693,38 @@
 
     async function processAttendance(generated_code){
       const date = todayISO();
+
+      if(el.dateSelect && el.dateSelect.value !== date){
+        state.selectedDate = date;
+        saveDatePref(date);
+      }
+
       el.lastScanInfo.innerHTML = `
-        <i class="fa-solid fa-circle-notch fa-spin text-primary"></i>
+        <i class="fa-solid fa-circle-notch fa-spin"></i>
         <span>Processing: ${generated_code}...</span>
       `;
 
       try {
+        // quick feedback that scanner read something
+        sfxScanned();
+
         const found = await api({ action:'find_student', generated_code });
         if(!found.success){
           beep(120, 220, 0.08);
           showToast('Student not found', 'error', 3000);
-          el.lastScanInfo.innerHTML = `<i class="fa-solid fa-xmark text-danger"></i><span>Invalid code</span>`;
+          el.lastScanInfo.innerHTML = `<i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Invalid code</span>`;
           return;
         }
 
-        speak("Successfully scanned");
-
         const student = found.student;
 
-        // Ensure we have the latest table to determine auto log type accurately
+        // optional voice
+        speak("Successfully scanned");
+
         await loadTables(date);
 
         const existing = findExistingRow(student.student_id, date);
+        setScanModeContextForStudent(student.student_id, date);
 
         let log_type = el.scanMode.value;
         if (log_type === 'auto') {
@@ -1572,15 +1736,12 @@
           }
         }
 
-        // PIN ONLY for Time In (AM In / PM In). Time Out has NO PIN.
+        // NO PIN AFTER SCAN
         if(isTimeInLogType(log_type) && !state.timeInPinGranted){
-          const label = log_type.toUpperCase().replace('_',' ');
-          const ok = await askAdminPin('timein', label);
-          if(!ok){
-            showToast('Admin PIN required for Time In.', 'warning', 2500);
-            return;
-          }
-          state.timeInPinGranted = true;
+          beep(120, 260, 0.06);
+          showToast('Admin PIN required for Time In. Select AM/PM Time In then Start Scanner.', 'warning', 3500);
+          el.lastScanInfo.innerHTML = `<i class="fa-solid fa-lock" style="color:var(--warning)"></i><span>Time In locked (PIN required)</span>`;
+          return;
         }
 
         const time = nowLocalTime12();
@@ -1589,20 +1750,29 @@
         if(!resp.success){
           beep(120, 260, 0.06);
           showToast(resp.message || 'Not recorded', 'warning', 3000);
-          el.lastScanInfo.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-warning"></i><span>${student.student_name} • ${resp.message || 'Not recorded'}</span>`;
+          el.lastScanInfo.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:var(--warning)"></i><span>${student.student_name} • ${resp.message || 'Not recorded'}</span>`;
           return;
         }
 
+        // ✅ SUCCESS SOUND + POPUP + TOAST (NEW)
         flashGreen();
-        chimeSuccess();
+        sfxRecorded();
+
+        const label = log_type.toUpperCase().replace('_', ' ');
+        showCenterPop({
+          title: "Processed Successfully",
+          sub: `${label} saved`,
+          body: `${student.student_name} • ${label} at ${time}`
+        });
 
         if (log_type.endsWith('_in'))  speak("Time In Successfully");
         if (log_type.endsWith('_out')) speak("Time Out Successfully");
 
-        showToast(`${student.student_name} • ${log_type.toUpperCase().replace('_', ' ')} at ${time}`, 'success', 3000);
-        el.lastScanInfo.innerHTML = `<i class="fa-solid fa-check text-success"></i><span>${student.student_name} recorded</span>`;
+        showToast(`${student.student_name} • ${label} at ${time}`, 'success', 3000);
+        el.lastScanInfo.innerHTML = `<i class="fa-solid fa-check" style="color:var(--success)"></i><span>${student.student_name} recorded</span>`;
 
         await loadTables(date);
+        setScanModeContextForStudent(student.student_id, date);
 
         if (AUTO_STOP_ON_SUCCESS && state.scanning) {
           setTimeout(() => stopScanner(), 300);
@@ -1612,17 +1782,20 @@
         console.error(err);
         beep(120, 220, 0.08);
         showToast('Network error', 'error', 4000);
-        el.lastScanInfo.innerHTML = `<i class="fa-solid fa-triangle-exclamation text-danger"></i><span>Connection error</span>`;
+        el.lastScanInfo.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:var(--danger)"></i><span>Connection error</span>`;
+      } finally {
+        syncTableHeightToScanner();
       }
     }
 
-    /* ===================== REGISTRATION PIN (NEW) ===================== */
+    /* ===================== REGISTRATION PIN ===================== */
     function setupRegistrationGate(){
       if(!el.registrationLink) return;
 
       el.registrationLink.addEventListener('click', async (e) => {
         e.preventDefault();
 
+        primeAudio(); // allow sound for modal click too
         const ok = await askAdminPin('registration', 'Registration');
         if(!ok){
           showToast('Admin PIN required to open Registration.', 'warning', 2500);
@@ -1643,17 +1816,21 @@
       initPinModal();
       setupRegistrationGate();
 
-      const pref = loadLiveSessionPref();
-      state.liveSessionFilter = pref;
-      if (el.liveSessionFilter) el.liveSessionFilter.value = pref;
+      state.liveSessionFilter = loadLiveSessionPref();
+      el.liveSessionFilter.value = state.liveSessionFilter;
+
+      const prefDate = loadDatePref();
+      state.selectedDate = prefDate || todayISO();
 
       updateClock();
       updateLiveColumns();
+      renderScanModeOptions(null);
+
       await initCameras();
-      await loadTables(todayISO());
+      await loadTables(state.selectedDate);
+
+      setTimeout(syncTableHeightToScanner, 120);
     });
   </script>
 </body>
 </html>
-
-
