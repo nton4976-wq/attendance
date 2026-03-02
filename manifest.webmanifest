@@ -1,15 +1,14 @@
 {
-  "name": "Smart Attendance",
-  "short_name": "SmartAttendance",
-  "start_url": "/index.html",
-  "scope": "/",
+  "start_url": "/attendance/index.html",
+  "scope": "/attendance/",
   "display": "standalone",
-  "background_color": "#0f172a",
+  "name": "Smart Attendance Pro",
+  "short_name": "SmartAttend",
   "theme_color": "#0b5d1e",
-  "description": "QR attendance scanner",
+  "background_color": "#0f172a",
   "icons": [
-    { "src": "/YOUR_REPO_NAME/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/YOUR_REPO_NAME/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "/YOUR_REPO_NAME/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    { "src": "/REPO/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/REPO/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/REPO/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
