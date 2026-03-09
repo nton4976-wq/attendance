@@ -7,7 +7,7 @@
   <meta name="theme-color" content="#0b5d1e">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>User CARES | SmartAttendance</title>
+  <title>User Portal | SmartAttendance Pro</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -65,12 +65,21 @@
       --mobile-drawer-w:min(88vw, 360px);
     }
 
-    *{box-sizing:border-box;margin:0;padding:0}
-    html{scroll-behavior:smooth}
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
     body{
       font-family:'Plus Jakarta Sans',sans-serif;
       min-height:100vh;
       color:var(--text-primary);
+      line-height:1.5;
       background:
         radial-gradient(circle at 12% 12%, rgba(34,197,94,.10) 0%, transparent 24%),
         radial-gradient(circle at 88% 16%, rgba(14,165,233,.08) 0%, transparent 18%),
@@ -79,6 +88,7 @@
       overflow-x:hidden;
       -webkit-font-smoothing:antialiased;
       -moz-osx-font-smoothing:grayscale;
+      text-rendering:optimizeLegibility;
     }
 
     body::before{
@@ -100,6 +110,18 @@
       z-index:-1;
       opacity:.022;
       background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    img{
+      max-width:100%;
+      display:block;
+    }
+
+    button,
+    input,
+    textarea,
+    select{
+      font:inherit;
     }
 
     .hidden{display:none !important}
@@ -126,6 +148,11 @@
       font-weight:900;
       letter-spacing:-.03em;
       min-width:0;
+    }
+
+    .navbar-brand:hover{
+      color:var(--text-primary);
+      opacity:.98;
     }
 
     .brand-logo{
@@ -249,9 +276,7 @@
     }
 
     @media (max-width:575.98px){
-      .topbar-clock{
-        display:none;
-      }
+      .topbar-clock{display:none}
 
       .navbar{
         min-height:74px;
@@ -279,6 +304,7 @@
       max-width:var(--container-max);
       margin:0 auto;
       padding:1rem;
+      width:100%;
     }
 
     @media (min-width:768px){
@@ -305,6 +331,21 @@
     @keyframes pageSlide{
       from{opacity:0;transform:translateY(14px) scale(.992)}
       to{opacity:1;transform:translateY(0) scale(1)}
+    }
+
+    /* Added because your JS is already using these classes */
+    .page-enter{
+      opacity:0;
+      transform:translateY(14px) scale(.992);
+      will-change:transform, opacity;
+    }
+
+    .page-enter.page-enter-active{
+      opacity:1;
+      transform:translateY(0) scale(1);
+      transition:
+        opacity .32s cubic-bezier(.22,1,.36,1),
+        transform .32s cubic-bezier(.22,1,.36,1);
     }
 
     .glass-panel{
@@ -340,9 +381,7 @@
     }
 
     @media (max-width:575.98px){
-      .auth-card{
-        border-radius:26px;
-      }
+      .auth-card{border-radius:26px}
     }
 
     .auth-brand-panel{
@@ -523,6 +562,7 @@
     }
 
     .field-group{margin-bottom:1rem}
+
     .field-label{
       display:block;
       margin-bottom:.45rem;
@@ -607,8 +647,18 @@
 
     /* APP LAYOUT */
     .app-shell{
-      display:block;
+      display:grid;
+      grid-template-columns:1fr;
+      gap:1rem;
+      align-items:start;
       min-width:0;
+    }
+
+    @media (min-width:1141px){
+      .app-shell{
+        grid-template-columns:minmax(270px, 320px) minmax(0, 1fr);
+        gap:1.2rem;
+      }
     }
 
     .content-stack{
@@ -861,6 +911,8 @@
       box-shadow:var(--shadow);
       backdrop-filter:blur(14px);
       margin-bottom:1rem;
+      align-self:start;
+      min-width:0;
     }
 
     @media (max-width:1140px){
@@ -1064,10 +1116,12 @@
       box-shadow:var(--shadow);
       backdrop-filter:blur(14px);
       overflow:hidden;
+      min-width:0;
     }
 
     .panel-body{
       padding:1rem;
+      min-width:0;
     }
 
     @media (min-width:768px){
@@ -1082,6 +1136,7 @@
       align-items:center;
       justify-content:space-between;
       gap:.8rem;
+      min-width:0;
     }
 
     @media (min-width:768px){
@@ -1095,6 +1150,7 @@
       font-size:1rem;
       font-weight:1000;
       letter-spacing:-.02em;
+      min-width:0;
     }
 
     .section-title i{color:var(--primary-light)}
@@ -1167,12 +1223,12 @@
       cursor:pointer;
       white-space:nowrap;
       min-height:46px;
+      text-decoration:none;
     }
 
     @media (max-width:576px){
-      .btn{
-        width:100%;
-      }
+      .btn{width:100%}
+
       .hero-actions .btn,
       .mini-actions .btn,
       .profile-side .btn,
@@ -1239,22 +1295,40 @@
       flex-wrap:wrap;
       align-items:center;
       width:100%;
+      min-width:0;
+    }
+
+    .filter-bar > *{
+      min-width:0;
     }
 
     @media (min-width:768px){
       .filter-bar{width:auto}
     }
 
+    /* ATTENDANCE TABLE */
     .table-responsive{
-      max-height:60vh;
-      overflow:auto;
       width:100%;
+      overflow:auto;
+      overflow-y:auto;
+      overflow-x:auto;
+      max-width:100%;
+      max-height:min(62vh, 680px);
       -webkit-overflow-scrolling:touch;
+      border-radius:0 0 var(--radius-xl) var(--radius-xl);
+      overscroll-behavior:contain;
+    }
+
+    .table-responsive::after{
+      content:'';
+      display:block;
+      height:1px;
     }
 
     .custom-table{
       width:100%;
-      border-collapse:collapse;
+      border-collapse:separate;
+      border-spacing:0;
       font-size:.92rem;
       min-width:720px;
     }
@@ -1266,6 +1340,8 @@
     }
 
     .custom-table th{
+      position:sticky;
+      top:0;
       background:rgba(15,23,42,.96);
       color:var(--text-muted);
       font-size:.72rem;
@@ -1276,6 +1352,7 @@
       padding:1rem 1.05rem;
       border-bottom:1px solid var(--border-subtle);
       white-space:nowrap;
+      backdrop-filter:blur(10px);
     }
 
     .custom-table td{
@@ -1283,10 +1360,19 @@
       color:var(--text-secondary);
       border-bottom:1px solid var(--border-subtle);
       vertical-align:middle;
+      background:transparent;
+    }
+
+    .custom-table tbody tr{
+      transition:background var(--transition-fast), transform var(--transition-fast);
     }
 
     .custom-table tbody tr:hover{
       background:rgba(255,255,255,.02);
+    }
+
+    .custom-table tbody tr:last-child td{
+      border-bottom:none;
     }
 
     .time-col{
@@ -1332,6 +1418,13 @@
       padding:1rem;
       box-shadow:var(--shadow-sm);
       min-width:0;
+      transition:transform var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+    }
+
+    .report-card:hover{
+      transform:translateY(-1px);
+      border-color:rgba(255,255,255,.11);
+      background:rgba(15,23,42,.44);
     }
 
     .report-title{
@@ -1464,6 +1557,7 @@
       align-items:flex-start;
       gap:1rem;
       flex-wrap:wrap;
+      min-width:0;
     }
 
     .profile-main{
@@ -1539,27 +1633,40 @@
       box-shadow:none;
     }
 
+    /* New close button styling, very visible and touch-friendly */
     .qr-x{
       position:absolute;
       top:max(12px, env(safe-area-inset-top));
       right:max(12px, env(safe-area-inset-right));
-      z-index:12;
-      width:46px;
-      height:46px;
+      z-index:20;
+      width:48px;
+      height:48px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(6,19,29,.58);
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(6,19,29,.72);
       color:var(--text-primary);
       display:grid;
       place-items:center;
       cursor:pointer;
       backdrop-filter:blur(16px) saturate(160%);
+      -webkit-backdrop-filter:blur(16px) saturate(160%);
       transition:all var(--transition-fast);
+      box-shadow:0 14px 30px rgba(0,0,0,.28);
     }
 
     .qr-x:hover{
-      background:rgba(255,255,255,.08);
-      transform:translateY(-1px);
+      background:rgba(255,255,255,.10);
+      transform:translateY(-1px) scale(1.02);
+    }
+
+    .qr-x:focus{
+      outline:none;
+      box-shadow:var(--shadow-glow), 0 14px 30px rgba(0,0,0,.28);
+    }
+
+    .qr-x i{
+      font-size:1.05rem;
+      pointer-events:none;
     }
 
     .qr-id-card{
@@ -1591,6 +1698,13 @@
         min-height:100vh;
         border-radius:0;
         padding:max(22px, env(safe-area-inset-top)) 18px max(22px, env(safe-area-inset-bottom));
+      }
+
+      .qr-x{
+        top:max(12px, env(safe-area-inset-top));
+        right:max(12px, env(safe-area-inset-right));
+        width:46px;
+        height:46px;
       }
     }
 
@@ -1896,9 +2010,7 @@
 
     /* RESPONSIVE IMPROVEMENTS */
     @media (max-width:991.98px){
-      .page-hero{
-        gap:.85rem;
-      }
+      .page-hero{gap:.85rem}
 
       .page-title{
         font-size:clamp(1.3rem, 5vw, 1.8rem);
@@ -1945,6 +2057,10 @@
 
       .custom-table{
         min-width:640px;
+      }
+
+      .table-responsive{
+        max-height:58vh;
       }
     }
 
@@ -1996,6 +2112,27 @@
       .toast{
         width:100%;
       }
+
+      .custom-table{
+        min-width:600px;
+        font-size:.88rem;
+      }
+
+      .custom-table th,
+      .custom-table td{
+        padding:.9rem .8rem;
+      }
+    }
+
+    /* ACCESSIBILITY / MOTION */
+    @media (prefers-reduced-motion:reduce){
+      html{scroll-behavior:auto}
+      *,
+      *::before,
+      *::after{
+        animation:none !important;
+        transition:none !important;
+      }
     }
 
     /* SCROLLBAR */
@@ -2010,20 +2147,21 @@
     }
   </style>
 </head>
-
 <body>
   <nav class="navbar">
     <div class="container-fluid px-3 px-md-4">
-      <a class="navbar-brand" href="users.html">
+      <a class="navbar-brand" href="users.html" aria-label="SmartAttend User Portal Home">
         <img class="brand-logo" src="rsu_logo_transparent.png" alt="RSU Logo" />
         <div class="d-flex flex-column" style="line-height:1.02; min-width:0;">
           <span>SmartAttend</span>
-          <small style="font-size:.68rem; color:var(--text-muted); font-weight:800; letter-spacing:.08em; text-transform:uppercase;">User Portal</small>
+          <small style="font-size:.68rem; color:var(--text-muted); font-weight:800; letter-spacing:.08em; text-transform:uppercase;">
+            User Portal
+          </small>
         </div>
       </a>
 
       <div class="navbar-actions">
-        <div class="topbar-clock">
+        <div class="topbar-clock" aria-live="polite">
           <div class="clock-group">
             <div id="clockTime">--:--:--</div>
             <div id="clockDate">Loading...</div>
@@ -2127,7 +2265,7 @@
                 <div>
                   <div class="auth-brand-title">RSU CARES<br>User Portal</div>
                   <div class="auth-brand-sub">
-                    Secure, self-service access for registered users to manage attendance, reports, and digital identity in one modern portal.
+                    A secure and simple space where you can view your attendance, manage internship reports, and access your digital ID anytime.
                   </div>
                 </div>
               </div>
@@ -2146,7 +2284,7 @@
                 </div>
                 <div>
                   <h4>Personal Dashboard</h4>
-                  <p>Review your own attendance, total hours, weekly progress status, and reflection completion in one organized workspace.</p>
+                  <p>See your attendance summary, total rendered hours, weekly progress, and reflection status in one place.</p>
                 </div>
               </div>
 
@@ -2156,7 +2294,7 @@
                 </div>
                 <div>
                   <h4>Digital ID & QR Code</h4>
-                  <p>Open your digital ID card and highlighted QR code anytime for fast identity verification and attendance-related use.</p>
+                  <p>Open your digital ID instantly and present your QR code quickly whenever attendance verification is needed.</p>
                 </div>
               </div>
 
@@ -2166,7 +2304,7 @@
                 </div>
                 <div>
                   <h4>Reports & Exports</h4>
-                  <p>Create weekly entries, save reflections, and export your attendance or weekly report files when needed.</p>
+                  <p>Save your weekly entries, reflection, and export your attendance or report records whenever required.</p>
                 </div>
               </div>
             </div>
@@ -2181,7 +2319,7 @@
 
               <div class="auth-title">Sign in with your registered email</div>
               <div class="auth-subtitle">
-                Use the same email address from your attendance registration to access your personal user portal.
+                Use the same email you registered in the attendance system to open your personal portal.
               </div>
 
               <div class="field-group">
@@ -2191,12 +2329,12 @@
                   <input id="loginEmail" type="email" class="form-control-custom" placeholder="name@example.com" autocomplete="email" />
                 </div>
                 <div class="helper-text" id="loginHelperText">
-                  Your account will only open if your email is found in the registered users list.
+                  Your portal will open only if your email is found in the registered users list.
                 </div>
               </div>
 
               <div class="d-grid gap-2">
-                <button class="btn btn-primary" id="btnUserLogin">
+                <button class="btn btn-primary" id="btnUserLogin" type="button">
                   <i class="fa-solid fa-right-to-bracket"></i>
                   Continue to Portal
                 </button>
@@ -2209,7 +2347,7 @@
 
               <div class="helper-card">
                 <strong style="color:var(--text-primary);">Quick note:</strong>
-                Only your own registered account data will be displayed inside this portal, including attendance, QR code, and internship reports.
+                Only your own registered account data will be shown here, including your attendance records, internship reports, and digital ID.
               </div>
             </div>
           </div>
@@ -2286,16 +2424,16 @@
               <div>
                 <div class="page-title">Welcome back, <span id="dashboardWelcomeName">User</span></div>
                 <div class="page-subtitle">
-                  Review your attendance status, internship progress, reflection completion, and quick access tools from one clean dashboard.
+                  Here is your quick overview for attendance, internship progress, reflection status, and your digital ID.
                 </div>
               </div>
 
               <div class="hero-actions">
-                <button class="btn btn-secondary" id="btnDashboardViewQR">
+                <button class="btn btn-secondary" id="btnDashboardViewQR" type="button">
                   <i class="fa-solid fa-qrcode"></i>
                   My QR ID
                 </button>
-                <button class="btn btn-primary" id="btnDashboardExportAttendance">
+                <button class="btn btn-primary" id="btnDashboardExportAttendance" type="button">
                   <i class="fa-solid fa-file-excel"></i>
                   Export Attendance
                 </button>
@@ -2334,7 +2472,7 @@
                   </div>
 
                   <div class="profile-side">
-                    <button class="btn btn-secondary" id="btnQuickOpenReports">
+                    <button class="btn btn-secondary" id="btnQuickOpenReports" type="button">
                       <i class="fa-solid fa-clipboard-list"></i>
                       Open Reports
                     </button>
@@ -2382,7 +2520,7 @@
 
                 <div class="filter-bar">
                   <input type="date" id="dashWeekPicker" class="form-control-custom" style="min-width:220px;" />
-                  <button class="btn btn-primary" id="btnDashLoadWeek">
+                  <button class="btn btn-primary" id="btnDashLoadWeek" type="button">
                     <i class="fa-solid fa-arrows-rotate"></i>
                     Load Week
                   </button>
@@ -2401,12 +2539,12 @@
               <div>
                 <div class="page-title">My Attendance History</div>
                 <div class="page-subtitle">
-                  Filter and review your daily attendance records, time logs, and total hours in a clean table layout.
+                  Review your attendance logs clearly by date, time, and total rendered hours.
                 </div>
               </div>
 
               <div class="hero-actions">
-                <button class="btn btn-primary" id="btnAttendanceExport">
+                <button class="btn btn-primary" id="btnAttendanceExport" type="button">
                   <i class="fa-solid fa-file-excel"></i>
                   Export My Attendance
                 </button>
@@ -2421,20 +2559,27 @@
                 </div>
 
                 <div class="filter-bar">
-                  <input type="date" id="attendanceStart" class="form-control-custom">
-                  <input type="date" id="attendanceEnd" class="form-control-custom">
-                  <button class="btn btn-primary" id="btnUserApplyAttendanceFilter">
+                  <input type="date" id="attendanceStart" class="form-control-custom" aria-label="Attendance start date">
+                  <input type="date" id="attendanceEnd" class="form-control-custom" aria-label="Attendance end date">
+                  <button class="btn btn-primary" id="btnUserApplyAttendanceFilter" type="button">
                     <i class="fa-solid fa-filter"></i>
                     Filter
                   </button>
-                  <button class="btn btn-secondary" id="btnUserResetAttendanceFilter">
+                  <button class="btn btn-secondary" id="btnUserResetAttendanceFilter" type="button">
                     <i class="fa-solid fa-rotate-left"></i>
                     Reset
                   </button>
                 </div>
               </div>
 
-              <div class="table-responsive">
+              <div class="panel-body" style="padding-top:.9rem;">
+                <div class="helper-card" style="margin-top:0;">
+                  <strong style="color:var(--text-primary);">Tip:</strong>
+                  On mobile or smaller screens, swipe left or right inside the table to view all attendance columns.
+                </div>
+              </div>
+
+              <div class="table-responsive" tabindex="0" aria-label="Scrollable attendance history table">
                 <table class="custom-table">
                   <thead>
                     <tr>
@@ -2465,12 +2610,12 @@
               <div>
                 <div class="page-title">My Internship Reports</div>
                 <div class="page-subtitle">
-                  Create and manage your daily progress entries and weekly reflection using the same logic connected to your attendance system.
+                  Save your daily progress and weekly reflection using the same reporting logic connected to your attendance system.
                 </div>
               </div>
 
               <div class="hero-actions">
-                <button class="btn btn-secondary" id="btnReportsExportWeek">
+                <button class="btn btn-secondary" id="btnReportsExportWeek" type="button">
                   <i class="fa-solid fa-file-excel"></i>
                   Export Selected Week
                 </button>
@@ -2486,7 +2631,7 @@
 
                 <div class="filter-bar">
                   <input type="date" id="userWeekPicker" class="form-control-custom" title="Pick any date within the week">
-                  <button class="btn btn-primary" id="btnUserLoadWeek">
+                  <button class="btn btn-primary" id="btnUserLoadWeek" type="button">
                     <i class="fa-solid fa-arrows-rotate"></i>
                     Load Week
                   </button>
@@ -2502,23 +2647,23 @@
 
                   <div class="field-row inline">
                     <div class="field">
-                      <label>Organization</label>
+                      <label for="userOrgName">Organization</label>
                       <input id="userOrgName" class="form-control-custom" value="Romblon State University" />
                     </div>
 
                     <div class="field">
-                      <label>Assigned Department / Section</label>
+                      <label for="userDeptName">Assigned Department / Section</label>
                       <input id="userDeptName" class="form-control-custom" value="Center For Alumni Relation And Employment Services" />
                     </div>
 
                     <div class="field">
-                      <label>OJT Supervisor (Printed Name)</label>
+                      <label for="userSupervisorName">OJT Supervisor (Printed Name)</label>
                       <input id="userSupervisorName" class="form-control-custom" placeholder="e.g., Sherryll Fetalvero" />
                     </div>
                   </div>
 
                   <div class="report-help">
-                    These values are saved together with your weekly report entries and included in Excel exports.
+                    These values are saved together with your weekly report entries and included in your Excel exports.
                   </div>
                 </div>
 
@@ -2531,38 +2676,38 @@
 
                     <div class="field-row">
                       <div class="field">
-                        <label>Date</label>
+                        <label for="userDailyDate">Date</label>
                         <input type="date" id="userDailyDate" class="form-control-custom">
                       </div>
                     </div>
 
                     <div class="field-row">
                       <div class="field">
-                        <label>Morning Activities (AM)</label>
+                        <label for="userDailyAM">Morning Activities (AM)</label>
                         <textarea id="userDailyAM" class="form-textarea-custom" placeholder="Write your morning tasks and accomplishments..."></textarea>
                       </div>
                     </div>
 
                     <div class="field-row">
                       <div class="field">
-                        <label>Afternoon Activities (PM)</label>
+                        <label for="userDailyPM">Afternoon Activities (PM)</label>
                         <textarea id="userDailyPM" class="form-textarea-custom" placeholder="Write your afternoon tasks and accomplishments..."></textarea>
                       </div>
                     </div>
 
                     <div class="field-row">
                       <div class="field">
-                        <label>Remarks (optional)</label>
+                        <label for="userDailyRemarks">Remarks (optional)</label>
                         <textarea id="userDailyRemarks" class="form-textarea-custom" placeholder="Write remarks, concerns, or notes..."></textarea>
                       </div>
                     </div>
 
                     <div class="mini-actions">
-                      <button class="btn btn-primary" id="btnUserSaveDaily">
+                      <button class="btn btn-primary" id="btnUserSaveDaily" type="button">
                         <i class="fa-solid fa-floppy-disk"></i>
                         Save Daily Entry
                       </button>
-                      <button class="btn btn-secondary" id="btnUserClearDaily">
+                      <button class="btn btn-secondary" id="btnUserClearDaily" type="button">
                         <i class="fa-solid fa-eraser"></i>
                         Clear
                       </button>
@@ -2579,18 +2724,18 @@
 
                     <div class="field-row">
                       <div class="field">
-                        <label>Reflection (saved per selected week)</label>
+                        <label for="userWeeklyReflectionText">Reflection (saved per selected week)</label>
                         <textarea id="userWeeklyReflectionText" class="form-textarea-custom" style="min-height:240px;"
                           placeholder="What important lessons (technical, social, or personal) did you learn this week?"></textarea>
                       </div>
                     </div>
 
                     <div class="mini-actions">
-                      <button class="btn btn-primary" id="btnUserSaveReflection">
+                      <button class="btn btn-primary" id="btnUserSaveReflection" type="button">
                         <i class="fa-solid fa-floppy-disk"></i>
                         Save Reflection
                       </button>
-                      <button class="btn btn-secondary" id="btnUserClearReflection">
+                      <button class="btn btn-secondary" id="btnUserClearReflection" type="button">
                         <i class="fa-solid fa-eraser"></i>
                         Clear
                       </button>
@@ -2608,7 +2753,7 @@
                   </div>
 
                   <div class="report-help">
-                    Save daily progress for Monday to Friday. Reflection follows the same weekly logic used in your attendance reporting system.
+                    Save your daily progress from Monday to Friday. Your weekly reflection follows the same weekly logic used by the internship reporting system.
                   </div>
 
                   <div class="week-summary" id="userWeekSummary"></div>
@@ -2623,7 +2768,7 @@
               <div>
                 <div class="page-title">My Account</div>
                 <div class="page-subtitle">
-                  Review your registered information and access quick actions like your digital ID and logout.
+                  Review your registered account information and open your digital ID anytime.
                 </div>
               </div>
             </div>
@@ -2665,11 +2810,11 @@
                   </div>
 
                   <div class="profile-side">
-                    <button class="btn btn-secondary" id="btnAccountViewQR">
+                    <button class="btn btn-secondary" id="btnAccountViewQR" type="button">
                       <i class="fa-solid fa-qrcode"></i>
                       Open Digital ID
                     </button>
-                    <button class="btn btn-danger" id="btnAccountLogout">
+                    <button class="btn btn-danger" id="btnAccountLogout" type="button">
                       <i class="fa-solid fa-right-from-bracket"></i>
                       Logout
                     </button>
@@ -2701,7 +2846,9 @@
   <div class="modal fade" id="qrModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered qr-id-dialog">
       <div class="modal-content qr-id-modal">
-        <button type="button" class="qr-x" data-bs-dismiss="modal" aria-label="Close">
+
+        <!-- CLOSE / X BUTTON -->
+        <button type="button" class="qr-x" data-bs-dismiss="modal" aria-label="Close digital ID">
           <i class="fa-solid fa-xmark"></i>
         </button>
 
@@ -2749,7 +2896,9 @@
                 <div class="qr-id-qrbox">
                   <div id="qrCanvas"></div>
                 </div>
-                <div class="qr-id-hint">Present this digital ID when scanning your attendance QR code.</div>
+                <div class="qr-id-hint">
+                  Present this digital ID when your attendance QR code needs to be scanned.
+                </div>
               </div>
             </div>
           </div>
@@ -2797,6 +2946,7 @@
   let qrModalInstance = null;
   let logoutModalInstance = null;
   let mobileDrawerOpen = false;
+  let resizeTimer = null;
 
   let userReportStore = {
     meta: {
@@ -2818,6 +2968,8 @@
     const tBody = document.getElementById("toastBody");
     const tTime = document.getElementById("toastTime");
 
+    if (!el || !icon || !tTitle || !tBody || !tTime) return;
+
     const now = new Date();
     tTime.textContent = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 
@@ -2830,7 +2982,7 @@
     tTitle.textContent = title || "Notice";
     tBody.textContent = message || "";
 
-    toastInstance = toastInstance || new bootstrap.Toast(el, { delay: 3000 });
+    toastInstance = toastInstance || new bootstrap.Toast(el, { delay: 3200 });
     toastInstance.show();
   }
 
@@ -2855,15 +3007,26 @@
     elBadge.textContent = isMorning ? "Morning" : "Afternoon";
     elBadge.classList.toggle("afternoon", !isMorning);
   }
-  setInterval(updateClock, 1000);
 
   /* ===================== API ===================== */
   async function api(params) {
     params._ts = Date.now();
     const qs = new URLSearchParams(params).toString();
-    const res = await fetch(`${API_URL}?${qs}`, { cache: "no-store" });
+
+    const res = await fetch(`${API_URL}?${qs}`, {
+      cache: "no-store"
+    });
+
     const json = await res.json().catch(() => null);
-    if (!json) throw new Error("Invalid JSON response");
+
+    if (!res.ok) {
+      throw new Error(`Request failed (${res.status})`);
+    }
+
+    if (!json) {
+      throw new Error("Invalid JSON response");
+    }
+
     return json;
   }
 
@@ -2878,14 +3041,19 @@
 
     const text = await res.text();
     let json = null;
-    try { json = JSON.parse(text); } catch (e) {}
+
+    try {
+      json = JSON.parse(text);
+    } catch (e) {}
 
     if (!res.ok) {
       throw new Error(`HTTP ${res.status} ${res.statusText}: ${text.slice(0, 200)}`);
     }
+
     if (!json) {
       throw new Error("Invalid JSON response: " + text.slice(0, 200));
     }
+
     return json;
   }
 
@@ -3014,6 +3182,13 @@
     return mins ? mins / 60 : 0;
   }
 
+  function debounce(fn, delay = 180) {
+    return (...args) => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => fn(...args), delay);
+    };
+  }
+
   /* ===================== SESSION ===================== */
   function saveUserSession(user) {
     if (!user) return;
@@ -3046,8 +3221,7 @@
     const backdrop = document.getElementById("mobileMenuBackdrop");
     const toggle = document.getElementById("menuToggle");
 
-    if (!drawer || !backdrop || !toggle) return;
-    if (!shouldUseMobileMenu()) return;
+    if (!drawer || !backdrop || !toggle || !shouldUseMobileMenu()) return;
 
     drawer.classList.add("show");
     backdrop.classList.add("show");
@@ -3073,22 +3247,17 @@
   }
 
   function toggleMobileDrawer() {
-    if (mobileDrawerOpen) closeMobileDrawer();
-    else openMobileDrawer();
+    mobileDrawerOpen ? closeMobileDrawer() : openMobileDrawer();
   }
 
   function syncMenuMode() {
     const toggle = document.getElementById("menuToggle");
-    const sidebar = document.querySelector(".sidebar-panel");
-
-    if (!toggle || !sidebar) return;
+    if (!toggle) return;
 
     if (shouldUseMobileMenu()) {
       toggle.classList.remove("hidden");
-      sidebar.classList.add("desktop-sidebar-hidden");
     } else {
       toggle.classList.add("hidden");
-      sidebar.classList.remove("desktop-sidebar-hidden");
       closeMobileDrawer();
     }
   }
@@ -3096,6 +3265,23 @@
   function syncActiveNavButtons(viewId) {
     document.querySelectorAll(".side-nav-btn[data-user-view], .drawer-nav-btn[data-user-view]").forEach(btn => {
       btn.classList.toggle("active", btn.getAttribute("data-user-view") === viewId);
+    });
+  }
+
+  /* ===================== TABLE UX ===================== */
+  function setupScrollableTables() {
+    document.querySelectorAll(".table-responsive").forEach(wrapper => {
+      if (wrapper.dataset.enhanced === "true") return;
+      wrapper.dataset.enhanced = "true";
+
+      wrapper.addEventListener("wheel", (e) => {
+        const canScrollX = wrapper.scrollWidth > wrapper.clientWidth;
+        if (!canScrollX) return;
+
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          wrapper.scrollLeft += e.deltaY;
+        }
+      }, { passive: true });
     });
   }
 
@@ -3134,7 +3320,7 @@
       return;
     }
 
-    helper.textContent = "Login successful. Redirecting...";
+    helper.textContent = "Login successful. Opening your portal...";
 
     currentUser = user;
     saveUserSession(user);
@@ -3206,7 +3392,8 @@
     document.getElementById("loginView").classList.remove("hidden");
     document.getElementById("appView").classList.add("hidden");
     document.getElementById("loginEmail").value = "";
-    document.getElementById("loginHelperText").textContent = "Your account will only open if your email is found in the registered users list.";
+    document.getElementById("loginHelperText").textContent = "Your portal will open only if your email is found in the registered users list.";
+
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -3269,6 +3456,7 @@
       const el = document.getElementById(id);
       if (el) el.innerHTML = html;
     };
+
     const setText = (id, text) => {
       const el = document.getElementById(id);
       if (el) el.textContent = text;
@@ -3329,6 +3517,7 @@
     setDefaultInputs();
     bindReportMetaInputs();
     setUserPageView("dashboardView");
+    setupScrollableTables();
 
     try {
       await Promise.all([
@@ -3338,6 +3527,7 @@
         ),
         loadWeekDataForUser(activeWeek.startISO)
       ]);
+
       updateDashboardStats();
       syncMenuMode();
     } catch (err) {
@@ -3349,19 +3539,23 @@
   /* ===================== PAGE NAV ===================== */
   function animatePageIn(target) {
     if (!target) return;
+    target.classList.remove("page-enter", "page-enter-active");
     target.classList.add("page-enter");
+
     requestAnimationFrame(() => {
-      target.classList.add("page-enter-active");
-      setTimeout(() => {
-        target.classList.remove("page-enter");
-        target.classList.remove("page-enter-active");
-      }, 320);
+      requestAnimationFrame(() => {
+        target.classList.add("page-enter-active");
+        setTimeout(() => {
+          target.classList.remove("page-enter", "page-enter-active");
+        }, 340);
+      });
     });
   }
 
   function setUserPageView(viewId) {
     document.querySelectorAll(".user-page-view").forEach(el => el.classList.add("hidden"));
     const target = document.getElementById(viewId);
+
     if (target) {
       target.classList.remove("hidden");
       animatePageIn(target);
@@ -3373,6 +3567,7 @@
       closeMobileDrawer();
     }
 
+    setupScrollableTables();
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -3402,6 +3597,7 @@
     currentLogs = resp.logs || [];
     renderUserAttendanceTable(currentLogs);
     updateDashboardStats();
+    setupScrollableTables();
   }
 
   function renderUserAttendanceTable(data) {
@@ -3412,7 +3608,7 @@
         <tr>
           <td colspan="6" class="empty-state">
             <i class="fa-solid fa-inbox"></i>
-            <p>No records found for selected range.</p>
+            <p>No records found for the selected date range.</p>
           </td>
         </tr>
       `;
@@ -3588,7 +3784,7 @@
 
     if (!am && !pm && !remarks) {
       const el = document.getElementById("userDailySavedHint");
-      el.textContent = "Nothing to save. Please write something first.";
+      el.textContent = "Nothing to save yet. Please write something first.";
       el.className = "hint warn";
       showToast("warn", "No Content", "Write something before saving.");
       return;
@@ -3647,9 +3843,9 @@
     const text = (document.getElementById("userWeeklyReflectionText").value || "").trim();
     if (!text) {
       const el = document.getElementById("userReflectionSavedHint");
-      el.textContent = "Nothing to save. Please write your reflection first.";
+      el.textContent = "Nothing to save yet. Please write your reflection first.";
       el.className = "hint warn";
-      showToast("warn", "No Content", "Write reflection before saving.");
+      showToast("warn", "No Content", "Write your reflection before saving.");
       return;
     }
 
@@ -3745,7 +3941,7 @@
         </div>
         <div style="display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;">
           <span class="${chipClass}">${chipText}</span>
-          <button class="btn btn-secondary" style="padding:.58rem .9rem; font-size:.85rem; min-height:auto;" data-edit="${iso}">
+          <button class="btn btn-secondary" style="padding:.58rem .9rem; font-size:.85rem; min-height:auto;" data-edit="${iso}" type="button">
             <i class="fa-solid fa-pen-to-square"></i>
             Edit
           </button>
@@ -3933,16 +4129,24 @@
 
     const qrMetaDept = document.getElementById("qrMetaDept");
     const qrMetaCode = document.getElementById("qrMetaCode");
+
     if (qrMetaDept) qrMetaDept.innerHTML = `<i class="fa-solid fa-building"></i><strong>${escapeHtml(dept)}</strong>`;
     if (qrMetaCode) qrMetaCode.innerHTML = `<i class="fa-solid fa-hashtag"></i><strong>${escapeHtml(shortCode)}</strong>`;
 
     renderPrettyQR(document.getElementById("qrCanvas"), code);
 
-    qrModalInstance = qrModalInstance || new bootstrap.Modal(document.getElementById("qrModal"), {
+    const modalEl = document.getElementById("qrModal");
+    qrModalInstance = qrModalInstance || new bootstrap.Modal(modalEl, {
       backdrop: true,
-      keyboard: true
+      keyboard: true,
+      focus: true
     });
+
     qrModalInstance.show();
+  }
+
+  function closeQrModal() {
+    qrModalInstance?.hide();
   }
 
   /* ===================== UI BINDINGS ===================== */
@@ -3951,6 +4155,8 @@
     const menuToggle = document.getElementById("menuToggle");
     const drawerClose = document.getElementById("drawerClose");
     const mobileMenuBackdrop = document.getElementById("mobileMenuBackdrop");
+    const qrModalEl = document.getElementById("qrModal");
+    const qrCloseBtn = document.querySelector(".qr-x");
 
     document.getElementById("btnUserLogin").addEventListener("click", async () => {
       try {
@@ -4000,6 +4206,16 @@
     document.getElementById("btnDashboardViewQR").addEventListener("click", openQrModal);
     document.getElementById("btnAccountViewQR").addEventListener("click", openQrModal);
 
+    if (qrCloseBtn) {
+      qrCloseBtn.addEventListener("click", closeQrModal);
+    }
+
+    if (qrModalEl) {
+      qrModalEl.addEventListener("hidden.bs.modal", () => {
+        document.getElementById("qrCanvas").innerHTML = "";
+      });
+    }
+
     document.getElementById("btnDashboardExportAttendance").addEventListener("click", exportMyAttendanceExcel);
     document.getElementById("btnAttendanceExport").addEventListener("click", exportMyAttendanceExcel);
     document.getElementById("btnReportsExportWeek").addEventListener("click", exportMyWeeklyExcel);
@@ -4010,6 +4226,7 @@
 
     document.getElementById("btnUserApplyAttendanceFilter").addEventListener("click", async () => {
       if (!currentUser) return;
+
       try {
         await loadUserAttendance(
           document.getElementById("attendanceStart").value,
@@ -4023,6 +4240,7 @@
 
     document.getElementById("btnUserResetAttendanceFilter").addEventListener("click", async () => {
       if (!currentUser) return;
+
       const today = todayISO();
       const som = startOfMonthISO();
 
@@ -4041,6 +4259,7 @@
       if (!currentUser) return;
       const picked = document.getElementById("dashWeekPicker").value || todayISO();
       document.getElementById("userWeekPicker").value = picked;
+
       try {
         await loadWeekDataForUser(picked);
       } catch (err) {
@@ -4053,6 +4272,7 @@
       if (!currentUser) return;
       const picked = document.getElementById("dashWeekPicker").value || todayISO();
       document.getElementById("userWeekPicker").value = picked;
+
       try {
         await loadWeekDataForUser(picked);
         showToast("success", "Loaded", "Selected week loaded.");
@@ -4066,6 +4286,7 @@
       if (!currentUser) return;
       const picked = document.getElementById("userWeekPicker").value || todayISO();
       document.getElementById("dashWeekPicker").value = picked;
+
       try {
         await loadWeekDataForUser(picked);
       } catch (err) {
@@ -4078,6 +4299,7 @@
       if (!currentUser) return;
       const picked = document.getElementById("userWeekPicker").value || todayISO();
       document.getElementById("dashWeekPicker").value = picked;
+
       try {
         await loadWeekDataForUser(picked);
         showToast("success", "Loaded", "Week progress and reflection loaded.");
@@ -4119,11 +4341,15 @@
       showToast("success", "Logged Out", "You have been logged out successfully.");
     });
 
-    window.addEventListener("resize", syncMenuMode);
+    window.addEventListener("resize", debounce(() => {
+      syncMenuMode();
+      setupScrollableTables();
+    }, 180));
 
     document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape" && mobileDrawerOpen) {
-        closeMobileDrawer();
+      if (e.key === "Escape") {
+        if (mobileDrawerOpen) closeMobileDrawer();
+        closeQrModal();
       }
     });
   }
@@ -4131,9 +4357,12 @@
   /* ===================== INIT ===================== */
   async function init() {
     updateClock();
+    setInterval(updateClock, 1000);
+
     bindUI();
     updateReflectionButtonState();
     syncMenuMode();
+    setupScrollableTables();
 
     try {
       await loadAllStudents();
@@ -4157,11 +4386,14 @@
 
 <script>
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./sw.js");
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js").catch(err => {
+        console.error("Service worker registration failed:", err);
+      });
+    });
   }
 </script>
 </body>
-
 </html>
 
 
