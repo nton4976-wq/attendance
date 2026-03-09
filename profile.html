@@ -12,957 +12,1690 @@
   <!-- XLSX for real Excel export -->
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-  <style>
-    :root {
-      /* ===================== GREENFOREST THEME (ACCENTS ONLY) ===================== */
-      --primary: #0b5d1e;
-      --primary-light: #22c55e;
-      --primary-dark: #064117;
-      --success: #16a34a;
-      --success-light: #34d399;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --info: #0ea5e9;
+<style>
+  :root {
+    --primary: #0b5d1e;
+    --primary-light: #22c55e;
+    --primary-dark: #064117;
+    --success: #16a34a;
+    --success-light: #34d399;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #0ea5e9;
 
-      /* Background colors */
-      --bg-primary: #0f172a;
-      --bg-secondary: #1e293b;
-      --bg-tertiary: #334155;
-      --bg-card: rgba(30, 41, 59, 0.72);
-      --bg-glass: rgba(2, 6, 23, 0.35);
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
+    --bg-card: rgba(30, 41, 59, 0.74);
+    --bg-card-strong: rgba(15, 23, 42, 0.92);
+    --bg-glass: rgba(2, 6, 23, 0.34);
+    --bg-soft: rgba(255, 255, 255, 0.035);
 
-      --text-primary: #f8fafc;
-      --text-secondary: #cbd5e1;
-      --text-muted: #94a3b8;
-      --text-subtle: #64748b;
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --text-subtle: #64748b;
 
-      --border-subtle: rgba(255, 255, 255, 0.06);
-      --border-default: rgba(255, 255, 255, 0.1);
-      --border-focus: rgba(34, 197, 94, 0.45);
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-default: rgba(255, 255, 255, 0.10);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --border-focus: rgba(34, 197, 94, 0.45);
 
-      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.4);
-      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
-      --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.45), 0 8px 10px -6px rgba(0, 0, 0, 0.45);
-      --shadow-glow: 0 0 0 3px rgba(34, 197, 94, 0.16);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.22);
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.28);
+    --shadow-lg: 0 18px 50px rgba(0, 0, 0, 0.36);
+    --shadow-xl: 0 28px 70px rgba(0, 0, 0, 0.46);
+    --shadow-glow: 0 0 0 3px rgba(34, 197, 94, 0.16);
 
-      --radius-sm: 8px;
-      --radius: 12px;
-      --radius-lg: 16px;
-      --radius-xl: 24px;
+    --radius-sm: 10px;
+    --radius: 14px;
+    --radius-lg: 18px;
+    --radius-xl: 26px;
+    --radius-2xl: 34px;
 
-      --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
-      --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-      --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    min-height: 100vh;
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    touch-action: manipulation;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 40%, rgba(79, 70, 229, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 40% at 80% 60%, rgba(16, 185, 129, 0.10) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -2;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.02;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .hidden { display: none !important; }
+
+  /* ===================== NAVBAR ===================== */
+  .navbar {
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 0.75rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  .navbar-brand {
+    font-weight: 900;
+    font-size: 1.18rem;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+
+  .brand-logo {
+    width: 46px;
+    height: 46px;
+    object-fit: contain;
+    flex-shrink: 0;
+    filter: drop-shadow(0 6px 18px rgba(34, 197, 94, 0.18));
+  }
+
+  @media (min-width:576px) {
+    .brand-logo {
+      width: 54px;
+      height: 54px;
     }
+  }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+  .navbar-toggler {
+    border: 1px solid var(--border-subtle);
+    padding: .5rem;
+    border-radius: var(--radius);
+    color: var(--text-primary);
+    background: rgba(255,255,255,.02);
+  }
 
-    body{
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg-primary);
+  .navbar-toggler:focus {
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
+  }
+
+  .nav-link {
+    font-weight: 800;
+    font-size: .875rem;
+    color: var(--text-muted) !important;
+    padding: .65rem 1rem !important;
+    border-radius: var(--radius);
+    transition: all var(--transition-fast);
+    margin: .25rem 0;
+  }
+
+  .nav-link:hover {
+    color: var(--text-secondary) !important;
+    background: rgba(255,255,255,0.04);
+  }
+
+  .nav-link.active {
+    color: var(--text-primary) !important;
+    background: rgba(34,197,94,0.10);
+    border: 1px solid rgba(34,197,94,0.14);
+  }
+
+  .nav-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: .75rem 0;
+    border-top: 1px solid var(--border-subtle);
+    margin-top: .5rem;
+  }
+
+  @media (min-width: 992px) {
+    .nav-meta {
+      padding-left: 1.5rem;
+      border-left: 1px solid var(--border-subtle);
+      border-top: none;
+      margin-top: 0;
+    }
+  }
+
+  #clockTime {
+    font-weight: 900;
+    font-size: 1rem;
+    color: var(--text-primary);
+    letter-spacing: -.02em;
+    line-height: 1.2;
+  }
+
+  #clockDate {
+    font-size: .7rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+  }
+
+  .session-badge {
+    font-size: .7rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    padding: .4rem .8rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-default);
+    background: rgba(255,255,255,.03);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: .4rem;
+    white-space: nowrap;
+  }
+
+  .session-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--success);
+    box-shadow: 0 0 10px rgba(22,163,74,.55);
+  }
+
+  .session-badge.afternoon::before {
+    background: var(--warning);
+    box-shadow: 0 0 10px rgba(245,158,11,.45);
+  }
+
+  /* ===================== MAIN ===================== */
+  .main-container {
+    padding: 1rem;
+    max-width: 1680px;
+    margin: 0 auto;
+  }
+
+  @media (min-width:768px) {
+    .main-container { padding: 1.5rem; }
+  }
+
+  @media (min-width:1200px) {
+    .main-container { padding: 1.9rem; }
+  }
+
+  .view-section {
+    animation: fadeIn .35s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity:0; transform: translateY(10px); }
+    to { opacity:1; transform: translateY(0); }
+  }
+
+  .glass-panel {
+    background: var(--bg-glass);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(16px) saturate(160%);
+  }
+
+  /* ===================== ADMIN HERO ===================== */
+  .page-hero {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .page-hero .title {
+    font-size: clamp(1.25rem, 3vw, 1.7rem);
+    font-weight: 1000;
+    letter-spacing: -.03em;
+    margin-bottom: .25rem;
+  }
+
+  .page-hero .subtitle {
+    color: var(--text-muted);
+    font-size: .95rem;
+    font-weight: 600;
+    max-width: 760px;
+  }
+
+  .admin-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: .8rem;
+    margin: 1rem 0 1.2rem;
+  }
+
+  @media (min-width: 768px) {
+    .admin-summary-grid {
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap: 1rem;
+    }
+  }
+
+  .summary-card {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(30,41,59,.76), rgba(15,23,42,.82));
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition);
+    min-width: 0;
+  }
+
+  .summary-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-default);
+    box-shadow: var(--shadow);
+  }
+
+  .summary-card::after {
+    content: '';
+    position: absolute;
+    inset: auto -20px -20px auto;
+    width: 88px;
+    height: 88px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.04);
+    pointer-events: none;
+  }
+
+  .summary-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    margin-bottom: .65rem;
+  }
+
+  .summary-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 14px;
+    display: grid;
+    place-items: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .summary-icon.green {
+    background: rgba(22,163,74,.15);
+    color: var(--success-light);
+  }
+
+  .summary-icon.blue {
+    background: rgba(14,165,233,.14);
+    color: #7dd3fc;
+  }
+
+  .summary-icon.orange {
+    background: rgba(245,158,11,.14);
+    color: #fbbf24;
+  }
+
+  .summary-icon.red {
+    background: rgba(239,68,68,.14);
+    color: #fca5a5;
+  }
+
+  .summary-label {
+    font-size: .74rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    font-weight: 900;
+  }
+
+  .summary-value {
+    font-size: clamp(1.25rem, 3vw, 1.95rem);
+    line-height: 1;
+    font-weight: 1000;
+    color: var(--text-primary);
+    letter-spacing: -.05em;
+  }
+
+  .summary-note {
+    margin-top: .35rem;
+    color: var(--text-subtle);
+    font-size: .82rem;
+    font-weight: 700;
+  }
+
+  /* ===================== TOOLBAR ===================== */
+  .toolbar {
+    padding: .95rem;
+    display: flex;
+    gap: .75rem;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .toolbar-left,
+  .toolbar-right {
+    display: flex;
+    gap: .6rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .search {
+    position: relative;
+    min-width: min(420px, 90vw);
+    flex: 1 1 320px;
+  }
+
+  .search input {
+    width: 100%;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    border-radius: 999px;
+    padding: .8rem 1rem .8rem 2.7rem;
+    font-weight: 800;
+    outline: none;
+    transition: all var(--transition-fast);
+  }
+
+  .search input:focus {
+    border-color: var(--border-focus);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .search i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(148,163,184,.9);
+    pointer-events: none;
+  }
+
+  .select-pill,
+  .form-control-custom,
+  .form-textarea-custom {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    border-radius: var(--radius);
+    transition: all var(--transition-fast);
+    outline: none;
+    font-weight: 800;
+  }
+
+  .select-pill,
+  .form-control-custom {
+    padding: .75rem .95rem;
+    min-height: 46px;
+  }
+
+  .select-pill {
+    border-radius: 999px;
+    min-width: 180px;
+  }
+
+  .form-textarea-custom {
+    padding: .85rem .95rem;
+    min-height: 120px;
+    resize: vertical;
+    line-height: 1.5;
+  }
+
+  .select-pill:focus,
+  .form-control-custom:focus,
+  .form-textarea-custom:focus {
+    border-color: var(--border-focus);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .45rem .8rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,.10);
+    background: rgba(255,255,255,.04);
+    color: var(--text-secondary);
+    font-weight: 900;
+    font-size: .78rem;
+    white-space: nowrap;
+  }
+
+  .chip strong {
+    color: var(--text-primary);
+    font-weight: 1000;
+  }
+
+  .chip.success {
+    background: rgba(22,163,74,.12);
+    color: rgba(187,247,208,1);
+    border-color: rgba(22,163,74,.18);
+  }
+
+  .chip.warn {
+    background: rgba(245,158,11,.12);
+    color: rgba(253,230,138,1);
+    border-color: rgba(245,158,11,.18);
+  }
+
+  .chip.danger {
+    background: rgba(239,68,68,.12);
+    color: #fecaca;
+    border-color: rgba(239,68,68,.18);
+  }
+
+  /* ===================== BUTTONS ===================== */
+  .btn {
+    font-weight: 1000;
+    font-size: .94rem;
+    padding: .8rem 1.1rem;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .55rem;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: #fff;
+    box-shadow: 0 14px 34px rgba(34,197,94,.12);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 18px 44px rgba(34,197,94,.18);
+  }
+
+  .btn-secondary {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-default);
+    transform: translateY(-1px);
+  }
+
+  .btn-ghost {
+    background: rgba(255,255,255,.06);
+    color: var(--text-primary);
+    border: 1px solid rgba(255,255,255,.10);
+  }
+
+  .btn-ghost:hover:not(:disabled) {
+    background: rgba(255,255,255,.10);
+    transform: translateY(-1px);
+  }
+
+  .btn:disabled {
+    opacity: .55;
+    cursor: not-allowed;
+  }
+
+  /* ===================== GRID CARDS ===================== */
+  .students-grid {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  @media (min-width:576px) {
+    .students-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (min-width:1200px) {
+    .students-grid {
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 1.15rem;
+    }
+  }
+
+  .profile-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all var(--transition-slow);
+    backdrop-filter: blur(12px);
+    box-shadow: var(--shadow);
+    min-height: 260px;
+  }
+
+  .profile-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 22px 30px -10px rgba(0,0,0,.55), 0 0 18px rgba(34,197,94,.12);
+    border-color: rgba(34,197,94,.26);
+  }
+
+  .card-header-img {
+    height: 88px;
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-header-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 20% 100%, rgba(255,255,255,.10) 0%, transparent 40%),
+      radial-gradient(circle at 80% 0%, rgba(255,255,255,.08) 0%, transparent 40%);
+    opacity: .65;
+  }
+
+  .card-avatar {
+    width: 62px;
+    height: 62px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    border: 3px solid var(--bg-card);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.45rem;
+    font-weight: 1000;
+    position: absolute;
+    top: 52px;
+    left: 1rem;
+    box-shadow: 0 12px 26px rgba(0,0,0,.35);
+    z-index: 2;
+  }
+
+  .profile-card .card-body {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 2.6rem 1rem 1rem;
+  }
+
+  .card-title {
+    font-weight: 1000;
+    font-size: 1.05rem;
+    margin-bottom: .25rem;
+    color: var(--text-primary);
+    letter-spacing: -.01em;
+    padding-right: 96px;
+    line-height: 1.2;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: .68rem;
+    font-weight: 1000;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: rgba(187,247,208,1);
+    background: rgba(34,197,94,.12);
+    border: 1px solid rgba(34,197,94,.22);
+    padding: .28rem .72rem;
+    border-radius: 999px;
+    white-space: nowrap;
+    z-index: 2;
+  }
+
+  .card-meta {
+    margin-top: .5rem;
+    display: flex;
+    flex-direction: column;
+    gap: .42rem;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
+    font-size: .88rem;
+    color: var(--text-muted);
+    overflow-wrap: anywhere;
+  }
+
+  .meta-item i {
+    width: 16px;
+    color: var(--text-subtle);
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  /* ===================== NEW ADMIN STATUS BLOCK ===================== */
+  .admin-health {
+    margin-top: auto;
+    padding-top: .9rem;
+    border-top: 1px solid var(--border-subtle);
+    display: grid;
+    gap: .75rem;
+  }
+
+  .health-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+  }
+
+  .health-label {
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-weight: 900;
+    color: var(--text-muted);
+  }
+
+  .health-score {
+    font-size: .9rem;
+    font-weight: 1000;
+    color: var(--text-primary);
+  }
+
+  .health-progress {
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.07);
+    overflow: hidden;
+    position: relative;
+  }
+
+  .health-progress > span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    width: 0%;
+  }
+
+  .health-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: .55rem;
+  }
+
+  .health-pill {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .6rem;
+    padding: .55rem .65rem;
+    border-radius: 12px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.06);
+    min-width: 0;
+  }
+
+  .health-pill-left {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    min-width: 0;
+    font-size: .77rem;
+    font-weight: 900;
+    color: var(--text-secondary);
+  }
+
+  .health-pill-left i {
+    color: var(--text-subtle);
+  }
+
+  .health-pill-state {
+    font-size: .68rem;
+    font-weight: 1000;
+    padding: .2rem .5rem;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .health-pill-state.ok {
+    background: rgba(22,163,74,.12);
+    color: rgba(187,247,208,1);
+    border: 1px solid rgba(22,163,74,.18);
+  }
+
+  .health-pill-state.partial {
+    background: rgba(245,158,11,.12);
+    color: rgba(253,230,138,1);
+    border: 1px solid rgba(245,158,11,.18);
+  }
+
+  .health-pill-state.none {
+    background: rgba(239,68,68,.12);
+    color: #fecaca;
+    border: 1px solid rgba(239,68,68,.18);
+  }
+
+  .card-footer-note {
+    margin-top: .1rem;
+    font-size: .76rem;
+    color: var(--text-subtle);
+    font-weight: 700;
+  }
+
+  /* ===================== DETAIL VIEW ===================== */
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    background: transparent;
+    border: 1px solid var(--border-default);
+    color: var(--text-secondary);
+    padding: .68rem 1rem;
+    border-radius: 999px;
+    font-weight: 1000;
+    font-size: .92rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    margin-bottom: 1rem;
+    width: 100%;
+    justify-content: center;
+  }
+
+  @media (min-width:576px) {
+    .back-btn {
+      width: auto;
+      justify-content: flex-start;
+    }
+  }
+
+  .back-btn:hover {
+    background: rgba(255,255,255,.05);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+  }
+
+  .profile-hero {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(12px);
+  }
+
+  .profile-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  @media (min-width:576px) {
+    .profile-header {
+      align-items: center;
+      padding: 1.25rem 1.5rem;
+    }
+  }
+
+  .hero-avatar {
+    width: 88px;
+    height: 88px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 1000;
+    box-shadow: 0 12px 30px rgba(34,197,94,.16);
+    flex-shrink: 0;
+  }
+
+  .profile-info {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .profile-info h1 {
+    font-size: 1.3rem;
+    font-weight: 1000;
+    margin-bottom: .3rem;
+    letter-spacing: -.02em;
+    overflow-wrap: break-word;
+  }
+
+  @media (min-width:768px) {
+    .profile-info h1 { font-size: 1.65rem; }
+  }
+
+  .profile-tags {
+    display: flex;
+    gap: .45rem;
+    flex-wrap: wrap;
+    margin-bottom: .4rem;
+  }
+
+  .tag {
+    font-size: .74rem;
+    font-weight: 1000;
+    padding: .35rem .85rem;
+    border-radius: 999px;
+    background: rgba(34,197,94,.10);
+    color: rgba(187,247,208,1);
+    border: 1px solid rgba(34,197,94,.20);
+  }
+
+  .tag.secondary {
+    background: rgba(255,255,255,.06);
+    color: var(--text-secondary);
+    border-color: rgba(255,255,255,.08);
+  }
+
+  .profile-email {
+    color: var(--text-muted);
+    font-size: .95rem;
+    display: flex;
+    align-items: center;
+    gap: .55rem;
+    overflow-wrap: anywhere;
+    font-weight: 700;
+  }
+
+  .hero-body {
+    padding: 1rem;
+  }
+
+  @media (min-width:768px) {
+    .hero-body { padding: 1.25rem 1.5rem; }
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0,1fr));
+    gap: .75rem;
+  }
+
+  @media (min-width: 992px) {
+    .stats-row {
+      grid-template-columns: repeat(5, minmax(0,1fr));
+    }
+  }
+
+  .stat-box {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    text-align: center;
+    transition: all var(--transition);
+  }
+
+  .stat-box:hover {
+    border-color: var(--border-default);
+    transform: translateY(-2px);
+  }
+
+  .stat-value {
+    font-size: 1.65rem;
+    font-weight: 1000;
+    color: var(--text-primary);
+    margin-bottom: .15rem;
+    letter-spacing: -.04em;
+  }
+
+  .stat-label {
+    font-size: .72rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    font-weight: 1000;
+  }
+
+  .action-bar {
+    display: flex;
+    gap: .6rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  /* ===================== SECTION BLOCKS ===================== */
+  .history-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    margin-top: 1rem;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+  }
+
+  .section-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+  }
+
+  @media (min-width: 576px) {
+    .section-header {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 1.5rem;
+    }
+  }
+
+  .section-title {
+    font-weight: 1000;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    color: var(--text-primary);
+    letter-spacing: -.01em;
+  }
+
+  .section-title i {
+    color: var(--primary-light);
+  }
+
+  .filter-bar {
+    display: flex;
+    gap: .6rem;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  /* ===================== TABLE ===================== */
+  .table-responsive {
+    max-height: 55vh;
+    overflow: auto;
+  }
+
+  .custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .92rem;
+    min-width: 780px;
+  }
+
+  .custom-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .custom-table th {
+    background: var(--bg-secondary);
+    color: var(--text-muted);
+    font-weight: 1000;
+    text-transform: uppercase;
+    font-size: .72rem;
+    letter-spacing: .1em;
+    padding: 1rem 1.1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-subtle);
+    white-space: nowrap;
+  }
+
+  .custom-table td {
+    padding: 1rem 1.1rem;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    vertical-align: middle;
+  }
+
+  .custom-table tbody tr:hover {
+    background: rgba(255,255,255,.02);
+  }
+
+  .time-col {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+
+  .hours-col {
+    text-align: right;
+    font-weight: 1000;
+    color: var(--success-light);
+    white-space: nowrap;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    color: var(--text-muted);
+    font-weight: 800;
+  }
+
+  .empty-state i {
+    font-size: 2rem;
+    margin-bottom: .75rem;
+    opacity: .35;
+  }
+
+  /* ===================== REPORTS ADMIN LAYOUT ===================== */
+  .reports-body {
+    padding: 1rem;
+  }
+
+  @media (min-width:768px) {
+    .reports-body { padding: 1.25rem 1.5rem; }
+  }
+
+  .admin-report-status-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: .9rem;
+    margin-bottom: 1rem;
+  }
+
+  @media (min-width: 992px) {
+    .admin-report-status-grid {
+      grid-template-columns: repeat(3, minmax(0,1fr));
+    }
+  }
+
+  .report-status-card {
+    background: rgba(15,23,42,.4);
+    border: 1px solid rgba(255,255,255,.08);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+  }
+
+  .report-status-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    margin-bottom: .7rem;
+  }
+
+  .report-status-title strong {
+    font-size: .92rem;
+    font-weight: 1000;
+    letter-spacing: -.01em;
+  }
+
+  .report-status-value {
+    font-size: 1.45rem;
+    line-height: 1;
+    font-weight: 1000;
+    letter-spacing: -.05em;
+    color: var(--text-primary);
+    margin-bottom: .25rem;
+  }
+
+  .report-status-help {
+    color: var(--text-muted);
+    font-size: .82rem;
+    font-weight: 700;
+  }
+
+  .report-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  @media (min-width: 992px) {
+    .report-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+  }
+
+  .report-card {
+    background: rgba(15, 23, 42, 0.35);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: var(--radius-xl);
+    padding: 1rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .report-title {
+    font-weight: 1000;
+    letter-spacing: -.02em;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    margin-bottom: .75rem;
+  }
+
+  .report-title i {
+    color: var(--primary-light);
+  }
+
+  .report-help {
+    color: var(--text-muted);
+    font-size: .9rem;
+    margin-top: .35rem;
+    line-height: 1.45;
+    font-weight: 700;
+  }
+
+  .field-row {
+    display: flex;
+    flex-direction: column;
+    gap: .6rem;
+    margin-bottom: .9rem;
+  }
+
+  .field-row.inline {
+    flex-direction: row;
+    gap: .75rem;
+    flex-wrap: wrap;
+  }
+
+  .field {
+    flex: 1;
+    min-width: 200px;
+  }
+
+  .field label {
+    display: block;
+    font-size: .78rem;
+    font-weight: 1000;
+    color: var(--text-muted);
+    margin-bottom: .25rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .mini-actions {
+    display: flex;
+    gap: .6rem;
+    flex-wrap: wrap;
+    margin-top: .75rem;
+  }
+
+  .hint {
+    margin-top: .6rem;
+    font-weight: 900;
+    font-size: .88rem;
+    color: rgba(187,247,208,1);
+  }
+
+  .hint.warn { color: rgba(253,230,138,1); }
+  .hint.err { color: rgba(252,165,165,1); }
+
+  .week-summary {
+    margin-top: .75rem;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding-top: .75rem;
+    display: flex;
+    flex-direction: column;
+    gap: .55rem;
+  }
+
+  .week-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: .75rem;
+    padding: .75rem .85rem;
+    border-radius: var(--radius);
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(2,6,23,0.22);
+  }
+
+  .week-row strong {
+    font-weight: 1000;
+    color: var(--text-primary);
+  }
+
+  .week-row small {
+    display: block;
+    color: var(--text-muted);
+    margin-top: .15rem;
+    font-weight: 800;
+  }
+
+  .status-chip {
+    font-size: .72rem;
+    font-weight: 1000;
+    padding: .25rem .55rem;
+    border-radius: 999px;
+    border: 1px solid rgba(34,197,94,0.22);
+    background: rgba(34,197,94,0.10);
+    color: rgba(187,247,208,1);
+    white-space: nowrap;
+  }
+
+  .status-chip.missing {
+    border-color: rgba(245,158,11,0.25);
+    background: rgba(245,158,11,0.10);
+    color: rgba(253,230,138,1);
+  }
+
+  .status-chip.none {
+    border-color: rgba(239,68,68,0.25);
+    background: rgba(239,68,68,0.10);
+    color: #fecaca;
+  }
+
+  /* ===================== QR MODAL ===================== */
+  .qr-id-dialog {
+    width: min(460px, calc(100vw - 24px));
+    margin: 12px auto;
+  }
+
+  @media (max-width: 576px) {
+    .qr-id-dialog {
+      width: 100vw;
+      height: 100vh;
+      margin: 0;
+      max-width: none;
+    }
+  }
+
+  .modal-content.qr-id-modal {
+    position: relative;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .qr-x {
+    position: absolute;
+    top: max(12px, env(safe-area-inset-top));
+    right: max(12px, env(safe-area-inset-right));
+    z-index: 5;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--border-default);
+    border-radius: 999px;
+    background: rgba(15,23,42,.55);
+    backdrop-filter: blur(14px) saturate(160%);
+    color: var(--text-primary);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+  }
+
+  .qr-id-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(255,255,255,0.12);
+    background:
+      radial-gradient(120% 80% at 20% 20%, rgba(34,197,94,0.20) 0%, transparent 55%),
+      radial-gradient(110% 70% at 80% 10%, rgba(16,185,129,0.12) 0%, transparent 55%),
+      linear-gradient(180deg, rgba(2,6,23,0.80) 0%, rgba(15,23,42,0.92) 55%, rgba(2,6,23,0.88) 100%);
+    box-shadow: var(--shadow-xl);
+    backdrop-filter: blur(18px) saturate(160%);
+    padding: max(18px, env(safe-area-inset-top)) 18px max(18px, env(safe-area-inset-bottom));
+    min-height: 620px;
+  }
+
+  @media (max-width: 576px) {
+    .qr-id-card {
+      border-radius: 0;
+      border: 0;
       min-height: 100vh;
-      color: var(--text-primary);
-      line-height: 1.6;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      overflow-x: hidden;
-      touch-action: manipulation;
+      height: 100vh;
     }
+  }
 
-    body::before{
-      content:'';
-      position: fixed;
-      inset:0;
-      background:
-        radial-gradient(ellipse 80% 50% at 20% 40%, rgba(79, 70, 229, 0.15) 0%, transparent 50%),
-        radial-gradient(ellipse 60% 40% at 80% 60%, rgba(16, 185, 129, 0.10) 0%, transparent 50%);
-      pointer-events:none;
-      z-index:-2;
-    }
-    body::after{
-      content:'';
-      position: fixed;
-      inset:0;
-      background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-      opacity:0.02;
-      pointer-events:none;
-      z-index:-1;
-    }
+  .qr-id-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-right: 54px;
+  }
 
-    /* Navbar */
-    .navbar{
-      background: rgba(15, 23, 42, 0.95);
-      backdrop-filter: blur(20px) saturate(180%);
-      border-bottom: 1px solid var(--border-subtle);
-      padding: 0.75rem 0;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-    }
-    .navbar-brand{
-      font-weight: 900;
-      font-size: 1.2rem;
-      color: var(--text-primary);
-      display:flex;
-      align-items:center;
-      gap: .75rem;
-      text-decoration:none;
-      letter-spacing:-0.02em;
-    }
-    .brand-logo{
-      width: 46px;
-      height: 46px;
-      object-fit: contain;
-      flex-shrink: 0;
-      filter: drop-shadow(0 6px 18px rgba(34, 197, 94, 0.18));
-    }
-    @media (min-width:576px){ .brand-logo{ width:54px; height:54px; } }
-    .navbar-toggler{
-      border: 1px solid var(--border-subtle);
-      padding: .5rem;
-      border-radius: var(--radius);
-      color: var(--text-primary);
-    }
-    .navbar-toggler:focus{
-      box-shadow: 0 0 0 3px rgba(34,197,94,0.18);
-    }
-    .nav-link{
-      font-weight: 700;
-      font-size: .875rem;
-      color: var(--text-muted) !important;
-      padding: .6rem 1rem !important;
-      border-radius: var(--radius);
-      transition: all var(--transition-fast);
-      margin: .25rem 0;
-    }
-    .nav-link:hover{
-      color: var(--text-secondary) !important;
-      background: rgba(255,255,255,0.03);
-    }
-    .nav-link.active{
-      color: var(--text-primary) !important;
-      background: rgba(34,197,94,0.10);
-    }
+  .qr-id-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
 
-    .nav-meta{
-      display:flex;
-      align-items:center;
-      gap: 1rem;
-      padding: .75rem 0;
-      border-top: 1px solid var(--border-subtle);
-      margin-top: .5rem;
-    }
-    @media (min-width: 992px){
-      .nav-meta{
-        padding-left: 1.5rem;
-        border-left: 1px solid var(--border-subtle);
-        border-top: none;
-        margin-top: 0;
-      }
-    }
-    #clockTime{ font-weight: 900; font-size: 1rem; color: var(--text-primary); letter-spacing:-0.02em; line-height:1.2; }
-    #clockDate{ font-size: .6875rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; }
+  .qr-id-logo {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    display: grid;
+    place-items: center;
+    color: #fff;
+    box-shadow: 0 10px 20px rgba(34,197,94,0.18);
+    flex: 0 0 auto;
+  }
 
-    .session-badge{
-      font-size: .6875rem;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-      padding: .35rem .75rem;
-      border-radius: 999px;
-      border: 1px solid var(--border-default);
-      background: rgba(255,255,255,0.03);
-      color: var(--text-secondary);
-      display:flex;
-      align-items:center;
-      gap: .4rem;
-      white-space: nowrap;
-    }
-    .session-badge::before{
-      content:'';
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      background: var(--success);
-      box-shadow: 0 0 10px rgba(22,163,74,0.55);
-    }
-    .session-badge.afternoon::before{
-      background: var(--warning);
-      box-shadow: 0 0 10px rgba(245,158,11,0.45);
-    }
+  .qr-id-app {
+    font-weight: 1000;
+    letter-spacing: -.02em;
+    font-size: 1rem;
+    line-height: 1.1;
+  }
 
-    .main-container{
-      padding: 1rem;
-      max-width: 1600px;
-      margin: 0 auto;
-    }
-    @media (min-width:768px){ .main-container{ padding: 1.5rem; } }
-    @media (min-width:1200px){ .main-container{ padding: 2rem; } }
+  .qr-id-sub {
+    font-size: .78rem;
+    color: var(--text-muted);
+    margin-top: 2px;
+    font-weight: 800;
+  }
 
-    .view-section{ animation: fadeIn .35s ease; }
-    @keyframes fadeIn{ from{ opacity:0; transform: translateY(10px);} to{ opacity:1; transform: translateY(0);} }
-    .hidden{ display:none !important; }
+  .qr-id-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(34,197,94,0.28);
+    background: rgba(34,197,94,0.08);
+    color: rgba(187,247,208,1);
+    font-weight: 1000;
+    font-size: .8rem;
+  }
 
-    /* HERO + TOOLBAR */
-    .page-hero{
-      display:flex;
-      align-items:flex-start;
-      justify-content: space-between;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-bottom: 1rem;
-    }
-    .page-hero .title{
-      font-size: 1.3rem;
-      font-weight: 1000;
-      letter-spacing:-0.02em;
-      margin-bottom: .2rem;
-    }
-    .page-hero .subtitle{
-      color: var(--text-muted);
-      font-size: .92rem;
-      font-weight: 600;
-    }
+  .qr-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 10px rgba(16,185,129,0.55);
+  }
 
-    .glass-panel{
-      background: var(--bg-glass);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px) saturate(160%);
-    }
+  .qr-id-center {
+    margin-top: 22px;
+    text-align: center;
+  }
 
-    .toolbar{
-      padding: .9rem;
-      display:flex;
-      gap: .75rem;
-      align-items:center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-    }
-    .toolbar-left{ display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; }
-    .toolbar-right{ display:flex; gap:.6rem; align-items:center; flex-wrap:wrap; }
+  .qr-id-avatar {
+    width: 98px;
+    height: 98px;
+    border-radius: 999px;
+    margin: 0 auto 10px;
+    display: grid;
+    place-items: center;
+    font-weight: 1000;
+    font-size: 3rem;
+    color: rgba(255,255,255,0.95);
+    background:
+      radial-gradient(circle at 30% 30%, rgba(255,255,255,0.22) 0%, transparent 55%),
+      linear-gradient(135deg, rgba(34,197,94,0.30) 0%, rgba(2,6,23,0.35) 60%),
+      rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow: 0 18px 30px rgba(0,0,0,0.28);
+  }
 
-    .search{
-      position: relative;
-      min-width: min(420px, 90vw);
-    }
-    .search input{
+  .qr-id-name {
+    font-weight: 1000;
+    letter-spacing: -.02em;
+    font-size: clamp(1.25rem, 4.5vw, 1.75rem);
+  }
+
+  .qr-id-role {
+    margin-top: 6px;
+    font-size: .78rem;
+    font-weight: 1000;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.65);
+  }
+
+  .qr-id-qrwrap {
+    margin-top: 22px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .qr-id-qrbox {
+    width: min(360px, 86vw);
+    background: #fff;
+    border-radius: 18px;
+    padding: 14px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.35), 0 0 0 4px rgba(34,197,94,0.18);
+    border: 1px solid rgba(0,0,0,0.08);
+  }
+
+  #qrCanvas img,
+  #qrCanvas canvas {
+    width: 100% !important;
+    height: auto !important;
+    display: block;
+    border-radius: 10px;
+  }
+
+  .qr-id-hint {
+    font-size: .85rem;
+    color: var(--text-muted);
+    text-align: center;
+    font-weight: 800;
+  }
+
+  /* ===================== PIN MODAL ===================== */
+  .pin-modal .modal-content {
+    background: rgba(15, 23, 42, 0.92);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xl);
+    backdrop-filter: blur(18px) saturate(160%);
+    overflow: hidden;
+    color: var(--text-primary);
+  }
+
+  .pin-modal .modal-header {
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 1rem 1.25rem;
+  }
+
+  .pin-modal .modal-title {
+    font-weight: 1000;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+  }
+
+  .pin-chip {
+    font-size: .7rem;
+    font-weight: 1000;
+    padding: .25rem .6rem;
+    border-radius: 999px;
+    border: 1px solid rgba(34,197,94,0.22);
+    background: rgba(34,197,94,0.10);
+    color: rgba(187,247,208,1);
+  }
+
+  .pin-modal .modal-body {
+    padding: 1.25rem;
+  }
+
+  .pin-help {
+    color: var(--text-muted);
+    font-size: .9rem;
+    margin-bottom: .85rem;
+    font-weight: 800;
+  }
+
+  .pin-input {
+    width: 100%;
+    background: rgba(2,6,23,0.6);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--text-primary);
+    border-radius: var(--radius);
+    padding: .9rem 1rem;
+    font-size: 1.1rem;
+    font-weight: 1000;
+    letter-spacing: .25em;
+    text-align: center;
+    outline: none;
+  }
+
+  .pin-input:focus {
+    border-color: rgba(34,197,94,0.55);
+    box-shadow: 0 0 0 3px rgba(34,197,94,0.16);
+  }
+
+  .pin-error {
+    display: none;
+    margin-top: .6rem;
+    color: #fca5a5;
+    font-weight: 1000;
+    font-size: .9rem;
+  }
+
+  .pin-modal .modal-footer {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: .9rem 1.25rem;
+    gap: .5rem;
+  }
+
+  .pin-btn {
+    flex: 1;
+    border-radius: 999px;
+    padding: .8rem 1rem;
+    font-weight: 1000;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.06);
+    color: var(--text-primary);
+    transition: transform var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+  }
+
+  .pin-btn:hover {
+    background: rgba(255,255,255,0.10);
+    border-color: rgba(34,197,94,0.25);
+    transform: translateY(-1px);
+  }
+
+  .pin-btn.primary {
+    background: rgba(11,93,30,0.92);
+    border-color: rgba(11,93,30,0.92);
+  }
+
+  .pin-btn.primary:hover {
+    background: rgba(6,65,23,1);
+    border-color: rgba(6,65,23,1);
+  }
+
+  /* ===================== TOAST ===================== */
+  .toast {
+    background: rgba(15,23,42,0.92);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--text-primary);
+    backdrop-filter: blur(12px) saturate(160%);
+    box-shadow: var(--shadow-lg);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .toast .toast-header {
+    background: rgba(255,255,255,0.06);
+    border-bottom: 1px solid rgba(255,255,255,0.10);
+    color: var(--text-primary);
+  }
+
+  /* ===================== MOBILE ===================== */
+  @media (max-width: 991.98px) {
+    .nav-meta { display: none !important; }
+  }
+
+  @media (max-width: 767.98px) {
+    .main-container { padding: .95rem; }
+    .toolbar,
+    .section-header,
+    .reports-body,
+    .hero-body { padding-left: .95rem; padding-right: .95rem; }
+
+    .search { min-width: 100%; }
+    .toolbar-left,
+    .toolbar-right,
+    .filter-bar,
+    .mini-actions,
+    .action-bar {
       width: 100%;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-primary);
-      border-radius: 999px;
-      padding: .75rem 1rem .75rem 2.6rem;
-      font-weight: 700;
-      outline: none;
-      transition: all var(--transition-fast);
-    }
-    .search input:focus{
-      border-color: rgba(34,197,94,0.55);
-      box-shadow: var(--shadow-glow);
-    }
-    .search i{
-      position: absolute;
-      left: .95rem;
-      top: 50%;
-      transform: translateY(-50%);
-      color: rgba(148,163,184,0.9);
-      pointer-events:none;
     }
 
-    .select-pill{
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-primary);
-      border-radius: 999px;
-      padding: .7rem 1rem;
-      font-weight: 800;
-      outline:none;
-      min-width: 180px;
-    }
-    .select-pill:focus{
-      border-color: rgba(34,197,94,0.55);
-      box-shadow: var(--shadow-glow);
+    .toolbar-left > *,
+    .toolbar-right > *,
+    .filter-bar > *,
+    .mini-actions > *,
+    .action-bar > * {
+      flex: 1 1 100%;
     }
 
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:.45rem;
-      padding: .4rem .7rem;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.04);
-      color: var(--text-secondary);
-      font-weight: 900;
-      font-size: .78rem;
-      white-space: nowrap;
-    }
-    .chip strong{ color: var(--text-primary); font-weight: 1000; }
+    .student-name { max-width: 180px; }
+  }
 
-    /* Cards grid */
-    .students-grid{
-      margin-top: 1rem;
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
+  @media (max-width: 575.98px) {
+    .navbar-brand { font-size: 1rem; }
+    .brand-logo { width: 44px; height: 44px; }
+    .profile-header { align-items: flex-start; }
+    .hero-avatar {
+      width: 74px;
+      height: 74px;
+      border-radius: 20px;
+      font-size: 1.7rem;
     }
-    @media (min-width:576px){ .students-grid{ grid-template-columns: repeat(2, 1fr);} }
-    @media (min-width:992px){ .students-grid{ grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.25rem;} }
+    .profile-info h1 { font-size: 1.2rem; }
+  }
 
-    .profile-card{
-      position:relative;
-      display:flex;
-      flex-direction: column;
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-xl);
-      overflow:hidden;
-      cursor:pointer;
-      transition: all var(--transition-slow);
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
-      min-height: 180px;
-    }
-    .profile-card:hover{
-      transform: translateY(-4px);
-      box-shadow: 0 22px 30px -10px rgba(0,0,0,0.55), 0 0 18px rgba(34,197,94,0.12);
-      border-color: rgba(34,197,94,0.26);
-    }
-    .card-header-img{
-      height: 76px;
-      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
-      position:relative;
-      overflow:hidden;
-    }
-    .card-header-img::after{
-      content:'';
-      position:absolute; inset:0;
-      background:
-        radial-gradient(circle at 20% 100%, rgba(255,255,255,0.10) 0%, transparent 40%),
-        radial-gradient(circle at 80% 0%, rgba(255,255,255,0.08) 0%, transparent 40%);
-      opacity: .65;
-    }
-
-    .card-avatar{
-      width: 62px;
-      height: 62px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      border: 3px solid var(--bg-card);
-      color: #fff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size: 1.5rem;
-      font-weight: 1000;
-      position:absolute;
-      top: 46px;
-      left: 1rem;
-      box-shadow: 0 12px 26px rgba(0,0,0,0.35);
-      z-index:2;
-    }
-
-    .profile-card .card-body{
-      position:relative;
-      flex:1;
-      display:flex;
-      flex-direction: column;
-      padding: 2.5rem 1rem 1rem;
-    }
-
-    .card-title{
-      font-weight: 1000;
-      font-size: 1.08rem;
-      margin-bottom: .25rem;
-      color: var(--text-primary);
-      letter-spacing:-0.01em;
-      padding-right: 96px;
-      line-height: 1.2;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-
-    .card-badge{
-      position:absolute;
-      top: 1rem;
-      right: 1rem;
-      font-size: .7rem;
-      font-weight: 1000;
-      text-transform: uppercase;
-      letter-spacing:.08em;
-      color: rgba(187,247,208,1);
-      background: rgba(34,197,94,0.12);
-      border: 1px solid rgba(34,197,94,0.22);
-      padding: .25rem .7rem;
-      border-radius: 999px;
-      white-space: nowrap;
-      z-index:2;
-    }
-
-    .card-meta{
-      margin-top: auto;
-      padding-top: .75rem;
-      border-top: 1px solid var(--border-subtle);
-      display:flex;
-      flex-direction: column;
-      gap: .4rem;
-    }
-    .meta-item{
-      display:flex;
-      align-items:center;
-      gap: .65rem;
-      font-size: .88rem;
-      color: var(--text-muted);
-      overflow-wrap: anywhere;
-    }
-    .meta-item i{
-      width: 16px;
-      color: var(--text-subtle);
-      text-align:center;
-      flex-shrink: 0;
-    }
-
-    /* Detail view */
-    .back-btn{
-      display:inline-flex;
-      align-items:center;
-      gap:.5rem;
-      background: transparent;
-      border: 1px solid var(--border-default);
-      color: var(--text-secondary);
-      padding: .65rem 1rem;
-      border-radius: 999px;
-      font-weight: 1000;
-      font-size: .92rem;
-      cursor:pointer;
-      transition: all var(--transition-fast);
-      margin-bottom: 1rem;
-      width: 100%;
-      justify-content: center;
-    }
-    @media (min-width:576px){ .back-btn{ width: auto; justify-content: flex-start;} }
-    .back-btn:hover{
-      background: rgba(255,255,255,0.05);
-      color: var(--text-primary);
-      transform: translateY(-1px);
-    }
-
-    .profile-hero{
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-xl);
-      overflow:hidden;
-      margin-bottom: 1rem;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-    }
-    .profile-header{
-      display:flex;
-      align-items:flex-start;
-      gap: 1rem;
-      padding: 1rem;
-      border-bottom: 1px solid var(--border-subtle);
-    }
-    @media (min-width:576px){ .profile-header{ align-items:center; padding: 1.25rem 1.5rem; } }
-
-    .hero-avatar{
-      width: 88px;
-      height: 88px;
-      border-radius: 24px;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      color:#fff;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size: 2.1rem;
-      font-weight: 1000;
-      box-shadow: 0 12px 30px rgba(34,197,94,0.16);
-      flex-shrink:0;
-    }
-    .profile-info{ min-width:0; flex:1; }
-    .profile-info h1{
-      font-size: 1.3rem;
-      font-weight: 1000;
-      margin-bottom: .25rem;
-      letter-spacing:-0.02em;
-      overflow-wrap: break-word;
-    }
-    @media (min-width:768px){ .profile-info h1{ font-size: 1.6rem; } }
-    .profile-tags{ display:flex; gap: .45rem; flex-wrap:wrap; margin-bottom: .35rem; }
-    .tag{
-      font-size: .74rem;
-      font-weight: 1000;
-      padding: .35rem .85rem;
-      border-radius: 999px;
-      background: rgba(34,197,94,0.10);
-      color: rgba(187,247,208,1);
-      border: 1px solid rgba(34,197,94,0.20);
-    }
-    .profile-email{
-      color: var(--text-muted);
-      font-size: .95rem;
-      display:flex;
-      align-items:center;
-      gap: .55rem;
-      overflow-wrap:anywhere;
-      font-weight: 700;
-    }
-
-    .hero-body{ padding: 1rem; }
-    @media (min-width:768px){ .hero-body{ padding: 1.25rem 1.5rem; } }
-
-    .stats-row{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: .75rem;
-    }
-    @media (max-width:575px){ .stats-row{ grid-template-columns: 1fr; } }
-    .stat-box{
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-lg);
-      padding: 1rem;
-      text-align:center;
-      transition: all var(--transition);
-    }
-    .stat-box:hover{ border-color: var(--border-default); transform: translateY(-2px); }
-    .stat-value{ font-size: 1.8rem; font-weight: 1000; color: var(--text-primary); margin-bottom: .1rem; }
-    .stat-label{ font-size: .75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .1em; font-weight: 1000; }
-
-    .action-bar{
-      display:flex;
-      gap: .6rem;
-      margin-top: 1rem;
-      flex-wrap: wrap;
-      align-items:center;
-    }
-
-    /* Buttons */
-    .btn{
-      font-weight: 1000;
-      font-size: .95rem;
-      padding: .75rem 1.1rem;
-      border-radius: 999px;
-      border: none;
-      cursor:pointer;
-      transition: all var(--transition-fast);
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap: .55rem;
-      flex: 1;
-      white-space: nowrap;
-    }
-    @media (min-width:576px){ .btn{ flex: 0 0 auto; } }
-    .btn-primary{
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      color: #fff;
-      box-shadow: 0 14px 34px rgba(34,197,94,0.12);
-    }
-    .btn-primary:hover:not(:disabled){ transform: translateY(-1px); box-shadow: 0 18px 44px rgba(34,197,94,0.18); }
-    .btn-secondary{
-      background: var(--bg-tertiary);
-      color: var(--text-secondary);
-      border: 1px solid var(--border-subtle);
-    }
-    .btn-secondary:hover:not(:disabled){
-      background: var(--bg-secondary);
-      color: var(--text-primary);
-      border-color: var(--border-default);
-      transform: translateY(-1px);
-    }
-    .btn-ghost{
-      background: rgba(255,255,255,0.06);
-      color: var(--text-primary);
-      border: 1px solid rgba(255,255,255,0.10);
-    }
-    .btn-ghost:hover{ background: rgba(255,255,255,0.10); transform: translateY(-1px); }
-    .btn:disabled{ opacity:.55; cursor:not-allowed; }
-
-    .form-control-custom, .form-textarea-custom{
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-primary);
-      border-radius: var(--radius);
-      width: 100%;
-      transition: all var(--transition-fast);
-      font-weight: 700;
-    }
-    .form-control-custom{ padding: .7rem .9rem; font-size: .95rem; }
-    .form-textarea-custom{
-      padding: .8rem .95rem;
-      font-size: .95rem;
-      min-height: 120px;
-      resize: vertical;
-      line-height: 1.45;
-    }
-    .form-control-custom:focus, .form-textarea-custom:focus{
-      outline:none;
-      border-color: rgba(34,197,94,0.55);
-      box-shadow: var(--shadow-glow);
-    }
-
-    /* Sections */
-    .history-section{
-      background: var(--bg-card);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-xl);
-      overflow:hidden;
-      margin-top: 1rem;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
-    }
-    .section-header{
-      padding: 1rem;
-      border-bottom: 1px solid var(--border-subtle);
-      display:flex;
-      flex-direction: column;
-      gap: .75rem;
-    }
-    @media (min-width: 576px){
-      .section-header{
-        flex-direction: row;
-        align-items: center;
-        justify-content: space-between;
-        padding: 1.1rem 1.5rem;
-      }
-    }
-    .section-title{
-      font-weight: 1000;
-      font-size: 1rem;
-      display:flex;
-      align-items:center;
-      gap: .6rem;
-      color: var(--text-primary);
-      letter-spacing:-0.01em;
-    }
-    .section-title i{ color: var(--primary-light); }
-    .filter-bar{
-      display:flex;
-      gap: .6rem;
-      align-items:center;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    /* Table */
-    .table-responsive{ max-height: 55vh; overflow:auto; }
-    .custom-table{
-      width: 100%;
-      border-collapse: collapse;
-      font-size: .92rem;
-      min-width: 720px;
-    }
-    .custom-table thead{ position: sticky; top: 0; z-index: 10; }
-    .custom-table th{
-      background: var(--bg-secondary);
-      color: var(--text-muted);
-      font-weight: 1000;
-      text-transform: uppercase;
-      font-size: .72rem;
-      letter-spacing: .1em;
-      padding: 1rem 1.1rem;
-      text-align:left;
-      border-bottom: 1px solid var(--border-subtle);
-      white-space: nowrap;
-    }
-    .custom-table td{
-      padding: 1rem 1.1rem;
-      border-bottom: 1px solid var(--border-subtle);
-      color: var(--text-secondary);
-      vertical-align: middle;
-    }
-    .custom-table tbody tr:hover{ background: rgba(255,255,255,0.02); }
-
-    .time-col{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      font-weight: 900;
-      white-space: nowrap;
-    }
-    .hours-col{
-      text-align:right;
-      font-weight: 1000;
-      color: var(--success-light);
-      white-space: nowrap;
-    }
-
-    .empty-state{
-      text-align:center;
-      padding: 3rem 1.5rem;
-      color: var(--text-muted);
-      font-weight: 800;
-    }
-    .empty-state i{
-      font-size: 2rem;
-      margin-bottom: .75rem;
-      opacity: .35;
-    }
-
-    /* Reports */
-    .reports-body{ padding: 1rem; }
-    @media (min-width:768px){ .reports-body{ padding: 1.25rem 1.5rem; } }
-
-    .report-grid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-    @media (min-width: 992px){
-      .report-grid{ grid-template-columns: 1fr 1fr; gap: 1.25rem; }
-    }
-    .report-card{
-      background: rgba(15, 23, 42, 0.35);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: var(--radius-xl);
-      padding: 1rem;
-      box-shadow: var(--shadow-sm);
-    }
-    .report-title{
-      font-weight: 1000;
-      letter-spacing:-0.02em;
-      display:flex;
-      align-items:center;
-      gap: .6rem;
-      margin-bottom: .75rem;
-    }
-    .report-title i{ color: var(--primary-light); }
-    .report-help{
-      color: var(--text-muted);
-      font-size: .9rem;
-      margin-top: .35rem;
-      line-height: 1.45;
-      font-weight: 700;
-    }
-    .field-row{ display:flex; flex-direction: column; gap:.6rem; margin-bottom: .9rem; }
-    .field-row.inline{ flex-direction: row; gap:.75rem; flex-wrap: wrap; }
-    .field{ flex:1; min-width: 200px; }
-    .field label{
-      display:block;
-      font-size: .78rem;
-      font-weight: 1000;
-      color: var(--text-muted);
-      margin-bottom: .25rem;
-      letter-spacing:.08em;
-      text-transform: uppercase;
-    }
-    .mini-actions{
-      display:flex;
-      gap: .6rem;
-      flex-wrap: wrap;
-      margin-top: .75rem;
-    }
-    .hint{
-      margin-top: .6rem;
-      font-weight: 900;
-      font-size: .88rem;
-      color: rgba(187,247,208,1);
-    }
-    .hint.warn{ color: rgba(253,230,138,1); }
-    .hint.err{ color: rgba(252,165,165,1); }
-
-    /* Week summary */
-    .week-summary{
-      margin-top: .75rem;
-      border-top: 1px solid rgba(255,255,255,0.08);
-      padding-top: .75rem;
-      display:flex;
-      flex-direction: column;
-      gap: .5rem;
-    }
-    .week-row{
-      display:flex;
-      align-items:flex-start;
-      justify-content: space-between;
-      gap: .75rem;
-      padding: .7rem .8rem;
-      border-radius: var(--radius);
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(2,6,23,0.22);
-    }
-    .week-row strong{ font-weight: 1000; color: var(--text-primary); }
-    .week-row small{ display:block; color: var(--text-muted); margin-top: .15rem; font-weight: 800; }
-
-    .status-chip{
-      font-size: .72rem;
-      font-weight: 1000;
-      padding: .25rem .55rem;
-      border-radius: 999px;
-      border: 1px solid rgba(34,197,94,0.22);
-      background: rgba(34,197,94,0.10);
-      color: rgba(187,247,208,1);
-      white-space: nowrap;
-    }
-    .status-chip.missing{
-      border-color: rgba(245,158,11,0.25);
-      background: rgba(245,158,11,0.10);
-      color: rgba(253,230,138,1);
-    }
-
-    /* QR modal */
-    .qr-id-dialog{ width: min(460px, calc(100vw - 24px)); margin: 12px auto; }
-    @media (max-width: 576px){
-      .qr-id-dialog{ width: 100vw; height: 100vh; margin:0; max-width:none; }
-    }
-    .modal-content.qr-id-modal{ position:relative; background:transparent; border:0; box-shadow:none; }
-    .qr-x{
-      position:absolute;
-      top:max(12px, env(safe-area-inset-top));
-      right:max(12px, env(safe-area-inset-right));
-      z-index:5;
-      width:44px;height:44px;
-      border:1px solid var(--border-default);
-      border-radius:999px;
-      background: rgba(15,23,42,0.55);
-      backdrop-filter: blur(14px) saturate(160%);
-      color: var(--text-primary);
-      display:grid; place-items:center;
-      cursor:pointer;
-    }
-    .qr-id-card{
-      position:relative;
-      overflow:hidden;
-      border-radius: var(--radius-xl);
-      border: 1px solid rgba(255,255,255,0.12);
-      background:
-        radial-gradient(120% 80% at 20% 20%, rgba(34,197,94,0.20) 0%, transparent 55%),
-        radial-gradient(110% 70% at 80% 10%, rgba(16,185,129,0.12) 0%, transparent 55%),
-        linear-gradient(180deg, rgba(2,6,23,0.80) 0%, rgba(15,23,42,0.92) 55%, rgba(2,6,23,0.88) 100%);
-      box-shadow: var(--shadow-xl);
-      backdrop-filter: blur(18px) saturate(160%);
-      padding: max(18px, env(safe-area-inset-top)) 18px max(18px, env(safe-area-inset-bottom));
-      min-height: 620px;
-    }
-    @media (max-width: 576px){
-      .qr-id-card{ border-radius:0; border:0; min-height:100vh; height:100vh; }
-    }
-    .qr-id-topbar{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-right:54px; }
-    .qr-id-brand{ display:flex; align-items:center; gap:10px; min-width:0; }
-    .qr-id-logo{
-      width:38px;height:38px;border-radius:12px;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      display:grid; place-items:center; color:#fff;
-      box-shadow: 0 10px 20px rgba(34,197,94,0.18);
-      flex:0 0 auto;
-    }
-    .qr-id-app{ font-weight:1000; letter-spacing:-0.02em; font-size:1rem; line-height:1.1; }
-    .qr-id-sub{ font-size:0.78rem; color: var(--text-muted); margin-top:2px; font-weight:800; }
-    .qr-id-status{
-      display:flex; align-items:center; gap:8px;
-      padding:8px 12px; border-radius:999px;
-      border: 1px solid rgba(34,197,94,0.28);
-      background: rgba(34,197,94,0.08);
-      color: rgba(187,247,208,1);
-      font-weight:1000; font-size:0.8rem;
-    }
-    .qr-dot{ width:8px; height:8px; border-radius:50%; background: var(--success); box-shadow: 0 0 10px rgba(16,185,129,0.55); }
-    .qr-id-center{ margin-top:22px; text-align:center; }
-    .qr-id-avatar{
-      width:98px;height:98px;border-radius:999px;
-      margin:0 auto 10px;
-      display:grid; place-items:center;
-      font-weight:1000; font-size:3rem;
-      color: rgba(255,255,255,0.95);
-      background:
-        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.22) 0%, transparent 55%),
-        linear-gradient(135deg, rgba(34,197,94,0.30) 0%, rgba(2,6,23,0.35) 60%),
-        rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      box-shadow: 0 18px 30px rgba(0,0,0,0.28);
-    }
-    .qr-id-name{ font-weight:1000; letter-spacing:-0.02em; font-size: clamp(1.25rem, 4.5vw, 1.75rem); }
-    .qr-id-role{ margin-top:6px; font-size:0.78rem; font-weight:1000; letter-spacing:0.14em; text-transform:uppercase; color: rgba(255,255,255,0.65); }
-    .qr-id-qrwrap{ margin-top:22px; display:flex; flex-direction:column; align-items:center; gap:10px; }
-    .qr-id-qrbox{
-      width: min(360px, 86vw);
-      background:#fff;
-      border-radius:18px;
-      padding:14px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.35), 0 0 0 4px rgba(34,197,94,0.18);
-      border: 1px solid rgba(0,0,0,0.08);
-    }
-    #qrCanvas img, #qrCanvas canvas{ width:100%!important; height:auto!important; display:block; border-radius:10px; }
-    .qr-id-hint{ font-size:0.85rem; color: var(--text-muted); text-align:center; font-weight:800; }
-
-    /* PIN modal */
-    .pin-modal .modal-content{
-      background: rgba(15, 23, 42, 0.92);
-      border: 1px solid rgba(255,255,255,0.12);
-      border-radius: var(--radius-xl);
-      box-shadow: var(--shadow-xl);
-      backdrop-filter: blur(18px) saturate(160%);
-      overflow:hidden;
-      color: var(--text-primary);
-    }
-    .pin-modal .modal-header{ border-bottom: 1px solid rgba(255,255,255,0.08); padding: 1rem 1.25rem; }
-    .pin-modal .modal-title{ font-weight: 1000; font-size: 1rem; display:flex; align-items:center; gap:.6rem; }
-    .pin-chip{
-      font-size: .7rem;
-      font-weight: 1000;
-      padding: .25rem .6rem;
-      border-radius: 999px;
-      border: 1px solid rgba(34,197,94,0.22);
-      background: rgba(34,197,94,0.10);
-      color: rgba(187,247,208,1);
-    }
-    .pin-modal .modal-body{ padding: 1.25rem; }
-    .pin-help{ color: var(--text-muted); font-size: .9rem; margin-bottom: .85rem; font-weight:800; }
-    .pin-input{
-      width:100%;
-      background: rgba(2,6,23,0.6);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: var(--text-primary);
-      border-radius: var(--radius);
-      padding: .9rem 1rem;
-      font-size: 1.1rem;
-      font-weight: 1000;
-      letter-spacing: .25em;
-      text-align:center;
-      outline:none;
-    }
-    .pin-input:focus{ border-color: rgba(34,197,94,0.55); box-shadow: 0 0 0 3px rgba(34,197,94,0.16); }
-    .pin-error{ display:none; margin-top: .6rem; color: #fca5a5; font-weight: 1000; font-size: .9rem; }
-    .pin-modal .modal-footer{ border-top: 1px solid rgba(255,255,255,0.08); padding: .9rem 1.25rem; gap: .5rem; }
-    .pin-btn{
-      flex:1;
-      border-radius: 999px;
-      padding: .8rem 1rem;
-      font-weight: 1000;
-      border: 1px solid rgba(255,255,255,0.10);
-      background: rgba(255,255,255,0.06);
-      color: var(--text-primary);
-      transition: transform var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
-    }
-    .pin-btn:hover{ background: rgba(255,255,255,0.10); border-color: rgba(34,197,94,0.25); transform: translateY(-1px); }
-    .pin-btn.primary{ background: rgba(11,93,30,0.92); border-color: rgba(11,93,30,0.92); }
-    .pin-btn.primary:hover{ background: rgba(6,65,23,1); border-color: rgba(6,65,23,1); }
-
-    /* Scrollbar */
-    ::-webkit-scrollbar{ width: 4px; height:4px; }
-    ::-webkit-scrollbar-track{ background: transparent; }
-    ::-webkit-scrollbar-thumb{ background: var(--text-subtle); border-radius: 2px; }
-    ::-webkit-scrollbar-thumb:hover{ background: var(--text-muted); }
-
-    /* Toast tweaks */
-    .toast{
-      background: rgba(15,23,42,0.92);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: var(--text-primary);
-      backdrop-filter: blur(12px) saturate(160%);
-      box-shadow: var(--shadow-lg);
-      border-radius: 14px;
-      overflow:hidden;
-    }
-    .toast .toast-header{
-      background: rgba(255,255,255,0.06);
-      border-bottom: 1px solid rgba(255,255,255,0.10);
-      color: var(--text-primary);
-    }
-  </style>
+  /* ===================== SCROLLBAR ===================== */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: var(--text-subtle);
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+  }
+</style>
 </head>
 
 <body>
@@ -970,8 +1703,8 @@
     <div class="container-fluid px-3 px-md-4">
       <a class="navbar-brand" href="index.html">
         <img class="brand-logo" src="rsu_logo_transparent.png" alt="RSU Logo" />
-        <span class="d-none d-sm-inline">SmartAttend</span>
-        <span class="d-sm-none">SmartAttend</span>
+        <span class="d-none d-sm-inline">SmartAttend Admin</span>
+        <span class="d-sm-none">Admin</span>
       </a>
 
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
@@ -981,7 +1714,7 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto align-items-lg-center">
           <li class="nav-item">
-            <a class="nav-link" href="index.html">
+            <a class="nav-link" href="Masters.html">
               <i class="fa-solid fa-camera me-2"></i>Scanner
             </a>
           </li>
@@ -1012,30 +1745,91 @@
 
   <div class="main-container">
 
-    <!-- Grid View -->
+    <!-- GRID VIEW -->
     <div id="gridView" class="view-section">
       <div class="page-hero">
         <div>
-          <div class="title">Student Profiles</div>
-          <div class="subtitle">Search students and manage attendance + internship reports</div>
+          <div class="title">Admin Student Profiles</div>
+          <div class="subtitle">
+            Monitor registered users, attendance records, weekly progress completion, and reflection submission status from one smart admin workspace.
+          </div>
         </div>
 
         <div class="d-flex gap-2 flex-wrap align-items-center">
-          <span class="chip" id="chipTotal"><i class="fa-solid fa-users"></i> <strong>0</strong> students</span>
-          <span class="chip" id="chipFiltered"><i class="fa-solid fa-filter"></i> <strong>0</strong> shown</span>
+          <span class="chip" id="chipTotal">
+            <i class="fa-solid fa-users"></i>
+            <strong>0</strong> students
+          </span>
+          <span class="chip" id="chipFiltered">
+            <i class="fa-solid fa-filter"></i>
+            <strong>0</strong> shown
+          </span>
         </div>
       </div>
 
+      <!-- ADMIN OVERVIEW -->
+      <div class="admin-summary-grid">
+        <div class="summary-card">
+          <div class="summary-top">
+            <div class="summary-icon green">
+              <i class="fa-solid fa-users"></i>
+            </div>
+          </div>
+          <div class="summary-label">Registered Users</div>
+          <div class="summary-value" id="adminStatStudents">0</div>
+          <div class="summary-note">Total student accounts in the system</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-top">
+            <div class="summary-icon blue">
+              <i class="fa-solid fa-clipboard-check"></i>
+            </div>
+          </div>
+          <div class="summary-label">With Progress Reports</div>
+          <div class="summary-value" id="adminStatWithProgress">0</div>
+          <div class="summary-note">Users with at least one saved daily progress</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-top">
+            <div class="summary-icon orange">
+              <i class="fa-solid fa-lightbulb"></i>
+            </div>
+          </div>
+          <div class="summary-label">With Reflections</div>
+          <div class="summary-value" id="adminStatWithReflection">0</div>
+          <div class="summary-note">Users with at least one submitted reflection</div>
+        </div>
+
+        <div class="summary-card">
+          <div class="summary-top">
+            <div class="summary-icon red">
+              <i class="fa-solid fa-hourglass-half"></i>
+            </div>
+          </div>
+          <div class="summary-label">Need Review</div>
+          <div class="summary-value" id="adminStatNeedsReview">0</div>
+          <div class="summary-note">Users missing weekly reporting requirements</div>
+        </div>
+      </div>
+
+      <!-- FILTER TOOLBAR -->
       <div class="glass-panel toolbar">
         <div class="toolbar-left">
           <div class="search">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <input id="studentSearch" type="text" placeholder="Search name, ID, email, department..." />
+            <input id="studentSearch" type="text" placeholder="Search name, ID, email, department, login type..." />
           </div>
 
           <select id="roleFilter" class="select-pill" title="Filter role">
             <option value="">All Roles</option>
             <option value="student">Student</option>
+            <option value="intern">Intern</option>
+            <option value="gip">GIP</option>
+            <option value="spes">SPES</option>
+            <option value="student asisstance">Student Asisstance</option>
+            <option value="admin">Admin</option>
           </select>
 
           <select id="deptFilter" class="select-pill" title="Filter department">
@@ -1060,7 +1854,8 @@
         </div>
       </div>
 
-      <div class="students-grid" id="studentGrid" style="margin-top:1rem;">
+      <!-- STUDENTS GRID -->
+      <div class="students-grid" id="studentGrid">
         <div class="empty-state" style="grid-column: 1/-1;">
           <i class="fa-solid fa-circle-notch fa-spin"></i>
           <p>Loading students...</p>
@@ -1068,7 +1863,7 @@
       </div>
     </div>
 
-    <!-- Detail View -->
+    <!-- DETAIL VIEW -->
     <div id="detailView" class="view-section hidden">
       <button class="back-btn" id="btnBackToGrid">
         <i class="fa-solid fa-arrow-left"></i>
@@ -1078,12 +1873,16 @@
       <div class="profile-hero">
         <div class="profile-header">
           <div class="hero-avatar" id="detailAvatar">?</div>
+
           <div class="profile-info">
             <h1 id="detailName">Student Name</h1>
+
             <div class="profile-tags">
               <span class="tag" id="detailType">Student</span>
-              <span class="tag" id="detailDept">Department</span>
+              <span class="tag secondary" id="detailDept">Department</span>
+              <span class="tag secondary" id="detailAdminStatus">Monitoring</span>
             </div>
+
             <div class="profile-email" id="detailEmail">
               <i class="fa-solid fa-envelope"></i>
               email@example.com
@@ -1097,13 +1896,25 @@
               <div class="stat-value" id="statDays">0</div>
               <div class="stat-label">Days Present</div>
             </div>
+
             <div class="stat-box">
               <div class="stat-value" id="statHours">0</div>
               <div class="stat-label">Total Hours</div>
             </div>
+
             <div class="stat-box">
               <div class="stat-value" id="statCode">#</div>
               <div class="stat-label">QR Code</div>
+            </div>
+
+            <div class="stat-box">
+              <div class="stat-value" id="statProgressDays">0/5</div>
+              <div class="stat-label">Week Progress</div>
+            </div>
+
+            <div class="stat-box">
+              <div class="stat-value" id="statReflection">No</div>
+              <div class="stat-label">Reflection</div>
             </div>
           </div>
 
@@ -1121,13 +1932,14 @@
         </div>
       </div>
 
-      <!-- Attendance history -->
+      <!-- ATTENDANCE HISTORY -->
       <div class="history-section">
         <div class="section-header">
           <div class="section-title">
             <i class="fa-solid fa-clock-rotate-left"></i>
             Attendance History
           </div>
+
           <div class="filter-bar">
             <input type="date" id="filterStart" class="form-control-custom">
             <input type="date" id="filterEnd" class="form-control-custom">
@@ -1166,12 +1978,12 @@
         </div>
       </div>
 
-      <!-- Internship reports -->
+      <!-- REPORT MONITORING -->
       <div class="history-section">
         <div class="section-header">
           <div class="section-title">
             <i class="fa-solid fa-clipboard-check"></i>
-            Internship Reports
+            Weekly Report Monitoring
           </div>
 
           <div class="filter-bar">
@@ -1185,29 +1997,69 @@
         </div>
 
         <div class="reports-body">
+
+          <!-- SMART STATUS CARDS -->
+          <div class="admin-report-status-grid">
+            <div class="report-status-card">
+              <div class="report-status-title">
+                <strong>Daily Progress Status</strong>
+                <span class="chip success" id="weekProgressChip">0/5</span>
+              </div>
+              <div class="report-status-value" id="weekProgressCount">0 / 5</div>
+              <div class="report-status-help">Saved progress entries for the selected Monday to Friday week.</div>
+            </div>
+
+            <div class="report-status-card">
+              <div class="report-status-title">
+                <strong>Reflection Status</strong>
+                <span class="chip warn" id="weekReflectionChip">Pending</span>
+              </div>
+              <div class="report-status-value" id="weekReflectionCount">No</div>
+              <div class="report-status-help">Shows whether the student submitted the weekly reflection for the selected week.</div>
+            </div>
+
+            <div class="report-status-card">
+              <div class="report-status-title">
+                <strong>Admin Review</strong>
+                <span class="chip" id="weekReviewChip">Monitoring</span>
+              </div>
+              <div class="report-status-value" id="weekReviewStatus">Incomplete</div>
+              <div class="report-status-help">Quick admin assessment based on weekly progress and reflection completion.</div>
+            </div>
+          </div>
+
           <div class="report-card" style="margin-bottom:1rem;">
             <div class="report-title"><i class="fa-solid fa-gear"></i> Report Details</div>
+
             <div class="field-row inline">
               <div class="field">
                 <label>Organization</label>
                 <input id="orgName" class="form-control-custom" value="Romblon State University" />
               </div>
+
               <div class="field">
                 <label>Assigned Department / Section</label>
                 <input id="deptName" class="form-control-custom" value="Center For Alumni Relation And Employment Services" />
               </div>
+
               <div class="field">
                 <label>OJT Supervisor (Printed Name)</label>
                 <input id="supervisorName" class="form-control-custom" placeholder="e.g., Sherryll Fetalvero" />
               </div>
             </div>
-            <div class="report-help">These values are included in Excel exports and saved with entries.</div>
+
+            <div class="report-help">
+              These values are included in Excel exports and saved with entries for admin review.
+            </div>
           </div>
 
           <div class="report-grid">
-            <!-- Daily progress entry -->
+            <!-- DAILY PROGRESS -->
             <div class="report-card">
-              <div class="report-title"><i class="fa-solid fa-calendar-day"></i> Daily Progress (per day)</div>
+              <div class="report-title">
+                <i class="fa-solid fa-calendar-day"></i>
+                Daily Progress (Admin Review)
+              </div>
 
               <div class="field-row">
                 <div class="field">
@@ -1219,21 +2071,21 @@
               <div class="field-row">
                 <div class="field">
                   <label>Morning Activities (AM)</label>
-                  <textarea id="dailyAM" class="form-textarea-custom" placeholder="Write what you did in the morning..."></textarea>
+                  <textarea id="dailyAM" class="form-textarea-custom" placeholder="Write what the student did in the morning..."></textarea>
                 </div>
               </div>
 
               <div class="field-row">
                 <div class="field">
                   <label>Afternoon Activities (PM)</label>
-                  <textarea id="dailyPM" class="form-textarea-custom" placeholder="Write what you did in the afternoon..."></textarea>
+                  <textarea id="dailyPM" class="form-textarea-custom" placeholder="Write what the student did in the afternoon..."></textarea>
                 </div>
               </div>
 
               <div class="field-row">
                 <div class="field">
                   <label>Remarks (optional)</label>
-                  <textarea id="dailyRemarks" class="form-textarea-custom" placeholder="Any notes / remarks..."></textarea>
+                  <textarea id="dailyRemarks" class="form-textarea-custom" placeholder="Admin notes, student remarks, or review comments..."></textarea>
                 </div>
               </div>
 
@@ -1249,15 +2101,18 @@
               <div class="report-help hint" id="dailySavedHint"></div>
             </div>
 
-            <!-- Weekly reflection -->
+            <!-- WEEKLY REFLECTION -->
             <div class="report-card">
-              <div class="report-title"><i class="fa-solid fa-lightbulb"></i> Weekly Internship Reflection</div>
+              <div class="report-title">
+                <i class="fa-solid fa-lightbulb"></i>
+                Weekly Internship Reflection
+              </div>
 
               <div class="field-row">
                 <div class="field">
                   <label>Reflection (saved per selected week)</label>
                   <textarea id="weeklyReflectionText" class="form-textarea-custom" style="min-height: 240px;"
-                    placeholder="What important lessons (technical, social, or personal) did you learn this week?"></textarea>
+                    placeholder="What important lessons (technical, social, or personal) did the student learn this week?"></textarea>
                 </div>
               </div>
 
@@ -1274,17 +2129,21 @@
             </div>
           </div>
 
-          <!-- Week summary -->
+          <!-- WEEK SUMMARY -->
           <div class="report-card" style="margin-top:1rem;">
-            <div class="report-title"><i class="fa-solid fa-list-check"></i> Week Summary</div>
-            <div class="report-help">
-              Save daily entries per day (Mon–Fri). Use <strong>Export Selected Week</strong> to download an Excel file (includes Progress + Reflection + Meta).
+            <div class="report-title">
+              <i class="fa-solid fa-list-check"></i>
+              Week Summary
             </div>
+
+            <div class="report-help">
+              Monitor whether the selected student has complete daily progress from Monday to Friday and whether the weekly reflection has been submitted.
+            </div>
+
             <div class="week-summary" id="weekSummary"></div>
           </div>
         </div>
       </div>
-
     </div>
   </div>
 
@@ -1338,12 +2197,11 @@
             <div class="qr-id-hint">Scan to verify presence</div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
 
-  <!-- ADMIN PIN MODAL (Registration) -->
+  <!-- ADMIN PIN MODAL -->
   <div class="modal fade pin-modal" id="pinModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 420px;">
       <div class="modal-content">
@@ -1370,1037 +2228,1262 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
   <script>
-    // ✅ Must match your deployed Apps Script URL
-    const API_URL = "https://script.google.com/macros/s/AKfycbw-adcztwNOxrEdEgXoYVybc0ByfnuvG3Axt0vQqvNi5saF0F6gLqULa-9twSDY07Wr_A/exec";
+  const API_URL = "https://script.google.com/macros/s/AKfycbw-adcztwNOxrEdEgXoYVybc0ByfnuvG3Axt0vQqvNi5saF0F6gLqULa-9twSDY07Wr_A/exec";
 
-    let students = [];
-    let filteredStudents = [];
-    let currentStudent = null;
-    let currentLogs = [];
-    let qrModalInstance = null;
+  let students = [];
+  let filteredStudents = [];
+  let currentStudent = null;
+  let currentLogs = [];
+  let qrModalInstance = null;
 
-    // Reports cache (client-side), but the source of truth is Google Sheets via API
-    let reportStore = {
-      meta: { orgName: "Romblon State University", deptName: "Center For Alumni Relation And Employment Services", supervisorName: "" },
-      daily: {},        // { "YYYY-MM-DD": { am:"", pm:"", remarks:"" } }
-      reflections: {}   // { "weekKey": "text" }
-    };
-    let activeWeek = { startISO: null, endISO: null, key: null };
+  let reportStore = {
+    meta: {
+      orgName: "Romblon State University",
+      deptName: "Center For Alumni Relation And Employment Services",
+      supervisorName: ""
+    },
+    daily: {},
+    reflections: {}
+  };
 
-    /* ===================== TOAST ===================== */
-    let toastInstance = null;
-    function showToast(type, title, message){
-      const el = document.getElementById('appToast');
-      const icon = document.getElementById('toastIcon');
-      const tTitle = document.getElementById('toastTitle');
-      const tBody = document.getElementById('toastBody');
-      const tTime = document.getElementById('toastTime');
+  let activeWeek = { startISO: null, endISO: null, key: null };
 
-      const now = new Date();
-      tTime.textContent = now.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+  const studentReportStatusMap = new Map();
 
-      let iconClass = "fa-circle-info";
-      if(type === "success") iconClass = "fa-circle-check";
-      if(type === "warn") iconClass = "fa-triangle-exclamation";
-      if(type === "error") iconClass = "fa-circle-xmark";
+  /* ===================== TOAST ===================== */
+  let toastInstance = null;
+  function showToast(type, title, message){
+    const el = document.getElementById("appToast");
+    const icon = document.getElementById("toastIcon");
+    const tTitle = document.getElementById("toastTitle");
+    const tBody = document.getElementById("toastBody");
+    const tTime = document.getElementById("toastTime");
 
-      icon.className = `fa-solid ${iconClass} me-2`;
-      tTitle.textContent = title || "Notice";
-      tBody.textContent = message || "";
+    const now = new Date();
+    tTime.textContent = now.toLocaleTimeString([], { hour:"2-digit", minute:"2-digit" });
 
-      toastInstance = toastInstance || new bootstrap.Toast(el, { delay: 2800 });
-      toastInstance.show();
-    }
+    let iconClass = "fa-circle-info";
+    if(type === "success") iconClass = "fa-circle-check";
+    if(type === "warn") iconClass = "fa-triangle-exclamation";
+    if(type === "error") iconClass = "fa-circle-xmark";
 
-    /* ===================== CLOCK / SESSION ===================== */
-    function updateClock(){
-      const elTime = document.getElementById('clockTime');
-      const elDate = document.getElementById('clockDate');
-      const elBadge = document.getElementById('sessionBadge');
-      if(!elTime || !elDate || !elBadge) return;
+    icon.className = `fa-solid ${iconClass} me-2`;
+    tTitle.textContent = title || "Notice";
+    tBody.textContent = message || "";
 
-      const now = new Date();
-      const h = now.getHours();
-      elTime.textContent = now.toLocaleTimeString('en-US', { hour12:true });
-      elDate.textContent = now.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' });
-
-      const isMorning = h < 12;
-      elBadge.textContent = isMorning ? 'Morning' : 'Afternoon';
-      elBadge.classList.toggle('afternoon', !isMorning);
-    }
-    setInterval(updateClock, 1000);
-
-    /* ===================== API ===================== */
-    async function api(params){
-      params._ts = Date.now();
-      const qs = new URLSearchParams(params).toString();
-      const res = await fetch(`${API_URL}?${qs}`, { cache:"no-store" });
-      const json = await res.json().catch(()=>null);
-      if(!json) throw new Error("Invalid JSON response");
-      return json;
-    }
-
-async function apiPost(payload){
-  const res = await fetch(API_URL, {
-    method: "POST",
-    // IMPORTANT: avoid CORS preflight
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
-    body: JSON.stringify(payload),
-    cache: "no-store",
-    redirect: "follow"
-  });
-
-  const text = await res.text(); // Apps Script sometimes returns text
-  let json = null;
-  try { json = JSON.parse(text); } catch(e) {}
-
-  if(!res.ok){
-    throw new Error(`HTTP ${res.status} ${res.statusText}: ${text.slice(0,200)}`);
+    toastInstance = toastInstance || new bootstrap.Toast(el, { delay: 2800 });
+    toastInstance.show();
   }
-  if(!json){
-    throw new Error("Invalid JSON response: " + text.slice(0,200));
+
+  /* ===================== CLOCK ===================== */
+  function updateClock(){
+    const elTime = document.getElementById("clockTime");
+    const elDate = document.getElementById("clockDate");
+    const elBadge = document.getElementById("sessionBadge");
+    if(!elTime || !elDate || !elBadge) return;
+
+    const now = new Date();
+    const h = now.getHours();
+
+    elTime.textContent = now.toLocaleTimeString("en-US", { hour12:true });
+    elDate.textContent = now.toLocaleDateString("en-US", {
+      weekday:"short",
+      month:"short",
+      day:"numeric"
+    });
+
+    const isMorning = h < 12;
+    elBadge.textContent = isMorning ? "Morning" : "Afternoon";
+    elBadge.classList.toggle("afternoon", !isMorning);
   }
-  return json;
-}
+  setInterval(updateClock, 1000);
 
-    /* ===================== DATE/TIME HELPERS ===================== */
-    function todayISO(){
-      const d = new Date();
-      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-    }
-    function startOfMonthISO(){
-      const d = new Date();
-      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-01`;
-    }
-    function safe(v){ return (v===null || v===undefined || String(v).trim()==='') ? '-' : String(v); }
+  /* ===================== API ===================== */
+  async function api(params){
+    params._ts = Date.now();
+    const qs = new URLSearchParams(params).toString();
+    const res = await fetch(`${API_URL}?${qs}`, { cache:"no-store" });
+    const json = await res.json().catch(() => null);
+    if(!json) throw new Error("Invalid JSON response");
+    return json;
+  }
 
-    function timeDisplay(v){
-      if(!v || v === '-') return '-';
-      const s = String(v).trim();
-      if (/^\d{4}-\d{2}-\d{2}T/.test(s)) {
-        const d = new Date(s);
-        if (!isNaN(d)) return d.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit', hour12:true });
+  async function apiPost(payload){
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+      redirect: "follow"
+    });
+
+    const text = await res.text();
+    let json = null;
+    try { json = JSON.parse(text); } catch(e) {}
+
+    if(!res.ok){
+      throw new Error(`HTTP ${res.status} ${res.statusText}: ${text.slice(0, 200)}`);
+    }
+    if(!json){
+      throw new Error("Invalid JSON response: " + text.slice(0, 200));
+    }
+    return json;
+  }
+
+  /* ===================== HELPERS ===================== */
+  function safe(v){
+    return (v === null || v === undefined || String(v).trim() === "") ? "-" : String(v);
+  }
+
+  function escapeHtml(str){
+    return String(str ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function escapeAttr(str){
+    return String(str ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function todayISO(){
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  }
+
+  function startOfMonthISO(){
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-01`;
+  }
+
+  function timeDisplay(v){
+    if(!v || v === "-") return "-";
+    const s = String(v).trim();
+    if(/^\d{4}-\d{2}-\d{2}T/.test(s)){
+      const d = new Date(s);
+      if(!isNaN(d)) return d.toLocaleTimeString([], { hour:"2-digit", minute:"2-digit", hour12:true });
+    }
+    return s;
+  }
+
+  function parseTimeToMinutes(t){
+    t = String(t || "").trim();
+    if(!t || t === "-") return null;
+
+    if(/^\d{4}-\d{2}-\d{2}T/.test(t)){
+      const d = new Date(t);
+      if(isNaN(d)) return null;
+      return d.getHours() * 60 + d.getMinutes();
+    }
+
+    const d = new Date("1970-01-01 " + t);
+    if(isNaN(d)) return null;
+    return d.getHours() * 60 + d.getMinutes();
+  }
+
+  function calcHours(am_in, am_out, pm_in, pm_out){
+    const a1 = parseTimeToMinutes(am_in), a2 = parseTimeToMinutes(am_out);
+    const p1 = parseTimeToMinutes(pm_in), p2 = parseTimeToMinutes(pm_out);
+    const diff = (x, y) => (x != null && y != null && y > x) ? (y - x) : 0;
+    const mins = diff(a1, a2) + diff(p1, p2);
+    return mins ? (mins / 60) : 0;
+  }
+
+  function isoToDate(iso){
+    const d = new Date(String(iso || "") + "T00:00:00");
+    return isNaN(d) ? null : d;
+  }
+
+  function dateToISO(d){
+    const x = d instanceof Date ? d : new Date(d);
+    if(isNaN(x)) return "";
+    return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,"0")}-${String(x.getDate()).padStart(2,"0")}`;
+  }
+
+  function getWeekStartMondayISO(anyISO){
+    const d = isoToDate(anyISO) || new Date();
+    const day = d.getDay();
+    const diff = day === 0 ? -6 : 1 - day;
+    const monday = new Date(d);
+    monday.setDate(d.getDate() + diff);
+    return dateToISO(monday);
+  }
+
+  function addDaysISO(iso, days){
+    const d = isoToDate(iso);
+    if(!d) return iso;
+    const x = new Date(d);
+    x.setDate(d.getDate() + days);
+    return dateToISO(x);
+  }
+
+  function weekKeyFromStart(startISO){
+    const endISO = addDaysISO(startISO, 4);
+    return `${startISO}__${endISO}`;
+  }
+
+  function weekdayName(iso){
+    const d = isoToDate(iso);
+    if(!d) return iso;
+    return d.toLocaleDateString("en-US", { weekday:"long" });
+  }
+
+  function fmtWeekLabel(startISO){
+    const d1 = isoToDate(startISO);
+    const d2 = isoToDate(addDaysISO(startISO, 4));
+    if(!d1 || !d2) return `${startISO} - ${addDaysISO(startISO, 4)}`;
+    const a = d1.toLocaleDateString("en-US", { month:"long", day:"numeric", year:"numeric" }).replace(/,/g, "");
+    const b = d2.toLocaleDateString("en-US", { month:"long", day:"numeric", year:"numeric" }).replace(/,/g, "");
+    return `${a} – ${b}`;
+  }
+
+  function getInitials(name){
+    const clean = String(name || "").trim();
+    if(!clean) return "S";
+    const parts = clean.split(/\s+/).filter(Boolean);
+    if(parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+  }
+
+  function weekProgressCountFromStore(){
+    return [0,1,2,3,4].map(i => addDaysISO(activeWeek.startISO, i)).filter(d => {
+      const e = reportStore.daily[d];
+      return !!(e && ((e.am || "").trim() || (e.pm || "").trim() || (e.remarks || "").trim()));
+    }).length;
+  }
+
+  function reflectionSavedForWeek(){
+    return !!String(reportStore.reflections[activeWeek.key] || "").trim();
+  }
+
+  function getAdminWeekReviewStatus(progressCount, reflectionSaved){
+    if(progressCount >= 5 && reflectionSaved){
+      return { text: "Complete", chip: "Complete", chipClass: "success" };
+    }
+    if(progressCount > 0 || reflectionSaved){
+      return { text: "Partial", chip: "Partial", chipClass: "warn" };
+    }
+    return { text: "Incomplete", chip: "Incomplete", chipClass: "danger" };
+  }
+
+  function setText(id, text){
+    const el = document.getElementById(id);
+    if(el) el.textContent = text;
+  }
+
+  function setHTML(id, html){
+    const el = document.getElementById(id);
+    if(el) el.innerHTML = html;
+  }
+
+  /* ===================== ADMIN SUMMARY + CARD STATUS ===================== */
+  async function buildStudentReportStatusMap(){
+    studentReportStatusMap.clear();
+
+    const tasks = (students || []).map(async (s) => {
+      const sid = String(s.student_id || "").trim();
+      if(!sid) return;
+
+      try{
+        const [progressResp, reflectionResp] = await Promise.all([
+          api({
+            action: "get_weekly_progress",
+            student_id: sid,
+            week_start: activeWeek.startISO,
+            week_end: activeWeek.endISO
+          }),
+          api({
+            action: "get_weekly_reflection",
+            student_id: sid,
+            week_start: activeWeek.startISO
+          })
+        ]);
+
+        const progressEntries = progressResp?.success ? (progressResp.entries || []) : [];
+        const progressCount = progressEntries.filter(e =>
+          String(e.am || "").trim() || String(e.pm || "").trim() || String(e.remarks || "").trim()
+        ).length;
+
+        const reflectionSaved = !!String(reflectionResp?.success ? (reflectionResp.reflection || "") : "").trim();
+        const review = getAdminWeekReviewStatus(progressCount, reflectionSaved);
+
+        studentReportStatusMap.set(sid, {
+          progressCount,
+          reflectionSaved,
+          review
+        });
+      }catch(err){
+        studentReportStatusMap.set(sid, {
+          progressCount: 0,
+          reflectionSaved: false,
+          review: getAdminWeekReviewStatus(0, false)
+        });
       }
-      return s;
+    });
+
+    await Promise.all(tasks);
+  }
+
+  function updateAdminSummaryCards(){
+    const total = students.length;
+    let withProgress = 0;
+    let withReflection = 0;
+    let needsReview = 0;
+
+    students.forEach(s => {
+      const status = studentReportStatusMap.get(String(s.student_id || "").trim());
+      if(!status) return;
+
+      if(status.progressCount > 0) withProgress++;
+      if(status.reflectionSaved) withReflection++;
+      if(status.review.text !== "Complete") needsReview++;
+    });
+
+    setText("adminStatStudents", String(total));
+    setText("adminStatWithProgress", String(withProgress));
+    setText("adminStatWithReflection", String(withReflection));
+    setText("adminStatNeedsReview", String(needsReview));
+  }
+
+  function getStudentCardStatusHTML(student){
+    const status = studentReportStatusMap.get(String(student.student_id || "").trim());
+    const progressCount = status?.progressCount || 0;
+    const reflectionSaved = !!status?.reflectionSaved;
+    const review = status?.review || getAdminWeekReviewStatus(0, false);
+
+    const reflectionClass = reflectionSaved ? "status-chip" : "status-chip missing";
+    const reflectionText = reflectionSaved ? "Reflection Saved" : "No Reflection";
+
+    const progressClass = progressCount >= 5 ? "status-chip" : "status-chip missing";
+
+    return `
+      <div class="admin-card-status">
+        <div class="admin-mini-status-row">
+          <span class="${progressClass}">Progress ${progressCount}/5</span>
+          <span class="${reflectionClass}">${reflectionText}</span>
+        </div>
+        <div class="meta-item">
+          <i class="fa-solid fa-clipboard-check"></i>
+          ${escapeHtml(review.text)} for ${escapeHtml(fmtWeekLabel(activeWeek.startISO))}
+        </div>
+      </div>
+    `;
+  }
+
+  /* ===================== WEEKLY REPORTS ===================== */
+  function setActiveWeekByAnyDate(anyISO){
+    const startISO = getWeekStartMondayISO(anyISO);
+    activeWeek.startISO = startISO;
+    activeWeek.endISO = addDaysISO(startISO, 4);
+    activeWeek.key = weekKeyFromStart(startISO);
+
+    const dailyHint = document.getElementById("dailySavedHint");
+    const reflectionHint = document.getElementById("reflectionSavedHint");
+
+    if(dailyHint){
+      dailyHint.textContent = `Selected week: ${fmtWeekLabel(activeWeek.startISO)}`;
+      dailyHint.className = "report-help hint";
     }
 
-    function parseTimeToMinutes(t){
-      t = String(t||'').trim();
-      if(!t || t === '-') return null;
-      if (/^\d{4}-\d{2}-\d{2}T/.test(t)) {
-        const d = new Date(t);
-        if (isNaN(d)) return null;
-        return d.getHours()*60 + d.getMinutes();
-      }
-      const d = new Date('1970-01-01 ' + t);
-      if (isNaN(d)) return null;
-      return d.getHours()*60 + d.getMinutes();
+    if(reflectionHint){
+      reflectionHint.textContent = `Selected week: ${fmtWeekLabel(activeWeek.startISO)}`;
+      reflectionHint.className = "report-help hint";
+    }
+  }
+
+  async function loadWeekProgressFromServer(){
+    if(!currentStudent) return;
+
+    const resp = await api({
+      action: "get_weekly_progress",
+      student_id: currentStudent.student_id,
+      week_start: activeWeek.startISO,
+      week_end: activeWeek.endISO
+    });
+
+    if(!resp.success) throw new Error(resp.message || "Failed to load weekly progress");
+
+    [0,1,2,3,4].forEach(i => {
+      const d = addDaysISO(activeWeek.startISO, i);
+      delete reportStore.daily[d];
+    });
+
+    (resp.entries || []).forEach(e => {
+      reportStore.daily[e.date] = {
+        am: e.am || "",
+        pm: e.pm || "",
+        remarks: e.remarks || ""
+      };
+    });
+
+    const dailyDateEl = document.getElementById("dailyDate");
+    const dISO = dailyDateEl.value || activeWeek.startISO;
+    loadDailyEntryIntoForm(dISO);
+    renderWeekSummary();
+    updateAdminDetailReportStatus();
+  }
+
+  async function loadReflectionFromServer(){
+    if(!currentStudent) return;
+
+    const resp = await api({
+      action: "get_weekly_reflection",
+      student_id: currentStudent.student_id,
+      week_start: activeWeek.startISO
+    });
+
+    if(!resp.success) throw new Error(resp.message || "Failed to load reflection");
+
+    const text = resp.reflection || "";
+    reportStore.reflections[activeWeek.key] = text;
+    document.getElementById("weeklyReflectionText").value = text;
+    updateAdminDetailReportStatus();
+  }
+
+  function loadDailyEntryIntoForm(dateISO){
+    const d = String(dateISO || "").trim();
+    const entry = reportStore.daily[d];
+
+    document.getElementById("dailyAM").value = entry?.am || "";
+    document.getElementById("dailyPM").value = entry?.pm || "";
+    document.getElementById("dailyRemarks").value = entry?.remarks || "";
+
+    const hint = document.getElementById("dailySavedHint");
+    hint.textContent = `Selected week: ${fmtWeekLabel(activeWeek.startISO)}`;
+    hint.className = "report-help hint";
+  }
+
+  async function saveDailyEntry(){
+    const dateISO = document.getElementById("dailyDate").value || todayISO();
+    const am = (document.getElementById("dailyAM").value || "").trim();
+    const pm = (document.getElementById("dailyPM").value || "").trim();
+    const remarks = (document.getElementById("dailyRemarks").value || "").trim();
+
+    if(!am && !pm && !remarks){
+      const elHint = document.getElementById("dailySavedHint");
+      elHint.textContent = "Nothing to save. Please write something first.";
+      elHint.className = "report-help hint warn";
+      showToast("warn", "No Content", "Write something before saving.");
+      return;
     }
 
-    function calcHours(am_in,am_out,pm_in,pm_out){
-      const a1=parseTimeToMinutes(am_in), a2=parseTimeToMinutes(am_out);
-      const p1=parseTimeToMinutes(pm_in), p2=parseTimeToMinutes(pm_out);
-      const diff=(x,y)=>(x!=null && y!=null && y>x)?(y-x):0;
-      const mins = diff(a1,a2)+diff(p1,p2);
-      return mins ? (mins/60) : 0;
-    }
+    const org = (document.getElementById("orgName").value || "").trim();
+    const dept = (document.getElementById("deptName").value || "").trim();
+    const supervisor = (document.getElementById("supervisorName").value || "").trim();
 
-    function isoToDate(iso){
-      const d = new Date(String(iso||'') + "T00:00:00");
-      return isNaN(d) ? null : d;
-    }
-    function dateToISO(d){
-      const x = (d instanceof Date) ? d : new Date(d);
-      if(isNaN(x)) return '';
-      return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`;
-    }
-    // Monday-start week
-    function getWeekStartMondayISO(anyISO){
-      const d = isoToDate(anyISO) || new Date();
-      const day = d.getDay(); // 0 Sun ... 6 Sat
-      const diff = (day === 0) ? -6 : (1 - day); // back to Monday
-      const monday = new Date(d);
-      monday.setDate(d.getDate() + diff);
-      return dateToISO(monday);
-    }
-    function addDaysISO(iso, days){
-      const d = isoToDate(iso);
-      if(!d) return iso;
-      const x = new Date(d);
-      x.setDate(d.getDate() + days);
-      return dateToISO(x);
-    }
-    function weekKeyFromStart(startISO){
-      const endISO = addDaysISO(startISO, 4); // Mon-Fri
-      return `${startISO}__${endISO}`;
-    }
-    function weekdayName(iso){
-      const d = isoToDate(iso);
-      if(!d) return iso;
-      return d.toLocaleDateString('en-US', { weekday:'long' });
-    }
-    function fmtWeekLabel(startISO){
-      const d1 = isoToDate(startISO);
-      const d2 = isoToDate(addDaysISO(startISO, 4));
-      if(!d1 || !d2) return `${startISO} - ${addDaysISO(startISO,4)}`;
-      const a = d1.toLocaleDateString('en-US',{ month:'long', day:'numeric', year:'numeric' }).replace(/,/g,'');
-      const b = d2.toLocaleDateString('en-US',{ month:'long', day:'numeric', year:'numeric' }).replace(/,/g,'');
-      return `${a} – ${b}`;
-    }
+    reportStore.daily[dateISO] = { am, pm, remarks };
 
-    /* ===================== WEEKLY REPORTS (SERVER SYNC) ===================== */
-    function setActiveWeekByAnyDate(anyISO){
-      const startISO = getWeekStartMondayISO(anyISO);
-      activeWeek.startISO = startISO;
-      activeWeek.endISO = addDaysISO(startISO, 4);
-      activeWeek.key = weekKeyFromStart(startISO);
-
-      // display hints
-      document.getElementById('dailySavedHint').textContent = `Selected week: ${fmtWeekLabel(activeWeek.startISO)}`;
-      document.getElementById('dailySavedHint').className = 'report-help hint';
-
-      document.getElementById('reflectionSavedHint').textContent = `Selected week: ${fmtWeekLabel(activeWeek.startISO)}`;
-      document.getElementById('reflectionSavedHint').className = 'report-help hint';
-    }
-
-    async function loadWeekProgressFromServer(){
-      if(!currentStudent) return;
-
-      const resp = await api({
-        action: "get_weekly_progress",
+    try{
+      const resp = await apiPost({
+        action: "save_daily_progress",
         student_id: currentStudent.student_id,
+        student_name: currentStudent.student_name,
         week_start: activeWeek.startISO,
-        week_end: activeWeek.endISO
+        week_end: activeWeek.endISO,
+        date: dateISO,
+        am, pm, remarks,
+        org, dept, supervisor
       });
 
-      if(!resp.success) throw new Error(resp.message || "Failed to load weekly progress");
+      if(!resp.success) throw new Error(resp.message || "Save failed");
 
-      // Clear current week in cache then load
-      [0,1,2,3,4].forEach(i=>{
-        const d = addDaysISO(activeWeek.startISO, i);
-        delete reportStore.daily[d];
-      });
+      const elHint = document.getElementById("dailySavedHint");
+      elHint.textContent = `Saved to Weekly Progress • ${weekdayName(dateISO)} (${dateISO})`;
+      elHint.className = "report-help hint";
 
-      (resp.entries || []).forEach(e=>{
-        reportStore.daily[e.date] = { am: e.am || "", pm: e.pm || "", remarks: e.remarks || "" };
-      });
-
-      // refresh UI for selected day
-      const dailyDateEl = document.getElementById('dailyDate');
-      const dISO = dailyDateEl.value || activeWeek.startISO;
-      loadDailyEntryIntoForm(dISO);
+      updateAdminDetailReportStatus();
+      showToast("success", "Saved", "Daily progress saved to Google Sheet.");
       renderWeekSummary();
+
+      studentReportStatusMap.set(String(currentStudent.student_id || "").trim(), {
+        progressCount: weekProgressCountFromStore(),
+        reflectionSaved: reflectionSavedForWeek(),
+        review: getAdminWeekReviewStatus(weekProgressCountFromStore(), reflectionSavedForWeek())
+      });
+      updateAdminSummaryCards();
+      applyGridFilters();
+    }catch(err){
+      console.error(err);
+      const elHint = document.getElementById("dailySavedHint");
+      elHint.textContent = `Saved locally but failed to sync: ${err.message}`;
+      elHint.className = "report-help hint err";
+      showToast("error", "Sync Failed", err.message);
+    }
+  }
+
+  async function saveWeeklyReflection(){
+    const text = (document.getElementById("weeklyReflectionText").value || "").trim();
+    if(!text){
+      const elHint = document.getElementById("reflectionSavedHint");
+      elHint.textContent = "Nothing to save. Please write your reflection first.";
+      elHint.className = "report-help hint warn";
+      showToast("warn", "No Content", "Write reflection before saving.");
+      return;
     }
 
-    async function loadReflectionFromServer(){
-      if(!currentStudent) return;
+    const org = (document.getElementById("orgName").value || "").trim();
+    const dept = (document.getElementById("deptName").value || "").trim();
+    const supervisor = (document.getElementById("supervisorName").value || "").trim();
 
-      const resp = await api({
-        action: "get_weekly_reflection",
+    try{
+      const resp = await apiPost({
+        action: "save_weekly_reflection",
         student_id: currentStudent.student_id,
-        week_start: activeWeek.startISO
+        student_name: currentStudent.student_name,
+        week_start: activeWeek.startISO,
+        week_end: activeWeek.endISO,
+        reflection: text,
+        org, dept, supervisor
       });
 
-      if(!resp.success) throw new Error(resp.message || "Failed to load reflection");
-      const text = resp.reflection || "";
+      if(!resp.success) throw new Error(resp.message || "Save failed");
+
       reportStore.reflections[activeWeek.key] = text;
-      document.getElementById('weeklyReflectionText').value = text;
+
+      const elHint = document.getElementById("reflectionSavedHint");
+      elHint.textContent = `Saved to Weekly Reflection • Week: ${fmtWeekLabel(activeWeek.startISO)}`;
+      elHint.className = "report-help hint";
+
+      updateAdminDetailReportStatus();
+      showToast("success", "Saved", "Weekly reflection saved to Google Sheet.");
+
+      studentReportStatusMap.set(String(currentStudent.student_id || "").trim(), {
+        progressCount: weekProgressCountFromStore(),
+        reflectionSaved: reflectionSavedForWeek(),
+        review: getAdminWeekReviewStatus(weekProgressCountFromStore(), reflectionSavedForWeek())
+      });
+      updateAdminSummaryCards();
+      applyGridFilters();
+    }catch(err){
+      console.error(err);
+      const elHint = document.getElementById("reflectionSavedHint");
+      elHint.textContent = `Failed to sync: ${err.message}`;
+      elHint.className = "report-help hint err";
+      showToast("error", "Sync Failed", err.message);
+    }
+  }
+
+  function clearDailyForm(){
+    document.getElementById("dailyAM").value = "";
+    document.getElementById("dailyPM").value = "";
+    document.getElementById("dailyRemarks").value = "";
+
+    const elHint = document.getElementById("dailySavedHint");
+    elHint.textContent = `Selected week: ${fmtWeekLabel(activeWeek.startISO)}`;
+    elHint.className = "report-help hint";
+  }
+
+  function clearReflectionForm(){
+    document.getElementById("weeklyReflectionText").value = "";
+    const elHint = document.getElementById("reflectionSavedHint");
+    elHint.textContent = `Selected week: ${fmtWeekLabel(activeWeek.startISO)}`;
+    elHint.className = "report-help hint";
+  }
+
+  function renderWeekSummary(){
+    const wrap = document.getElementById("weekSummary");
+    wrap.innerHTML = "";
+
+    const days = [0,1,2,3,4].map(i => addDaysISO(activeWeek.startISO, i));
+
+    days.forEach(iso => {
+      const e = reportStore.daily[iso];
+      const filled = !!(e && ((e.am || "").trim() || (e.pm || "").trim() || (e.remarks || "").trim()));
+      const chipClass = filled ? "status-chip" : "status-chip missing";
+      const chipText = filled ? "Saved" : "Missing";
+
+      const row = document.createElement("div");
+      row.className = "week-row";
+      row.innerHTML = `
+        <div style="min-width:0;">
+          <strong>${escapeHtml(weekdayName(iso))}</strong>
+          <small>${escapeHtml(iso)}</small>
+        </div>
+        <div style="display:flex; align-items:center; gap:.5rem; flex-shrink:0;">
+          <span class="${chipClass}">${chipText}</span>
+          <button class="btn btn-secondary" style="padding:.55rem .85rem; font-size:.85rem;" data-edit="${iso}">
+            <i class="fa-solid fa-pen-to-square"></i> Edit
+          </button>
+        </div>
+      `;
+      wrap.appendChild(row);
+    });
+
+    wrap.querySelectorAll("button[data-edit]").forEach(btn => {
+      btn.onclick = () => {
+        const iso = btn.getAttribute("data-edit");
+        document.getElementById("dailyDate").value = iso;
+        loadDailyEntryIntoForm(iso);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      };
+    });
+
+    updateAdminDetailReportStatus();
+  }
+
+  function updateAdminDetailReportStatus(){
+    const progressCount = weekProgressCountFromStore();
+    const reflectionSaved = reflectionSavedForWeek();
+    const review = getAdminWeekReviewStatus(progressCount, reflectionSaved);
+
+    setText("statProgressDays", `${progressCount}/5`);
+    setText("statReflection", reflectionSaved ? "Yes" : "No");
+
+    setText("weekProgressChip", `${progressCount}/5`);
+    setText("weekProgressCount", `${progressCount} / 5`);
+
+    setText("weekReflectionChip", reflectionSaved ? "Saved" : "Pending");
+    setText("weekReflectionCount", reflectionSaved ? "Yes" : "No");
+
+    setText("weekReviewChip", review.chip);
+    setText("weekReviewStatus", review.text);
+
+    setText("detailAdminStatus", review.text);
+  }
+
+  /* ===================== EXCEL EXPORTS ===================== */
+  function exportStudentsExcel(rows){
+    const data = Array.isArray(rows) ? rows : [];
+    const headers = ["Student ID", "Student Name", "Role", "Email", "Department", "Generated Code"];
+    const aoa = [headers];
+
+    data.forEach(s => {
+      aoa.push([
+        safe(s.student_id),
+        safe(s.student_name),
+        safe(s.login_type),
+        safe(s.email),
+        safe(s.course_dept),
+        safe(s.generated_code)
+      ]);
+    });
+
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.aoa_to_sheet(aoa);
+    XLSX.utils.book_append_sheet(wb, ws, "Students");
+    const fname = `students_${todayISO()}.xlsx`;
+    XLSX.writeFile(wb, fname);
+    showToast("success", "Exported", `Downloaded ${fname}`);
+  }
+
+  function exportAttendanceExcel(){
+    if(!currentStudent) return;
+
+    const headers = ["Date", "AM In", "AM Out", "PM In", "PM Out", "Total Hours"];
+    const aoa = [headers];
+
+    (currentLogs || []).slice().sort((a, b) => String(a.date).localeCompare(String(b.date))).forEach(r => {
+      const amIn = timeDisplay(r.am_in);
+      const amOut = timeDisplay(r.am_out);
+      const pmIn = timeDisplay(r.pm_in);
+      const pmOut = timeDisplay(r.pm_out);
+
+      const total = String(r.total_hours || "").trim() !== ""
+        ? (Number(String(r.total_hours).replace(/[^\d.]/g, "")) || 0)
+        : calcHours(amIn, amOut, pmIn, pmOut);
+
+      aoa.push([
+        safe(r.date),
+        safe(amIn),
+        safe(amOut),
+        safe(pmIn),
+        safe(pmOut),
+        total ? Number(total.toFixed ? total.toFixed(2) : total) : ""
+      ]);
+    });
+
+    const wb = XLSX.utils.book_new();
+
+    const meta = [
+      ["Student Name", safe(currentStudent.student_name)],
+      ["Student ID", safe(currentStudent.student_id)],
+      ["Role", safe(currentStudent.login_type)],
+      ["Department", safe(currentStudent.course_dept)],
+      ["Email", safe(currentStudent.email)],
+      ["Export Date", todayISO()]
+    ];
+
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(meta), "Meta");
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(aoa), "Attendance");
+
+    const fname = `attendance_${safe(currentStudent.student_id)}_${todayISO()}.xlsx`;
+    XLSX.writeFile(wb, fname);
+    showToast("success", "Exported", `Downloaded ${fname}`);
+  }
+
+  function exportWeeklyExcel(){
+    if(!currentStudent) return;
+
+    if(!activeWeek.startISO) setActiveWeekByAnyDate(document.getElementById("weekPicker").value || todayISO());
+
+    const org = (document.getElementById("orgName").value || "").trim();
+    const dept = (document.getElementById("deptName").value || "").trim();
+    const supervisor = (document.getElementById("supervisorName").value || "").trim();
+    const weekLabel = fmtWeekLabel(activeWeek.startISO);
+
+    const progressHeaders = ["Date", "Day", "Morning Activities (AM)", "Afternoon Activities (PM)", "Remarks"];
+    const progressAoa = [progressHeaders];
+
+    [0,1,2,3,4].map(i => addDaysISO(activeWeek.startISO, i)).forEach(d => {
+      const e = reportStore.daily[d] || {};
+      progressAoa.push([d, weekdayName(d), e.am || "", e.pm || "", e.remarks || ""]);
+    });
+
+    const reflectionText = reportStore.reflections[activeWeek.key] || (document.getElementById("weeklyReflectionText").value || "");
+    const reflectionAoa = [
+      ["Week", weekLabel],
+      ["Week Start", activeWeek.startISO],
+      ["Week End", activeWeek.endISO],
+      ["Reflection", reflectionText]
+    ];
+
+    const metaAoa = [
+      ["Student Name", safe(currentStudent.student_name)],
+      ["Student ID", safe(currentStudent.student_id)],
+      ["Role", safe(currentStudent.login_type)],
+      ["Department", safe(currentStudent.course_dept)],
+      ["Email", safe(currentStudent.email)],
+      ["Organization", org],
+      ["Assigned Department / Section", dept],
+      ["OJT Supervisor", supervisor],
+      ["Week", weekLabel],
+      ["Export Date", todayISO()]
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(metaAoa), "Meta");
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(progressAoa), "Weekly Progress");
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(reflectionAoa), "Weekly Reflection");
+
+    const fname = `weekly_reports_${safe(currentStudent.student_id)}_${activeWeek.startISO}.xlsx`;
+    XLSX.writeFile(wb, fname);
+    showToast("success", "Exported", `Downloaded ${fname}`);
+  }
+
+  /* ===================== QR MODAL ===================== */
+  function openQrModal(){
+    if(!currentStudent) return;
+    const code = String(currentStudent.generated_code || "").trim();
+    if(!code) return;
+
+    const name = safe(currentStudent.student_name);
+    const roleRaw = safe(currentStudent.login_type);
+    const role = (roleRaw === "-" ? "STUDENT" : roleRaw).toUpperCase();
+
+    setText("qrName", name);
+    setText("qrRole", role);
+    setText("qrAvatar", getInitials(name));
+
+    const wrap = document.getElementById("qrCanvas");
+    wrap.innerHTML = "";
+
+    try{
+      new QRCode(wrap, {
+        text: code,
+        width: 512,
+        height: 512,
+        correctLevel: QRCode.CorrectLevel.H
+      });
+    }catch(e){
+      console.error(e);
     }
 
-    function loadDailyEntryIntoForm(dateISO){
-      const d = String(dateISO||'').trim();
-      const entry = reportStore.daily[d];
-      document.getElementById('dailyAM').value = entry?.am || '';
-      document.getElementById('dailyPM').value = entry?.pm || '';
-      document.getElementById('dailyRemarks').value = entry?.remarks || '';
-      document.getElementById('dailySavedHint').textContent = `Selected week: ${fmtWeekLabel(activeWeek.startISO)}`;
-      document.getElementById('dailySavedHint').className = 'report-help hint';
-    }
+    qrModalInstance = qrModalInstance || new bootstrap.Modal(document.getElementById("qrModal"), {
+      backdrop: true,
+      keyboard: true
+    });
+    qrModalInstance.show();
+  }
 
-    async function saveDailyEntry(){
-      const dateISO = document.getElementById('dailyDate').value || todayISO();
-      const am = (document.getElementById('dailyAM').value || '').trim();
-      const pm = (document.getElementById('dailyPM').value || '').trim();
-      const remarks = (document.getElementById('dailyRemarks').value || '').trim();
+  /* ===================== GRID ===================== */
+  function buildDeptFilterOptions(){
+    const el = document.getElementById("deptFilter");
+    const depts = [...new Set((students || []).map(s => String(s.course_dept || "").trim()).filter(Boolean))].sort((a, b) => a.localeCompare(b));
+    el.innerHTML = `<option value="">All Departments</option>` +
+      depts.map(d => `<option value="${escapeAttr(d)}">${escapeHtml(d)}</option>`).join("");
+  }
 
-      if(!am && !pm && !remarks){
-        const el = document.getElementById('dailySavedHint');
-        el.textContent = 'Nothing to save. Please write something first.';
-        el.className = 'report-help hint warn';
-        showToast('warn','No Content','Write something before saving.');
-        return;
+  function updateGridChips(){
+    const total = (students || []).length;
+    const shown = (filteredStudents || []).length;
+    document.querySelector("#chipTotal strong").textContent = total;
+    document.querySelector("#chipFiltered strong").textContent = shown;
+  }
+
+  function applyGridFilters(){
+    const q = String(document.getElementById("studentSearch").value || "").trim().toLowerCase();
+    const role = String(document.getElementById("roleFilter").value || "").trim().toLowerCase();
+    const dept = String(document.getElementById("deptFilter").value || "").trim().toLowerCase();
+    const sortBy = String(document.getElementById("sortBy").value || "name_asc");
+
+    filteredStudents = (students || []).filter(s => {
+      const sid = String(s.student_id || "").toLowerCase();
+      const name = String(s.student_name || "").toLowerCase();
+      const email = String(s.email || "").toLowerCase();
+      const d = String(s.course_dept || "").toLowerCase();
+      const type = String(s.login_type || "").toLowerCase();
+
+      if(q){
+        const hit = sid.includes(q) || name.includes(q) || email.includes(q) || d.includes(q) || type.includes(q);
+        if(!hit) return false;
       }
 
-      const org = (document.getElementById('orgName').value || '').trim();
-      const dept = (document.getElementById('deptName').value || '').trim();
-      const supervisor = (document.getElementById('supervisorName').value || '').trim();
+      if(role && !type.includes(role)) return false;
+      if(dept && d !== dept) return false;
+      return true;
+    });
 
-      // local cache update
-      reportStore.daily[dateISO] = { am, pm, remarks };
+    const compare = (a, b) => String(a || "").localeCompare(String(b || ""), undefined, { sensitivity: "base" });
 
-      try{
-        const resp = await apiPost({
-          action: "save_daily_progress",
-          student_id: currentStudent.student_id,
-          student_name: currentStudent.student_name,
-          week_start: activeWeek.startISO,
-          week_end: activeWeek.endISO,
-          date: dateISO,
-          am, pm, remarks,
-          org, dept, supervisor
-        });
+    filteredStudents.sort((A, B) => {
+      const an = String(A.student_name || "");
+      const bn = String(B.student_name || "");
+      const ad = String(A.course_dept || "");
+      const bd = String(B.course_dept || "");
 
-        if(!resp.success) throw new Error(resp.message || "Save failed");
+      if(sortBy === "name_desc") return compare(bn, an);
+      if(sortBy === "dept_asc") return compare(ad, bd) || compare(an, bn);
+      if(sortBy === "dept_desc") return compare(bd, ad) || compare(an, bn);
+      return compare(an, bn);
+    });
 
-        const el = document.getElementById('dailySavedHint');
-        el.textContent = `Saved to Weekly Progress • ${weekdayName(dateISO)} (${dateISO})`;
-        el.className = 'report-help hint';
+    renderGrid(filteredStudents);
+    updateGridChips();
+  }
 
-        showToast('success','Saved','Daily progress saved to Google Sheet.');
-        renderWeekSummary();
-      }catch(err){
-        console.error(err);
-        const el = document.getElementById('dailySavedHint');
-        el.textContent = `Saved locally but failed to sync: ${err.message}`;
-        el.className = 'report-help hint err';
-        showToast('error','Sync Failed', err.message);
-      }
+  function renderGrid(list){
+    const grid = document.getElementById("studentGrid");
+    const arr = Array.isArray(list) ? list : [];
+
+    if(!arr.length){
+      grid.innerHTML = `
+        <div class="empty-state" style="grid-column: 1/-1;">
+          <i class="fa-solid fa-user-slash"></i>
+          <p>No students found</p>
+        </div>
+      `;
+      return;
     }
 
-    async function saveWeeklyReflection(){
-      const text = (document.getElementById('weeklyReflectionText').value || '').trim();
-      if(!text){
-        const el = document.getElementById('reflectionSavedHint');
-        el.textContent = 'Nothing to save. Please write your reflection first.';
-        el.className = 'report-help hint warn';
-        showToast('warn','No Content','Write reflection before saving.');
-        return;
-      }
+    grid.innerHTML = arr.map(s => `
+      <div class="profile-card" data-student-id="${escapeAttr(safe(s.student_id))}">
+        <div class="card-header-img"></div>
+        <div class="card-avatar">${escapeHtml(getInitials(safe(s.student_name)))}</div>
+        <div class="card-body">
+          <div class="card-title" title="${escapeAttr(safe(s.student_name))}">${escapeHtml(safe(s.student_name))}</div>
+          <span class="card-badge">${escapeHtml(safe(s.login_type))}</span>
 
-      const org = (document.getElementById('orgName').value || '').trim();
-      const dept = (document.getElementById('deptName').value || '').trim();
-      const supervisor = (document.getElementById('supervisorName').value || '').trim();
-
-      try{
-        const resp = await apiPost({
-          action: "save_weekly_reflection",
-          student_id: currentStudent.student_id,
-          student_name: currentStudent.student_name,
-          week_start: activeWeek.startISO,
-          week_end: activeWeek.endISO,
-          reflection: text,
-          org, dept, supervisor
-        });
-
-        if(!resp.success) throw new Error(resp.message || "Save failed");
-
-        reportStore.reflections[activeWeek.key] = text;
-
-        const el = document.getElementById('reflectionSavedHint');
-        el.textContent = `Saved to Weekly Reflection • Week: ${fmtWeekLabel(activeWeek.startISO)}`;
-        el.className = 'report-help hint';
-
-        showToast('success','Saved','Weekly reflection saved to Google Sheet.');
-      }catch(err){
-        console.error(err);
-        const el = document.getElementById('reflectionSavedHint');
-        el.textContent = `Failed to sync: ${err.message}`;
-        el.className = 'report-help hint err';
-        showToast('error','Sync Failed', err.message);
-      }
-    }
-
-    function clearDailyForm(){
-      document.getElementById('dailyAM').value = '';
-      document.getElementById('dailyPM').value = '';
-      document.getElementById('dailyRemarks').value = '';
-      const el = document.getElementById('dailySavedHint');
-      el.textContent = `Selected week: ${fmtWeekLabel(activeWeek.startISO)}`;
-      el.className = 'report-help hint';
-    }
-
-    function clearReflectionForm(){
-      document.getElementById('weeklyReflectionText').value = '';
-      const el = document.getElementById('reflectionSavedHint');
-      el.textContent = `Selected week: ${fmtWeekLabel(activeWeek.startISO)}`;
-      el.className = 'report-help hint';
-    }
-
-    function renderWeekSummary(){
-      const wrap = document.getElementById('weekSummary');
-      wrap.innerHTML = '';
-
-      const days = [0,1,2,3,4].map(i => addDaysISO(activeWeek.startISO, i));
-      days.forEach(iso => {
-        const e = reportStore.daily[iso];
-        const filled = !!(e && ((e.am||'').trim() || (e.pm||'').trim() || (e.remarks||'').trim()));
-        const chipClass = filled ? 'status-chip' : 'status-chip missing';
-        const chipText = filled ? 'Saved' : 'Missing';
-
-        const row = document.createElement('div');
-        row.className = 'week-row';
-        row.innerHTML = `
-          <div style="min-width:0;">
-            <strong>${escapeHtml(weekdayName(iso))}</strong>
-            <small>${escapeHtml(iso)}</small>
-          </div>
-          <div style="display:flex; align-items:center; gap:.5rem; flex-shrink:0;">
-            <span class="${chipClass}">${chipText}</span>
-            <button class="btn btn-secondary" style="padding:.55rem .85rem; font-size:.85rem;" data-edit="${iso}">
-              <i class="fa-solid fa-pen-to-square"></i> Edit
-            </button>
-          </div>
-        `;
-        wrap.appendChild(row);
-      });
-
-      wrap.querySelectorAll('button[data-edit]').forEach(btn => {
-        btn.onclick = () => {
-          const iso = btn.getAttribute('data-edit');
-          document.getElementById('dailyDate').value = iso;
-          loadDailyEntryIntoForm(iso);
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-      });
-    }
-
-    /* ===================== EXCEL EXPORTS ===================== */
-    function exportStudentsExcel(rows){
-      const data = Array.isArray(rows) ? rows : [];
-      const headers = ["Student ID","Student Name","Role","Email","Department","Generated Code"];
-      const aoa = [headers];
-
-      data.forEach(s=>{
-        aoa.push([
-          safe(s.student_id),
-          safe(s.student_name),
-          safe(s.login_type),
-          safe(s.email),
-          safe(s.course_dept),
-          safe(s.generated_code),
-        ]);
-      });
-
-      const wb = XLSX.utils.book_new();
-      const ws = XLSX.utils.aoa_to_sheet(aoa);
-      XLSX.utils.book_append_sheet(wb, ws, "Students");
-      const fname = `students_${todayISO()}.xlsx`;
-      XLSX.writeFile(wb, fname);
-      showToast('success','Exported', `Downloaded ${fname}`);
-    }
-
-    function exportAttendanceExcel(){
-      if(!currentStudent) return;
-      const headers = ["Date","AM In","AM Out","PM In","PM Out","Total Hours"];
-      const aoa = [headers];
-
-      (currentLogs || []).slice().sort((a,b)=> String(a.date).localeCompare(String(b.date))).forEach(r=>{
-        const amIn = timeDisplay(r.am_in);
-        const amOut = timeDisplay(r.am_out);
-        const pmIn = timeDisplay(r.pm_in);
-        const pmOut = timeDisplay(r.pm_out);
-        const total = String(r.total_hours||'').trim() !== ''
-          ? (Number(String(r.total_hours).replace(/[^\d.]/g,'')) || 0)
-          : calcHours(amIn, amOut, pmIn, pmOut);
-
-        aoa.push([
-          safe(r.date),
-          safe(amIn),
-          safe(amOut),
-          safe(pmIn),
-          safe(pmOut),
-          total ? Number(total.toFixed ? total.toFixed(2) : total) : ""
-        ]);
-      });
-
-      const wb = XLSX.utils.book_new();
-
-      // meta sheet
-      const meta = [
-        ["Student Name", safe(currentStudent.student_name)],
-        ["Student ID", safe(currentStudent.student_id)],
-        ["Role", safe(currentStudent.login_type)],
-        ["Department", safe(currentStudent.course_dept)],
-        ["Email", safe(currentStudent.email)],
-        ["Export Date", todayISO()]
-      ];
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(meta), "Meta");
-
-      // attendance
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(aoa), "Attendance");
-
-      const fname = `attendance_${safe(currentStudent.student_id)}_${todayISO()}.xlsx`;
-      XLSX.writeFile(wb, fname);
-      showToast('success','Exported', `Downloaded ${fname}`);
-    }
-
-    function exportWeeklyExcel(){
-      if(!currentStudent) return;
-
-      // Ensure week is set
-      if(!activeWeek.startISO) setActiveWeekByAnyDate(document.getElementById('weekPicker').value || todayISO());
-
-      const org = (document.getElementById('orgName').value || '').trim();
-      const dept = (document.getElementById('deptName').value || '').trim();
-      const supervisor = (document.getElementById('supervisorName').value || '').trim();
-      const weekLabel = fmtWeekLabel(activeWeek.startISO);
-
-      // Progress (Mon-Fri)
-      const progressHeaders = ["Date","Day","Morning Activities (AM)","Afternoon Activities (PM)","Remarks"];
-      const progressAoa = [progressHeaders];
-      [0,1,2,3,4].map(i=>addDaysISO(activeWeek.startISO,i)).forEach(d=>{
-        const e = reportStore.daily[d] || {};
-        progressAoa.push([
-          d,
-          weekdayName(d),
-          (e.am || ""),
-          (e.pm || ""),
-          (e.remarks || "")
-        ]);
-      });
-
-      // Reflection
-      const reflectionText = reportStore.reflections[activeWeek.key] || (document.getElementById('weeklyReflectionText').value || "");
-      const reflectionAoa = [
-        ["Week", weekLabel],
-        ["Week Start", activeWeek.startISO],
-        ["Week End", activeWeek.endISO],
-        ["Reflection", reflectionText]
-      ];
-
-      // Meta
-      const metaAoa = [
-        ["Student Name", safe(currentStudent.student_name)],
-        ["Student ID", safe(currentStudent.student_id)],
-        ["Role", safe(currentStudent.login_type)],
-        ["Department", safe(currentStudent.course_dept)],
-        ["Email", safe(currentStudent.email)],
-        ["Organization", org],
-        ["Assigned Department / Section", dept],
-        ["OJT Supervisor", supervisor],
-        ["Week", weekLabel],
-        ["Export Date", todayISO()]
-      ];
-
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(metaAoa), "Meta");
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(progressAoa), "Weekly Progress");
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(reflectionAoa), "Weekly Reflection");
-
-      const fname = `weekly_reports_${safe(currentStudent.student_id)}_${activeWeek.startISO}.xlsx`;
-      XLSX.writeFile(wb, fname);
-      showToast('success','Exported', `Downloaded ${fname}`);
-    }
-
-    /* ===================== QR MODAL ===================== */
-    function openQrModal(){
-      if(!currentStudent) return;
-      const code = String(currentStudent.generated_code || '').trim();
-      if(!code) return;
-
-      const name = safe(currentStudent.student_name);
-      const roleRaw = safe(currentStudent.login_type);
-      const role = (roleRaw === '-' ? 'STUDENT' : roleRaw).toUpperCase();
-
-      document.getElementById('qrName').textContent = name;
-      document.getElementById('qrRole').textContent = role;
-      document.getElementById('qrAvatar').textContent = (name && name !== '-') ? name.charAt(0).toUpperCase() : 'S';
-
-      const wrap = document.getElementById('qrCanvas');
-      wrap.innerHTML = '';
-      try{
-        new QRCode(wrap, { text: code, width: 512, height: 512, correctLevel: QRCode.CorrectLevel.H });
-      }catch(e){ console.error(e); }
-
-      qrModalInstance = qrModalInstance || new bootstrap.Modal(document.getElementById('qrModal'), { backdrop:true, keyboard:true });
-      qrModalInstance.show();
-    }
-
-    /* ===================== STUDENTS GRID ===================== */
-    function buildDeptFilterOptions(){
-      const el = document.getElementById('deptFilter');
-      const depts = [...new Set((students||[]).map(s => String(s.course_dept||'').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b));
-      el.innerHTML = `<option value="">All Departments</option>` + depts.map(d => `<option value="${escapeAttr(d)}">${escapeHtml(d)}</option>`).join('');
-    }
-
-    function updateGridChips(){
-      const total = (students||[]).length;
-      const shown = (filteredStudents||[]).length;
-      document.querySelector('#chipTotal strong').textContent = total;
-      document.querySelector('#chipFiltered strong').textContent = shown;
-    }
-
-    function applyGridFilters(){
-      const q = String(document.getElementById('studentSearch').value || '').trim().toLowerCase();
-      const role = String(document.getElementById('roleFilter').value || '').trim().toLowerCase();
-      const dept = String(document.getElementById('deptFilter').value || '').trim().toLowerCase();
-      const sortBy = String(document.getElementById('sortBy').value || 'name_asc');
-
-      filteredStudents = (students || []).filter(s=>{
-        const sid = String(s.student_id||'').toLowerCase();
-        const name = String(s.student_name||'').toLowerCase();
-        const email = String(s.email||'').toLowerCase();
-        const d = String(s.course_dept||'').toLowerCase();
-        const type = String(s.login_type||'').toLowerCase();
-
-        if(q){
-          const hit = (sid.includes(q) || name.includes(q) || email.includes(q) || d.includes(q) || type.includes(q));
-          if(!hit) return false;
-        }
-        if(role && !type.includes(role)) return false;
-        if(dept && d !== dept) return false;
-        return true;
-      });
-
-      const compare = (a,b)=> String(a||'').localeCompare(String(b||''), undefined, { sensitivity:'base' });
-      filteredStudents.sort((A,B)=>{
-        const an = String(A.student_name||'');
-        const bn = String(B.student_name||'');
-        const ad = String(A.course_dept||'');
-        const bd = String(B.course_dept||'');
-
-        if(sortBy === 'name_desc') return compare(bn, an);
-        if(sortBy === 'dept_asc') return compare(ad, bd) || compare(an, bn);
-        if(sortBy === 'dept_desc') return compare(bd, ad) || compare(an, bn);
-        return compare(an, bn);
-      });
-
-      renderGrid(filteredStudents);
-      updateGridChips();
-    }
-
-    function renderGrid(list) {
-      const grid = document.getElementById('studentGrid');
-      const arr = Array.isArray(list) ? list : [];
-
-      if(!arr.length){
-        grid.innerHTML = `
-          <div class="empty-state" style="grid-column: 1/-1;">
-            <i class="fa-solid fa-user-slash"></i>
-            <p>No students found</p>
-          </div>
-        `;
-        return;
-      }
-
-      grid.innerHTML = arr.map(s => `
-        <div class="profile-card" data-student-id="${escapeAttr(safe(s.student_id))}">
-          <div class="card-header-img"></div>
-          <div class="card-avatar">${escapeHtml(safe(s.student_name)).charAt(0).toUpperCase()}</div>
-          <div class="card-body">
-            <div class="card-title" title="${escapeAttr(safe(s.student_name))}">${escapeHtml(safe(s.student_name))}</div>
-            <span class="card-badge">${escapeHtml(safe(s.login_type))}</span>
-            <div class="card-meta">
-              <div class="meta-item"><i class="fa-solid fa-building"></i>${escapeHtml(safe(s.course_dept))}</div>
-              <div class="meta-item"><i class="fa-solid fa-envelope"></i>${escapeHtml(safe(s.email))}</div>
-              <div class="meta-item"><i class="fa-solid fa-qrcode"></i>${escapeHtml(safe(s.generated_code))}</div>
-            </div>
+          <div class="card-meta">
+            <div class="meta-item"><i class="fa-solid fa-building"></i>${escapeHtml(safe(s.course_dept))}</div>
+            <div class="meta-item"><i class="fa-solid fa-envelope"></i>${escapeHtml(safe(s.email))}</div>
+            <div class="meta-item"><i class="fa-solid fa-qrcode"></i>${escapeHtml(safe(s.generated_code))}</div>
+            ${getStudentCardStatusHTML(s)}
           </div>
         </div>
-      `).join('');
+      </div>
+    `).join("");
 
-      // Click handler (event delegation)
-      grid.querySelectorAll('.profile-card').forEach(card=>{
-        card.addEventListener('click', ()=>{
-          const id = card.getAttribute('data-student-id');
-          showDetail(id);
-        });
+    grid.querySelectorAll(".profile-card").forEach(card => {
+      card.addEventListener("click", () => {
+        const id = card.getAttribute("data-student-id");
+        showDetail(id);
       });
+    });
+  }
+
+  async function loadStudents(){
+    const grid = document.getElementById("studentGrid");
+    try{
+      const resp = await api({ action: "get_students" });
+      if(!resp.success) throw new Error(resp.message || "get_students failed");
+
+      students = resp.students || [];
+
+      buildDeptFilterOptions();
+
+      await buildStudentReportStatusMap();
+      updateAdminSummaryCards();
+      applyGridFilters();
+    }catch(err){
+      console.error(err);
+      grid.innerHTML = `
+        <div class="empty-state" style="grid-column: 1/-1;">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <p>Failed to load students</p>
+        </div>
+      `;
+      showToast("error", "Load Failed", err.message || "Unable to load students.");
+    }
+  }
+
+  /* ===================== DETAIL VIEW ===================== */
+  function showGrid(){
+    document.getElementById("gridView").classList.remove("hidden");
+    document.getElementById("detailView").classList.add("hidden");
+    currentStudent = null;
+    currentLogs = [];
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  async function showDetail(id){
+    currentStudent = (students || []).find(s => String(s.student_id || "") === String(id || ""));
+    if(!currentStudent) return;
+
+    document.getElementById("gridView").classList.add("hidden");
+    document.getElementById("detailView").classList.remove("hidden");
+
+    setText("detailAvatar", getInitials(currentStudent.student_name));
+    setText("detailName", safe(currentStudent.student_name));
+    setText("detailType", safe(currentStudent.login_type));
+    setText("detailDept", safe(currentStudent.course_dept));
+    setHTML("detailEmail", `<i class="fa-solid fa-envelope"></i>${escapeHtml(safe(currentStudent.email))}`);
+    setText("statCode", String(safe(currentStudent.generated_code)).slice(-4));
+
+    reportStore = {
+      meta: {
+        orgName: "Romblon State University",
+        deptName: "Center For Alumni Relation And Employment Services",
+        supervisorName: ""
+      },
+      daily: {},
+      reflections: {}
+    };
+
+    const today = todayISO();
+    const som = startOfMonthISO();
+    document.getElementById("filterStart").value = som;
+    document.getElementById("filterEnd").value = today;
+
+    const weekPicker = document.getElementById("weekPicker");
+    const dailyDate = document.getElementById("dailyDate");
+    weekPicker.value = today;
+    dailyDate.value = today;
+
+    bindReportMetaInputs();
+    setActiveWeekByAnyDate(weekPicker.value || today);
+
+    try{
+      await loadWeekProgressFromServer();
+      await loadReflectionFromServer();
+      showToast("success", "Loaded", "Weekly reports loaded from Sheets.");
+    }catch(err){
+      console.error(err);
+      showToast("warn", "Partial Load", err.message || "Could not load weekly reports.");
     }
 
-    async function loadStudents(){
-      const grid = document.getElementById('studentGrid');
-      try{
-        const resp = await api({ action:'get_students' });
-        if(!resp.success) throw new Error(resp.message || 'get_students failed');
-        students = resp.students || [];
+    const inWeek = dailyDate.value >= activeWeek.startISO && dailyDate.value <= activeWeek.endISO;
+    if(!inWeek) dailyDate.value = activeWeek.startISO;
 
-        buildDeptFilterOptions();
-        applyGridFilters();
+    loadDailyEntryIntoForm(dailyDate.value);
+    updateAdminDetailReportStatus();
 
-      }catch(err){
-        console.error(err);
-        grid.innerHTML = `
-          <div class="empty-state" style="grid-column: 1/-1;">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <p>Failed to load students</p>
-          </div>
-        `;
-        showToast('error','Load Failed', err.message || 'Unable to load students.');
-      }
-    }
+    await loadStudentLogs(som, today);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
-    /* ===================== DETAIL VIEW ===================== */
-    function showGrid(){
-      document.getElementById('gridView').classList.remove('hidden');
-      document.getElementById('detailView').classList.add('hidden');
-      currentStudent = null;
-      currentLogs = [];
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+  function bindReportMetaInputs(){
+    const orgName = document.getElementById("orgName");
+    const deptName = document.getElementById("deptName");
+    const supervisorName = document.getElementById("supervisorName");
 
-    async function showDetail(id){
-      currentStudent = (students || []).find(s => String(s.student_id||'') === String(id||''));
-      if(!currentStudent) return;
+    orgName.oninput = () => reportStore.meta.orgName = orgName.value;
+    deptName.oninput = () => reportStore.meta.deptName = deptName.value;
+    supervisorName.oninput = () => reportStore.meta.supervisorName = supervisorName.value;
+  }
 
-      document.getElementById('gridView').classList.add('hidden');
-      document.getElementById('detailView').classList.remove('hidden');
+  /* ===================== LOGS ===================== */
+  async function loadStudentLogs(from, to){
+    const tbody = document.getElementById("historyTableBody");
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="6" class="empty-state">
+          <i class="fa-solid fa-circle-notch fa-spin"></i>
+          <p>Loading records...</p>
+        </td>
+      </tr>
+    `;
 
-      document.getElementById('detailAvatar').textContent = safe(currentStudent.student_name).charAt(0).toUpperCase();
-      document.getElementById('detailName').textContent = safe(currentStudent.student_name);
-      document.getElementById('detailType').textContent = safe(currentStudent.login_type);
-      document.getElementById('detailDept').textContent = safe(currentStudent.course_dept);
-      document.getElementById('detailEmail').innerHTML = `<i class="fa-solid fa-envelope"></i>${escapeHtml(safe(currentStudent.email))}`;
-      document.getElementById('statCode').textContent = String(safe(currentStudent.generated_code)).slice(-4);
+    try{
+      const resp = await api({
+        action: "get_student_logs",
+        student_id: currentStudent.student_id,
+        from, to
+      });
 
-      // Setup report state + UI
-      reportStore = {
-        meta: { orgName: "Romblon State University", deptName: "Center For Alumni Relation And Employment Services", supervisorName: "" },
-        daily: {},
-        reflections: {}
-      };
+      if(!resp.success) throw new Error(resp.message || "get_student_logs failed");
 
-      // default dates
-      const today = todayISO();
-      const som = startOfMonthISO();
-      document.getElementById('filterStart').value = som;
-      document.getElementById('filterEnd').value = today;
+      currentLogs = resp.logs || [];
+      const totalDays = currentLogs.length;
 
-      // reports defaults
-      const weekPicker = document.getElementById('weekPicker');
-      const dailyDate = document.getElementById('dailyDate');
-      weekPicker.value = today;
-      dailyDate.value = today;
+      let totalHours = 0;
+      currentLogs.forEach(r => {
+        const h = String(r.total_hours || "").trim() !== ""
+          ? (Number(String(r.total_hours).replace(/[^\d.]/g, "")) || 0)
+          : calcHours(timeDisplay(r.am_in), timeDisplay(r.am_out), timeDisplay(r.pm_in), timeDisplay(r.pm_out));
+        totalHours += h;
+      });
 
-      // bind report inputs (meta)
-      bindReportMetaInputs();
+      animateValue("statDays", 0, totalDays, 800);
+      animateValueFloat("statHours", 0, totalHours, 800, 1);
 
-      // set active week
-      setActiveWeekByAnyDate(weekPicker.value || today);
-
-      // load server weekly + reflection
-      try{
-        await loadWeekProgressFromServer();
-        await loadReflectionFromServer();
-        showToast('success','Loaded', 'Weekly reports loaded from Sheets.');
-      }catch(err){
-        console.error(err);
-        showToast('warn','Partial Load', err.message || 'Could not load weekly reports.');
-      }
-
-      // ensure daily form points within the week
-      const inWeek = (dailyDate.value >= activeWeek.startISO && dailyDate.value <= activeWeek.endISO);
-      if(!inWeek){
-        dailyDate.value = activeWeek.startISO;
-      }
-      loadDailyEntryIntoForm(dailyDate.value);
-
-      // load logs
-      await loadStudentLogs(som, today);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function bindReportMetaInputs(){
-      const orgName = document.getElementById('orgName');
-      const deptName = document.getElementById('deptName');
-      const supervisorName = document.getElementById('supervisorName');
-
-      orgName.oninput = () => reportStore.meta.orgName = orgName.value;
-      deptName.oninput = () => reportStore.meta.deptName = deptName.value;
-      supervisorName.oninput = () => reportStore.meta.supervisorName = supervisorName.value;
-    }
-
-    /* ===================== LOGS ===================== */
-    async function loadStudentLogs(from, to){
-      const tbody = document.getElementById('historyTableBody');
+      renderTable(currentLogs);
+    }catch(err){
+      console.error(err);
       tbody.innerHTML = `
         <tr>
           <td colspan="6" class="empty-state">
-            <i class="fa-solid fa-circle-notch fa-spin"></i>
-            <p>Loading records...</p>
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <p>No records available</p>
           </td>
         </tr>
       `;
+      document.getElementById("statDays").textContent = "0";
+      document.getElementById("statHours").textContent = "0";
+      showToast("warn", "No Logs", "No attendance records in selected range.");
+    }
+  }
 
-      try{
-        const resp = await api({ action:'get_student_logs', student_id: currentStudent.student_id, from, to });
-        if(!resp.success) throw new Error(resp.message || 'get_student_logs failed');
+  function renderTable(data){
+    const tbody = document.getElementById("historyTableBody");
 
-        currentLogs = resp.logs || [];
-        const totalDays = currentLogs.length;
-
-        let totalHours = 0;
-        currentLogs.forEach(r=>{
-          const h = String(r.total_hours||'').trim() !== ''
-            ? (Number(String(r.total_hours).replace(/[^\d.]/g,'')) || 0)
-            : calcHours(timeDisplay(r.am_in), timeDisplay(r.am_out), timeDisplay(r.pm_in), timeDisplay(r.pm_out));
-          totalHours += h;
-        });
-
-        animateValue("statDays", 0, totalDays, 800);
-        animateValueFloat("statHours", 0, totalHours, 800, 1);
-
-        renderTable(currentLogs);
-      }catch(err){
-        console.error(err);
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="6" class="empty-state">
-              <i class="fa-solid fa-triangle-exclamation"></i>
-              <p>No records available</p>
-            </td>
-          </tr>
-        `;
-        document.getElementById('statDays').textContent = '0';
-        document.getElementById('statHours').textContent = '0';
-        showToast('warn','No Logs', 'No attendance records in selected range.');
-      }
+    if(!data.length){
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" class="empty-state">
+            <i class="fa-solid fa-inbox"></i>
+            <p>No records found for selected range</p>
+          </td>
+        </tr>
+      `;
+      return;
     }
 
-    function renderTable(data){
-      const tbody = document.getElementById('historyTableBody');
-      if(!data.length){
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="6" class="empty-state">
-              <i class="fa-solid fa-inbox"></i>
-              <p>No records found for selected range</p>
-            </td>
-          </tr>
-        `;
+    tbody.innerHTML = data.map(row => {
+      const amIn = timeDisplay(row.am_in);
+      const amOut = timeDisplay(row.am_out);
+      const pmIn = timeDisplay(row.pm_in);
+      const pmOut = timeDisplay(row.pm_out);
+      const total = String(row.total_hours || "").trim() !== ""
+        ? (Number(String(row.total_hours).replace(/[^\d.]/g, "")) || 0)
+        : calcHours(amIn, amOut, pmIn, pmOut);
+
+      return `
+        <tr>
+          <td>${escapeHtml(safe(row.date))}</td>
+          <td class="time-col">${escapeHtml(safe(amIn))}</td>
+          <td class="time-col">${escapeHtml(safe(amOut))}</td>
+          <td class="time-col">${escapeHtml(safe(pmIn))}</td>
+          <td class="time-col">${escapeHtml(safe(pmOut))}</td>
+          <td class="hours-col">${total ? total.toFixed(2) + "h" : "-"}</td>
+        </tr>
+      `;
+    }).join("");
+  }
+
+  /* ===================== STATS ANIMATION ===================== */
+  function animateValue(id, start, end, duration){
+    const obj = document.getElementById(id);
+    let startTimestamp = null;
+
+    const step = (timestamp) => {
+      if(!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      obj.innerHTML = Math.floor(progress * (end - start) + start);
+      if(progress < 1) window.requestAnimationFrame(step);
+    };
+    window.requestAnimationFrame(step);
+  }
+
+  function animateValueFloat(id, start, end, duration, decimals = 2){
+    const obj = document.getElementById(id);
+    let startTimestamp = null;
+
+    const step = (timestamp) => {
+      if(!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const val = (progress * (end - start) + start);
+      obj.innerHTML = val.toFixed(decimals);
+      if(progress < 1) window.requestAnimationFrame(step);
+    };
+    window.requestAnimationFrame(step);
+  }
+
+  /* ===================== REGISTRATION PIN GATE ===================== */
+  const ADMIN_PIN = "0143";
+  let pinModalInstance = null;
+  let pendingRegistrationUrl = null;
+
+  function openRegistrationPinModal(url){
+    pendingRegistrationUrl = url;
+    const pinInput = document.getElementById("pinInput");
+    const pinError = document.getElementById("pinError");
+    pinError.style.display = "none";
+    pinInput.value = "";
+
+    pinModalInstance = pinModalInstance || new bootstrap.Modal(document.getElementById("pinModal"), {
+      backdrop: "static",
+      keyboard: false
+    });
+
+    pinModalInstance.show();
+    setTimeout(() => pinInput.focus(), 150);
+  }
+
+  function setupRegistrationGate(){
+    const link = document.getElementById("registrationLink");
+    if(!link) return;
+
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      openRegistrationPinModal(link.getAttribute("href"));
+    }, { passive:false });
+
+    const pinInput = document.getElementById("pinInput");
+    const pinOk = document.getElementById("pinOk");
+    const pinError = document.getElementById("pinError");
+
+    pinInput.addEventListener("keydown", (e) => {
+      if(e.key === "Enter"){
+        e.preventDefault();
+        pinOk.click();
+      }
+    });
+
+    pinOk.addEventListener("click", () => {
+      const entered = String(pinInput.value || "").trim();
+      if(entered !== ADMIN_PIN){
+        pinError.style.display = "block";
+        pinInput.focus();
         return;
       }
 
-      tbody.innerHTML = data.map(row => {
-        const amIn = timeDisplay(row.am_in);
-        const amOut = timeDisplay(row.am_out);
-        const pmIn = timeDisplay(row.pm_in);
-        const pmOut = timeDisplay(row.pm_out);
-        const total = String(row.total_hours||'').trim() !== ''
-          ? (Number(String(row.total_hours).replace(/[^\d.]/g,'')) || 0)
-          : calcHours(amIn, amOut, pmIn, pmOut);
+      pinError.style.display = "none";
+      pinInput.value = "";
+      pinModalInstance?.hide();
 
-        return `
-          <tr>
-            <td>${escapeHtml(safe(row.date))}</td>
-            <td class="time-col">${escapeHtml(safe(amIn))}</td>
-            <td class="time-col">${escapeHtml(safe(amOut))}</td>
-            <td class="time-col">${escapeHtml(safe(pmIn))}</td>
-            <td class="time-col">${escapeHtml(safe(pmOut))}</td>
-            <td class="hours-col">${total ? total.toFixed(2)+'h' : '-'}</td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    /* ===================== STATS ANIMATIONS ===================== */
-    function animateValue(id, start, end, duration){
-      const obj = document.getElementById(id);
-      let startTimestamp = null;
-      const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        obj.innerHTML = Math.floor(progress * (end - start) + start);
-        if (progress < 1) window.requestAnimationFrame(step);
-      };
-      window.requestAnimationFrame(step);
-    }
-
-    function animateValueFloat(id, start, end, duration, decimals=2){
-      const obj = document.getElementById(id);
-      let startTimestamp = null;
-      const step = (timestamp) => {
-        if (!startTimestamp) startTimestamp = timestamp;
-        const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-        const val = (progress * (end - start) + start);
-        obj.innerHTML = val.toFixed(decimals);
-        if (progress < 1) window.requestAnimationFrame(step);
-      };
-      window.requestAnimationFrame(step);
-    }
-
-    /* ===================== REGISTRATION PIN GATE ===================== */
-    const ADMIN_PIN = "0143";
-    let pinModalInstance = null;
-    let pendingRegistrationUrl = null;
-
-    function openRegistrationPinModal(url){
-      pendingRegistrationUrl = url;
-      const pinInput = document.getElementById('pinInput');
-      const pinError = document.getElementById('pinError');
-      pinError.style.display = 'none';
-      pinInput.value = '';
-      pinModalInstance = pinModalInstance || new bootstrap.Modal(document.getElementById('pinModal'), {
-        backdrop: 'static',
-        keyboard: false
-      });
-      pinModalInstance.show();
-      setTimeout(() => pinInput.focus(), 150);
-    }
-
-    function setupRegistrationGate(){
-      const link = document.getElementById('registrationLink');
-      if(!link) return;
-
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        openRegistrationPinModal(link.getAttribute('href'));
-      }, { passive:false });
-
-      const pinInput = document.getElementById('pinInput');
-      const pinOk = document.getElementById('pinOk');
-      const pinError = document.getElementById('pinError');
-
-      pinInput.addEventListener('keydown', (e) => {
-        if(e.key === 'Enter'){ e.preventDefault(); pinOk.click(); }
-      });
-
-      pinOk.addEventListener('click', () => {
-        const entered = String(pinInput.value || '').trim();
-        if(entered !== ADMIN_PIN){
-          pinError.style.display = 'block';
-          pinInput.focus();
-          return;
-        }
-        pinError.style.display = 'none';
-        pinInput.value = '';
-        pinModalInstance?.hide();
-
-        if(pendingRegistrationUrl){
-          window.open(pendingRegistrationUrl, '_blank', 'noopener');
-          pendingRegistrationUrl = null;
-        }
-      });
-
-      document.getElementById('pinModal').addEventListener('hidden.bs.modal', () => {
-        pinError.style.display = 'none';
-        pinInput.value = '';
+      if(pendingRegistrationUrl){
+        window.open(pendingRegistrationUrl, "_blank", "noopener");
         pendingRegistrationUrl = null;
-      });
-    }
+      }
+    });
 
-    /* ===================== HTML ESCAPERS ===================== */
-    function escapeHtml(str){
-      return String(str ?? '')
-        .replaceAll('&','&amp;')
-        .replaceAll('<','&lt;')
-        .replaceAll('>','&gt;')
-        .replaceAll('"','&quot;')
-        .replaceAll("'","&#039;");
-    }
-    function escapeAttr(str){
-      return String(str ?? '').replaceAll('"','&quot;').replaceAll("'","&#039;");
-    }
+    document.getElementById("pinModal").addEventListener("hidden.bs.modal", () => {
+      pinError.style.display = "none";
+      pinInput.value = "";
+      pendingRegistrationUrl = null;
+    });
+  }
 
-    /* ===================== UI BINDINGS ===================== */
-    function bindUI(){
-      // Grid filters
-      document.getElementById('studentSearch').addEventListener('input', applyGridFilters);
-      document.getElementById('roleFilter').addEventListener('change', applyGridFilters);
-      document.getElementById('deptFilter').addEventListener('change', applyGridFilters);
-      document.getElementById('sortBy').addEventListener('change', applyGridFilters);
+  /* ===================== UI BINDINGS ===================== */
+  function bindUI(){
+    document.getElementById("studentSearch").addEventListener("input", applyGridFilters);
+    document.getElementById("roleFilter").addEventListener("change", applyGridFilters);
+    document.getElementById("deptFilter").addEventListener("change", applyGridFilters);
+    document.getElementById("sortBy").addEventListener("change", applyGridFilters);
 
-      document.getElementById('btnClearGridFilters').addEventListener('click', ()=>{
-        document.getElementById('studentSearch').value = '';
-        document.getElementById('roleFilter').value = '';
-        document.getElementById('deptFilter').value = '';
-        document.getElementById('sortBy').value = 'name_asc';
-        applyGridFilters();
-      });
+    document.getElementById("btnClearGridFilters").addEventListener("click", () => {
+      document.getElementById("studentSearch").value = "";
+      document.getElementById("roleFilter").value = "";
+      document.getElementById("deptFilter").value = "";
+      document.getElementById("sortBy").value = "name_asc";
+      applyGridFilters();
+    });
 
-      document.getElementById('btnExportStudents').addEventListener('click', ()=>{
-        exportStudentsExcel(filteredStudents || students || []);
-      });
+    document.getElementById("btnExportStudents").addEventListener("click", () => {
+      exportStudentsExcel(filteredStudents || students || []);
+    });
 
-      // Detail: back
-      document.getElementById('btnBackToGrid').addEventListener('click', showGrid);
+    document.getElementById("btnBackToGrid").addEventListener("click", showGrid);
 
-      // Detail: QR / exports
-      document.getElementById('btnViewQR').addEventListener('click', openQrModal);
-      document.getElementById('btnExportAttendance').addEventListener('click', exportAttendanceExcel);
-      document.getElementById('btnExportWeekly').addEventListener('click', exportWeeklyExcel);
+    document.getElementById("btnViewQR").addEventListener("click", openQrModal);
+    document.getElementById("btnExportAttendance").addEventListener("click", exportAttendanceExcel);
+    document.getElementById("btnExportWeekly").addEventListener("click", exportWeeklyExcel);
 
-      // Logs filter
-      document.getElementById('btnApplyFilter').addEventListener('click', async ()=>{
-        if(!currentStudent) return;
-        const start = document.getElementById('filterStart').value;
-        const end = document.getElementById('filterEnd').value;
-        await loadStudentLogs(start, end);
-      });
-      document.getElementById('btnResetFilter').addEventListener('click', async ()=>{
-        if(!currentStudent) return;
-        const today = todayISO();
-        const som = startOfMonthISO();
-        document.getElementById('filterStart').value = som;
-        document.getElementById('filterEnd').value = today;
-        await loadStudentLogs(som, today);
-      });
+    document.getElementById("btnApplyFilter").addEventListener("click", async () => {
+      if(!currentStudent) return;
+      const start = document.getElementById("filterStart").value;
+      const end = document.getElementById("filterEnd").value;
+      await loadStudentLogs(start, end);
+    });
 
-      // Reports week controls
-      document.getElementById('weekPicker').addEventListener('change', ()=>{
-        const picked = document.getElementById('weekPicker').value || todayISO();
-        setActiveWeekByAnyDate(picked);
+    document.getElementById("btnResetFilter").addEventListener("click", async () => {
+      if(!currentStudent) return;
+      const today = todayISO();
+      const som = startOfMonthISO();
+      document.getElementById("filterStart").value = som;
+      document.getElementById("filterEnd").value = today;
+      await loadStudentLogs(som, today);
+    });
 
-        // keep daily date within week
-        const dailyDateEl = document.getElementById('dailyDate');
-        const dISO = dailyDateEl.value || todayISO();
-        const inWeek = (dISO >= activeWeek.startISO && dISO <= activeWeek.endISO);
-        if(!inWeek){
-          dailyDateEl.value = activeWeek.startISO;
-        }
-        loadDailyEntryIntoForm(dailyDateEl.value);
-        renderWeekSummary();
-      });
+    document.getElementById("weekPicker").addEventListener("change", () => {
+      const picked = document.getElementById("weekPicker").value || todayISO();
+      setActiveWeekByAnyDate(picked);
 
-      document.getElementById('btnLoadWeek').addEventListener('click', async ()=>{
-        if(!currentStudent) return;
-        try{
-          const picked = document.getElementById('weekPicker').value || todayISO();
-          setActiveWeekByAnyDate(picked);
-          await loadWeekProgressFromServer();
-          await loadReflectionFromServer();
-          showToast('success','Loaded', 'Week progress and reflection loaded.');
-        }catch(err){
-          console.error(err);
-          showToast('error','Load Failed', err.message || 'Unable to load week data.');
-        }
-      });
+      const dailyDateEl = document.getElementById("dailyDate");
+      const dISO = dailyDateEl.value || todayISO();
+      const inWeek = dISO >= activeWeek.startISO && dISO <= activeWeek.endISO;
+      if(!inWeek) dailyDateEl.value = activeWeek.startISO;
 
-      document.getElementById('dailyDate').addEventListener('change', ()=>{
-        const iso = document.getElementById('dailyDate').value || todayISO();
-        loadDailyEntryIntoForm(iso);
-      });
-
-      document.getElementById('btnSaveDaily').addEventListener('click', saveDailyEntry);
-      document.getElementById('btnClearDaily').addEventListener('click', clearDailyForm);
-      document.getElementById('btnSaveReflection').addEventListener('click', saveWeeklyReflection);
-      document.getElementById('btnClearReflection').addEventListener('click', clearReflectionForm);
-    }
-
-    /* ===================== INIT ===================== */
-    async function init(){
-      updateClock();
-      setupRegistrationGate();
-      bindUI();
-
-      // default date inputs (safe if empty)
-      document.getElementById('filterStart').value = startOfMonthISO();
-      document.getElementById('filterEnd').value = todayISO();
-      document.getElementById('weekPicker').value = todayISO();
-      document.getElementById('dailyDate').value = todayISO();
-
-      setActiveWeekByAnyDate(todayISO());
+      loadDailyEntryIntoForm(dailyDateEl.value);
       renderWeekSummary();
+    });
 
-      await loadStudents();
-      updateGridChips();
-    }
+    document.getElementById("btnLoadWeek").addEventListener("click", async () => {
+      if(!currentStudent) return;
+      try{
+        const picked = document.getElementById("weekPicker").value || todayISO();
+        setActiveWeekByAnyDate(picked);
+        await loadWeekProgressFromServer();
+        await loadReflectionFromServer();
+        showToast("success", "Loaded", "Week progress and reflection loaded.");
+      }catch(err){
+        console.error(err);
+        showToast("error", "Load Failed", err.message || "Unable to load week data.");
+      }
+    });
 
-    init();
-  </script>
+    document.getElementById("dailyDate").addEventListener("change", () => {
+      const iso = document.getElementById("dailyDate").value || todayISO();
+      loadDailyEntryIntoForm(iso);
+    });
+
+    document.getElementById("btnSaveDaily").addEventListener("click", saveDailyEntry);
+    document.getElementById("btnClearDaily").addEventListener("click", clearDailyForm);
+    document.getElementById("btnSaveReflection").addEventListener("click", saveWeeklyReflection);
+    document.getElementById("btnClearReflection").addEventListener("click", clearReflectionForm);
+  }
+
+  /* ===================== INIT ===================== */
+  async function init(){
+    updateClock();
+    setupRegistrationGate();
+    bindUI();
+
+    document.getElementById("filterStart").value = startOfMonthISO();
+    document.getElementById("filterEnd").value = todayISO();
+    document.getElementById("weekPicker").value = todayISO();
+    document.getElementById("dailyDate").value = todayISO();
+
+    setActiveWeekByAnyDate(todayISO());
+    renderWeekSummary();
+    updateAdminDetailReportStatus();
+
+    await loadStudents();
+    updateGridChips();
+  }
+
+  init();
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </body>
 </html>
