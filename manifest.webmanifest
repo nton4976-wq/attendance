@@ -1,6 +1,6 @@
 {
-  "name": "Smart Attendance Pro",
-  "short_name": "Attendance",
+  "name": "Cares Attendance Monitoring",
+  "short_name": "Cares Attendance Monitoring",
   "start_url": "/",
   "scope": "/",
   "display": "fullscreen",
