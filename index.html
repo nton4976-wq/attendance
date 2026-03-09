@@ -15,7 +15,7 @@
   <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
   <style>
-:root{
+    :root{
   --primary:#0b5d1e;
   --primary-light:#22c55e;
   --primary-dark:#064117;
@@ -298,7 +298,6 @@ select{
   align-items:center;
   justify-content:center;
   transition:all var(--transition-fast);
-  box-shadow:none;
   flex-shrink:0;
 }
 
@@ -1311,6 +1310,7 @@ body.drawer-open{
   -webkit-overflow-scrolling:touch;
   border-radius:0 0 var(--radius-xl) var(--radius-xl);
   overscroll-behavior:contain;
+  touch-action:pan-x pan-y;
 }
 
 .table-responsive::after{
@@ -1619,7 +1619,7 @@ body.drawer-open{
   box-shadow:none;
 }
 
-/* X close button for ID card */
+/* EXIT / CLOSE ICON */
 .qr-x{
   position:absolute;
   top:max(12px, env(safe-area-inset-top));
@@ -2429,33 +2429,33 @@ body.drawer-open{
       </div>
 
       <div class="drawer-nav">
-        <button class="drawer-nav-btn active" data-user-view="dashboardView">
+        <button class="drawer-nav-btn active" data-user-view="dashboardView" type="button">
           <i class="fa-solid fa-chart-line"></i>
           Dashboard
         </button>
 
-        <button class="drawer-nav-btn" data-user-view="attendanceView">
+        <button class="drawer-nav-btn" data-user-view="attendanceView" type="button">
           <i class="fa-solid fa-clock-rotate-left"></i>
           Attendance History
         </button>
 
-        <button class="drawer-nav-btn" data-user-view="reportsView">
+        <button class="drawer-nav-btn" data-user-view="reportsView" type="button">
           <i class="fa-solid fa-clipboard-check"></i>
           Internship Reports
         </button>
 
-        <button class="drawer-nav-btn" data-user-view="accountView">
+        <button class="drawer-nav-btn" data-user-view="accountView" type="button">
           <i class="fa-solid fa-id-card"></i>
           My Account
         </button>
 
-        <button class="drawer-nav-btn" id="btnDrawerViewQR">
+        <button class="drawer-nav-btn" id="btnDrawerViewQR" type="button">
           <i class="fa-solid fa-qrcode"></i>
           View Digital ID
         </button>
 
         <div class="drawer-footer">
-          <button class="drawer-nav-btn drawer-logout" id="btnDrawerLogout">
+          <button class="drawer-nav-btn drawer-logout" id="btnDrawerLogout" type="button">
             <i class="fa-solid fa-right-from-bracket"></i>
             Logout
           </button>
@@ -2465,7 +2465,6 @@ body.drawer-open{
   </aside>
 
   <div class="main-container">
-
     <!-- LOGIN VIEW -->
     <section id="loginView" class="view-section">
       <div class="auth-shell">
@@ -2570,7 +2569,6 @@ body.drawer-open{
     <!-- APP VIEW -->
     <section id="appView" class="view-section hidden">
       <div class="app-shell">
-
         <!-- DESKTOP SIDEBAR -->
         <aside class="sidebar-panel">
           <div class="user-mini-card">
@@ -2595,32 +2593,32 @@ body.drawer-open{
           </div>
 
           <div class="side-nav">
-            <button class="side-nav-btn active" data-user-view="dashboardView">
+            <button class="side-nav-btn active" data-user-view="dashboardView" type="button">
               <i class="fa-solid fa-chart-line"></i>
               Dashboard
             </button>
 
-            <button class="side-nav-btn" data-user-view="attendanceView">
+            <button class="side-nav-btn" data-user-view="attendanceView" type="button">
               <i class="fa-solid fa-clock-rotate-left"></i>
               Attendance History
             </button>
 
-            <button class="side-nav-btn" data-user-view="reportsView">
+            <button class="side-nav-btn" data-user-view="reportsView" type="button">
               <i class="fa-solid fa-clipboard-check"></i>
               Internship Reports
             </button>
 
-            <button class="side-nav-btn" data-user-view="accountView">
+            <button class="side-nav-btn" data-user-view="accountView" type="button">
               <i class="fa-solid fa-id-card"></i>
               My Account
             </button>
 
-            <button class="side-nav-btn" id="btnSidebarViewQR">
+            <button class="side-nav-btn" id="btnSidebarViewQR" type="button">
               <i class="fa-solid fa-qrcode"></i>
               View Digital ID
             </button>
 
-            <button class="side-nav-btn" id="btnLogoutUser">
+            <button class="side-nav-btn" id="btnLogoutUser" type="button">
               <i class="fa-solid fa-right-from-bracket"></i>
               Logout
             </button>
@@ -2629,7 +2627,6 @@ body.drawer-open{
 
         <!-- MAIN CONTENT -->
         <main class="content-stack">
-
           <!-- DASHBOARD -->
           <section id="dashboardView" class="user-page-view page-transition">
             <div class="page-hero">
@@ -2937,8 +2934,7 @@ body.drawer-open{
                     <div class="field-row">
                       <div class="field">
                         <label for="userWeeklyReflectionText">Reflection (saved per selected week)</label>
-                        <textarea id="userWeeklyReflectionText" class="form-textarea-custom" style="min-height:240px;"
-                          placeholder="What important lessons (technical, social, or personal) did you learn this week?"></textarea>
+                        <textarea id="userWeeklyReflectionText" class="form-textarea-custom" style="min-height:240px;" placeholder="What important lessons (technical, social, or personal) did you learn this week?"></textarea>
                       </div>
                     </div>
 
@@ -3035,7 +3031,6 @@ body.drawer-open{
               </div>
             </div>
           </section>
-
         </main>
       </div>
     </section>
@@ -3058,8 +3053,6 @@ body.drawer-open{
   <div class="modal fade" id="qrModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered qr-id-dialog">
       <div class="modal-content qr-id-modal">
-
-        <!-- CLOSE / X BUTTON -->
         <button type="button" class="qr-x" data-bs-dismiss="modal" aria-label="Close digital ID">
           <i class="fa-solid fa-xmark"></i>
         </button>
@@ -3115,7 +3108,6 @@ body.drawer-open{
             </div>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -3143,11 +3135,7 @@ body.drawer-open{
       </div>
     </div>
   </div>
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-  <script>
+<script>
   const API_URL = "https://script.google.com/macros/s/AKfycbwUd5t6d_n26dn70N_PaVJ-DtkSu1D1OYHBlDM2wZIcG9p1M2hg-hZnYsosa2RUijMNyg/exec";
   const USER_SESSION_KEY = "smartattend_user_session_v2";
 
@@ -3183,7 +3171,10 @@ body.drawer-open{
     if (!el || !icon || !tTitle || !tBody || !tTime) return;
 
     const now = new Date();
-    tTime.textContent = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+    tTime.textContent = now.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
 
     let iconClass = "fa-circle-info";
     if (type === "success") iconClass = "fa-circle-check";
@@ -3339,8 +3330,19 @@ body.drawer-open{
     const d1 = isoToDate(startISO);
     const d2 = isoToDate(addDaysISO(startISO, 4));
     if (!d1 || !d2) return `${startISO} - ${addDaysISO(startISO, 4)}`;
-    const a = d1.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }).replace(/,/g, "");
-    const b = d2.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }).replace(/,/g, "");
+
+    const a = d1.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric"
+    }).replace(/,/g, "");
+
+    const b = d2.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric"
+    }).replace(/,/g, "");
+
     return `${a} – ${b}`;
   }
 
@@ -3359,12 +3361,18 @@ body.drawer-open{
   function timeDisplay(v) {
     if (!v || v === "-") return "-";
     const s = String(v).trim();
+
     if (/^\d{4}-\d{2}-\d{2}T/.test(s)) {
       const d = new Date(s);
       if (!isNaN(d)) {
-        return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
+        return d.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true
+        });
       }
     }
+
     return s;
   }
 
@@ -3404,6 +3412,7 @@ body.drawer-open{
   /* ===================== SESSION ===================== */
   function saveUserSession(user) {
     if (!user) return;
+
     localStorage.setItem(USER_SESSION_KEY, JSON.stringify({
       student_id: user.student_id,
       email: normalizeEmail(user.email),
@@ -3604,7 +3613,8 @@ body.drawer-open{
     document.getElementById("loginView").classList.remove("hidden");
     document.getElementById("appView").classList.add("hidden");
     document.getElementById("loginEmail").value = "";
-    document.getElementById("loginHelperText").textContent = "Your portal will open only if your email is found in the registered users list.";
+    document.getElementById("loginHelperText").textContent =
+      "Your portal will open only if your email is found in the registered users list.";
 
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -3751,6 +3761,7 @@ body.drawer-open{
   /* ===================== PAGE NAV ===================== */
   function animatePageIn(target) {
     if (!target) return;
+
     target.classList.remove("page-enter", "page-enter-active");
     target.classList.add("page-enter");
 
@@ -4102,6 +4113,7 @@ body.drawer-open{
     document.getElementById("userDailyAM").value = "";
     document.getElementById("userDailyPM").value = "";
     document.getElementById("userDailyRemarks").value = "";
+
     const el = document.getElementById("userDailySavedHint");
     el.textContent = `Selected week: ${fmtWeekLabel(activeWeek.startISO)}`;
     el.className = "hint";
@@ -4109,9 +4121,11 @@ body.drawer-open{
 
   function clearUserReflectionForm() {
     document.getElementById("userWeeklyReflectionText").value = "";
+
     const el = document.getElementById("userReflectionSavedHint");
     el.textContent = `Selected week: ${fmtWeekLabel(activeWeek.startISO)}`;
     el.className = "hint";
+
     updateReflectionButtonState();
   }
 
@@ -4195,7 +4209,7 @@ body.drawer-open{
         safe(amOut),
         safe(pmIn),
         safe(pmOut),
-        total ? Number(total.toFixed ? total.toFixed(2) : total) : ""
+        total ? Number(total.toFixed(2)) : ""
       ]);
     });
 
@@ -4244,7 +4258,9 @@ body.drawer-open{
       ]);
     });
 
-    const reflectionText = userReportStore.reflections[activeWeek.key] || (document.getElementById("userWeeklyReflectionText").value || "");
+    const reflectionText =
+      userReportStore.reflections[activeWeek.key] ||
+      (document.getElementById("userWeeklyReflectionText").value || "");
 
     const reflectionAoa = [
       ["Week", weekLabel],
@@ -4368,7 +4384,7 @@ body.drawer-open{
     const drawerClose = document.getElementById("drawerClose");
     const mobileMenuBackdrop = document.getElementById("mobileMenuBackdrop");
     const qrModalEl = document.getElementById("qrModal");
-    const qrCloseBtn = document.querySelector(".qr-x");
+    const qrCloseBtn = document.querySelector("#qrModal .qr-x");
 
     document.getElementById("btnUserLogin").addEventListener("click", async () => {
       try {
@@ -4605,6 +4621,8 @@ body.drawer-open{
     });
   }
 </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </body>
 </html>
 
