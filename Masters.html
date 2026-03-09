@@ -1,0 +1,2787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Smart Attendance</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
+<style>
+  :root {
+    --primary: #0b5d1e;
+    --primary-light: #22c55e;
+    --primary-dark: #064117;
+    --primary-soft: rgba(34, 197, 94, 0.14);
+
+    --success: #16a34a;
+    --success-light: #34d399;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --info: #0ea5e9;
+
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
+    --bg-card: rgba(30, 41, 59, 0.72);
+    --bg-card-strong: rgba(15, 23, 42, 0.88);
+    --bg-glass: rgba(2, 6, 23, 0.34);
+    --bg-soft: rgba(255, 255, 255, 0.035);
+
+    --text-primary: #f8fafc;
+    --text-secondary: #cbd5e1;
+    --text-muted: #94a3b8;
+    --text-soft: #64748b;
+
+    --border-subtle: rgba(255, 255, 255, 0.06);
+    --border-default: rgba(255, 255, 255, 0.10);
+    --border-strong: rgba(255, 255, 255, 0.14);
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.22);
+    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.28);
+    --shadow-lg: 0 18px 50px rgba(0, 0, 0, 0.36);
+    --shadow-xl: 0 28px 70px rgba(0, 0, 0, 0.46);
+    --shadow-glow: 0 0 0 3px rgba(34, 197, 94, 0.16);
+    --shadow-success: 0 18px 45px rgba(22, 163, 74, 0.28);
+
+    --radius-sm: 10px;
+    --radius: 14px;
+    --radius-lg: 18px;
+    --radius-xl: 26px;
+    --radius-2xl: 34px;
+
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    --navbar-height: 84px;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg-primary);
+    min-height: 100vh;
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    touch-action: manipulation;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 40%, rgba(79, 70, 229, 0.15) 0%, transparent 50%),
+      radial-gradient(ellipse 60% 40% at 80% 60%, rgba(16, 185, 129, 0.10) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: -2;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    opacity: 0.018;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  /* ===================== NAVBAR ===================== */
+  .navbar {
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 0.75rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 1100;
+    min-height: var(--navbar-height);
+  }
+
+  .navbar-brand {
+    font-weight: 900;
+    font-size: 1.08rem;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    letter-spacing: -0.03em;
+    text-decoration: none;
+    min-width: 0;
+  }
+
+  .brand-logo {
+    width: 52px;
+    height: 52px;
+    object-fit: contain;
+    flex-shrink: 0;
+    filter: drop-shadow(0 6px 18px rgba(34, 197, 94, 0.18));
+  }
+
+  .navbar-toggler {
+    border: 1px solid var(--border-subtle);
+    padding: 0.55rem 0.65rem;
+    border-radius: 14px;
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.02);
+  }
+
+  .navbar-toggler:focus {
+    box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.18);
+  }
+
+  .nav-link {
+    font-weight: 800;
+    font-size: 0.9rem;
+    color: var(--text-muted) !important;
+    padding: 0.72rem 1rem !important;
+    border-radius: 14px;
+    transition: all var(--transition-fast);
+    margin: 0.18rem 0;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .nav-link:hover {
+    color: var(--text-secondary) !important;
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .nav-link.active {
+    color: var(--text-primary) !important;
+    background: rgba(34, 197, 94, 0.10);
+    border: 1px solid rgba(34, 197, 94, 0.14);
+  }
+
+  .nav-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem 0;
+    border-top: 1px solid var(--border-subtle);
+    margin-top: 0.5rem;
+  }
+
+  @media (min-width: 992px) {
+    .nav-meta {
+      padding-left: 1.4rem;
+      border-left: 1px solid var(--border-subtle);
+      border-top: none;
+      margin-top: 0;
+    }
+  }
+
+  #clockTime {
+    font-weight: 900;
+    font-size: 1rem;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+  }
+
+  #clockDate {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .session-badge {
+    font-size: 0.7rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.42rem 0.8rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-default);
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.42rem;
+    white-space: nowrap;
+  }
+
+  .session-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 6px var(--success);
+  }
+
+  .session-badge.afternoon::before {
+    background: var(--warning);
+    box-shadow: 0 0 6px var(--warning);
+  }
+
+  /* ===================== MAIN ===================== */
+  .main-container {
+    padding: 1rem;
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+
+  @media (min-width: 768px) {
+    .main-container {
+      padding: 1.35rem;
+    }
+  }
+
+  @media (min-width: 1200px) {
+    .main-container {
+      padding: 1.8rem;
+    }
+  }
+
+  .tab-content,
+  .tab-pane {
+    min-height: 0;
+  }
+
+  /* ===================== STATS ===================== */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .stats-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+  }
+
+  .stat-card {
+    background: linear-gradient(180deg, rgba(30, 41, 59, 0.76), rgba(15, 23, 42, 0.76));
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    padding: 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    transition: all var(--transition);
+    box-shadow: var(--shadow-sm);
+    min-width: 0;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-default);
+    box-shadow: var(--shadow-md);
+  }
+
+  .stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .stat-icon.blue {
+    background: rgba(34, 197, 94, 0.12);
+    color: var(--primary-light);
+  }
+
+  .stat-icon.green {
+    background: rgba(22, 163, 74, 0.14);
+    color: var(--success-light);
+  }
+
+  .stat-icon.purple {
+    background: rgba(11, 93, 30, 0.20);
+    color: rgba(167, 243, 208, 1);
+  }
+
+  .stat-icon.orange {
+    background: rgba(245, 158, 11, 0.15);
+    color: #fbbf24;
+  }
+
+  .stat-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .stat-label {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 0.15rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .stat-value {
+    font-size: clamp(1.15rem, 4vw, 1.65rem);
+    font-weight: 900;
+    color: var(--text-primary);
+    line-height: 1.1;
+    word-break: break-word;
+  }
+
+  /* ===================== LAYOUT ===================== */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    align-items: start;
+  }
+
+  @media (min-width: 1200px) {
+    .content-grid {
+      grid-template-columns: minmax(340px, 430px) minmax(0, 1fr);
+      gap: 1.25rem;
+    }
+  }
+
+  .glass-card,
+  .table-container {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    backdrop-filter: blur(16px) saturate(150%);
+  }
+
+  .card-header {
+    padding: 1rem 1rem 0.95rem;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+  }
+
+  .card-header-title {
+    font-weight: 900;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    letter-spacing: -0.02em;
+  }
+
+  .card-header-title i {
+    color: var(--primary-light);
+  }
+
+  .badge-soft {
+    font-size: 0.72rem;
+    font-weight: 900;
+    padding: 0.38rem 0.78rem;
+    border-radius: 999px;
+    background: rgba(34, 197, 94, 0.10);
+    color: rgba(187, 247, 208, 1);
+    border: 1px solid rgba(34, 197, 94, 0.22);
+    white-space: nowrap;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .card-header,
+    .card-body {
+      padding-left: 1.15rem;
+      padding-right: 1.15rem;
+    }
+  }
+
+  /* ===================== SCANNER ===================== */
+  .scanner-wrapper {
+    position: relative;
+    background: var(--bg-primary);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+  }
+
+  #reader {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .scanner-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .scan-frame {
+    width: min(72vw, 240px);
+    height: min(72vw, 240px);
+    max-width: 240px;
+    max-height: 240px;
+    position: relative;
+  }
+
+  .scan-corner {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border-color: var(--success);
+    border-style: solid;
+    border-width: 3px;
+    filter: drop-shadow(0 0 6px rgba(22,163,74,.35));
+  }
+
+  .scan-corner.tl {
+    top: 0;
+    left: 0;
+    border-right: 0;
+    border-bottom: 0;
+    border-top-left-radius: 12px;
+  }
+
+  .scan-corner.tr {
+    top: 0;
+    right: 0;
+    border-left: 0;
+    border-bottom: 0;
+    border-top-right-radius: 12px;
+  }
+
+  .scan-corner.bl {
+    bottom: 0;
+    left: 0;
+    border-right: 0;
+    border-top: 0;
+    border-bottom-left-radius: 12px;
+  }
+
+  .scan-corner.br {
+    bottom: 0;
+    right: 0;
+    border-left: 0;
+    border-top: 0;
+    border-bottom-right-radius: 12px;
+  }
+
+  .scan-line {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--success), transparent);
+    box-shadow: 0 0 12px var(--success);
+    opacity: 0;
+    transition: opacity var(--transition);
+  }
+
+  .scanning .scan-line {
+    opacity: 1;
+    animation: scan 2.5s linear infinite;
+  }
+
+  @keyframes scan {
+    0% { top: 0; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+  }
+
+  .scanner-placeholder {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background:
+      radial-gradient(circle at 50% 30%, rgba(34,197,94,0.06), transparent 40%),
+      var(--bg-secondary);
+    color: var(--text-muted);
+    gap: 0.75rem;
+    text-align: center;
+    padding: 1rem;
+  }
+
+  .scanner-placeholder i {
+    font-size: 2.6rem;
+    opacity: 0.25;
+  }
+
+  .controls-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    margin: 1rem 0 0.95rem;
+  }
+
+  @media (min-width: 576px) {
+    .controls-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .form-select-custom,
+  .form-input-custom {
+    background: var(--bg-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    color: var(--text-primary);
+    border-radius: 14px;
+    padding: 0.8rem 2.6rem 0.8rem 0.95rem;
+    font-size: 0.92rem;
+    font-weight: 800;
+    transition: all var(--transition-fast);
+    min-height: 48px;
+    width: 100%;
+    outline: none;
+  }
+
+  .form-select-custom {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+    background-size: 1rem;
+  }
+
+  .form-select-custom:focus,
+  .form-input-custom:focus {
+    border-color: rgba(34, 197, 94, 0.55);
+    box-shadow: var(--shadow-glow);
+  }
+
+  .btn-group {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    font-weight: 900;
+    font-size: 0.94rem;
+    padding: 0.9rem 1rem;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.52rem;
+    width: 100%;
+    min-height: 48px;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 575px) {
+    .btn-group .btn {
+      flex: 1 1 100%;
+    }
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: white;
+    flex: 1;
+    box-shadow: 0 12px 30px rgba(34, 197, 94, 0.16);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 38px rgba(34, 197, 94, 0.22);
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .btn-secondary {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.10);
+    flex: 0.9;
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-default);
+  }
+
+  .scan-flash {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(34, 197, 94, 0.28) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 150ms ease;
+    z-index: 10;
+  }
+
+  .scan-flash.on {
+    opacity: 1;
+  }
+
+  /* ===================== TABLE PANEL ===================== */
+  .table-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .table-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: 0.95rem;
+    flex-shrink: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0));
+  }
+
+  @media (min-width: 768px) {
+    .table-header {
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+  }
+
+  .table-title-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    min-width: 220px;
+  }
+
+  .status-pill {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.92rem;
+    font-weight: 900;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--success);
+    box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.18);
+  }
+
+  .status-dot.scanning {
+    background: var(--warning);
+    box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.18);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .55; }
+  }
+
+  .table-controls {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    width: 100%;
+  }
+
+  @media (min-width: 576px) {
+    .table-controls {
+      grid-template-columns: 1fr 1fr;
+      width: 100%;
+    }
+  }
+
+  @media (min-width: 992px) {
+    .table-controls {
+      width: 440px;
+    }
+  }
+
+  .control-block {
+    width: 100%;
+  }
+
+  .control-label {
+    font-size: 0.76rem;
+    font-weight: 900;
+    color: var(--text-muted);
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .table-responsive {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  .custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    min-width: 760px;
+  }
+
+  .custom-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .custom-table th {
+    background: rgba(30, 41, 59, 0.96);
+    color: var(--text-muted);
+    font-weight: 900;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    padding: 0.95rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    white-space: nowrap;
+  }
+
+  .custom-table td {
+    padding: 0.95rem 1rem;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    color: var(--text-secondary);
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  .custom-table tbody tr {
+    transition: background var(--transition-fast);
+  }
+
+  .custom-table tbody tr:hover {
+    background: rgba(255,255,255,0.025);
+  }
+
+  .student-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    min-width: 0;
+  }
+
+  .avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    flex-shrink: 0;
+    box-shadow: 0 8px 18px rgba(34,197,94,0.16);
+  }
+
+  .student-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  .student-name {
+    font-weight: 900;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 240px;
+  }
+
+  .student-meta {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    font-weight: 700;
+  }
+
+  .time-cell {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-weight: 800;
+  }
+
+  .hours-cell {
+    font-weight: 1000;
+    color: var(--success-light);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .history-row-highlight {
+    background: rgba(34, 197, 94, 0.05);
+  }
+
+  .table-footer {
+    padding: 0.9rem 1rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    background: rgba(15, 23, 42, 0.35);
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0;
+    min-height: 56px;
+    font-weight: 700;
+  }
+
+  #liveWrapper.show-am .col-pm,
+  #liveWrapper.show-pm .col-am {
+    display: none;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 2.8rem 1rem;
+    color: var(--text-muted);
+    font-weight: 800;
+  }
+
+  .empty-state i {
+    font-size: 2rem;
+    opacity: 0.28;
+    margin-bottom: 0.7rem;
+  }
+
+  /* ===================== BEAUTIFUL SUCCESS POPUP ===================== */
+  .center-pop {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    pointer-events: none;
+    padding: 1rem;
+    background: rgba(2, 6, 23, 0.26);
+    backdrop-filter: blur(6px);
+  }
+
+  .center-pop.show {
+    display: flex;
+  }
+
+  .center-pop-card {
+    pointer-events: auto;
+    width: min(420px, 92vw);
+    border-radius: 24px;
+    border: 1px solid rgba(255,255,255,0.14);
+    background:
+      radial-gradient(circle at top right, rgba(34,197,94,0.12), transparent 36%),
+      linear-gradient(180deg, rgba(15, 23, 42, 0.97), rgba(30, 41, 59, 0.94));
+    backdrop-filter: blur(18px) saturate(160%);
+    box-shadow: var(--shadow-xl), var(--shadow-success);
+    overflow: hidden;
+    transform: translateY(10px) scale(0.97);
+    opacity: 0;
+    transition: opacity 180ms ease, transform 180ms ease;
+  }
+
+  .center-pop.show .center-pop-card {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .center-pop-top {
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: linear-gradient(135deg, rgba(11, 93, 30, 0.48), rgba(34, 197, 94, 0.18));
+  }
+
+  .center-pop-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(34,197,94,0.18);
+    border: 1px solid rgba(34,197,94,0.24);
+    color: rgba(187,247,208,1);
+    flex-shrink: 0;
+    font-size: 1.15rem;
+    box-shadow: inset 0 0 18px rgba(34,197,94,0.10);
+  }
+
+  .center-pop-title {
+    font-weight: 900;
+    font-size: 1.06rem;
+    color: var(--text-primary);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .center-pop-sub {
+    margin-top: 4px;
+    color: rgba(226, 232, 240, 0.75);
+    font-weight: 700;
+    font-size: 0.82rem;
+  }
+
+  .center-pop-body {
+    padding: 16px 18px 18px;
+    color: var(--text-secondary);
+    font-weight: 800;
+    font-size: 0.94rem;
+    line-height: 1.55;
+  }
+
+  /* ===================== PIN MODAL ===================== */
+  .pin-modal .modal-content {
+    background: rgba(15, 23, 42, 0.92);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: var(--radius-xl);
+    box-shadow: 0 20px 60px rgba(0,0,0,.45);
+    backdrop-filter: blur(18px) saturate(160%);
+    overflow: hidden;
+  }
+
+  .pin-modal .modal-header {
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 1rem 1.25rem;
+  }
+
+  .pin-modal .modal-title {
+    font-weight: 900;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+  }
+
+  .pin-chip {
+    font-size: .72rem;
+    font-weight: 900;
+    padding: .25rem .6rem;
+    border-radius: 999px;
+    border: 1px solid rgba(34,197,94,0.22);
+    background: rgba(34,197,94,0.10);
+    color: rgba(187,247,208,1);
+  }
+
+  .pin-modal .modal-body {
+    padding: 1.25rem;
+  }
+
+  .pin-help {
+    color: var(--text-muted);
+    font-size: .9rem;
+    margin-bottom: .85rem;
+    font-weight: 600;
+  }
+
+  .pin-input {
+    width: 100%;
+    background: rgba(2,6,23,0.6);
+    border: 1px solid rgba(255,255,255,0.12);
+    color: var(--text-primary);
+    border-radius: 14px;
+    padding: .95rem 1rem;
+    font-size: 1.1rem;
+    font-weight: 900;
+    letter-spacing: .25em;
+    text-align: center;
+    outline: none;
+    min-height: 50px;
+  }
+
+  .pin-input:focus {
+    border-color: rgba(34,197,94,0.55);
+    box-shadow: 0 0 0 3px rgba(34,197,94,0.16);
+  }
+
+  .pin-error {
+    display: none;
+    margin-top: .6rem;
+    color: #fca5a5;
+    font-weight: 800;
+    font-size: .9rem;
+  }
+
+  .pin-modal .modal-footer {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: .9rem 1.25rem;
+    gap: .5rem;
+  }
+
+  .pin-btn {
+    flex: 1;
+    border-radius: 14px;
+    padding: .82rem 1rem;
+    font-weight: 900;
+    border: 1px solid rgba(255,255,255,0.10);
+    background: rgba(255,255,255,0.06);
+    color: var(--text-primary);
+    transition: transform var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+    min-height: 46px;
+  }
+
+  .pin-btn:hover {
+    background: rgba(255,255,255,0.10);
+    border-color: rgba(34,197,94,0.25);
+    transform: translateY(-1px);
+  }
+
+  .pin-btn.primary {
+    background: rgba(11,93,30,0.92);
+    border-color: rgba(11,93,30,0.92);
+  }
+
+  .pin-btn.primary:hover {
+    background: rgba(6,65,23,1);
+    border-color: rgba(6,65,23,1);
+  }
+
+  /* ===================== TOASTS ===================== */
+  .toast-container {
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+  }
+
+  .toastx {
+    background: rgba(15, 23, 42, 0.94);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-left: 3px solid var(--primary-light);
+    color: var(--text-primary);
+    backdrop-filter: blur(14px) saturate(160%);
+    box-shadow: var(--shadow-lg);
+    border-radius: 16px;
+    overflow: hidden;
+    min-width: 300px;
+    max-width: 380px;
+    padding: 0.95rem 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    pointer-events: auto;
+    animation: toastIn .22s ease;
+  }
+
+  .toastx.success { border-left-color: var(--success); }
+  .toastx.error { border-left-color: var(--danger); }
+  .toastx.warning { border-left-color: var(--warning); }
+  .toastx.info { border-left-color: var(--info); }
+
+  .toastx-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.95rem;
+  }
+
+  .toastx.success .toastx-icon {
+    background: rgba(22,163,74,0.16);
+    color: var(--success-light);
+  }
+
+  .toastx.error .toastx-icon {
+    background: rgba(239,68,68,0.16);
+    color: #fca5a5;
+  }
+
+  .toastx.warning .toastx-icon {
+    background: rgba(245,158,11,0.16);
+    color: #fbbf24;
+  }
+
+  .toastx.info .toastx-icon {
+    background: rgba(14,165,233,0.16);
+    color: #7dd3fc;
+  }
+
+  .toastx-content {
+    min-width: 0;
+  }
+
+  .toastx-title {
+    font-weight: 900;
+    font-size: 0.92rem;
+    line-height: 1.2;
+    margin-bottom: 0.1rem;
+  }
+
+  .toastx-message {
+    font-size: 0.84rem;
+    color: var(--text-muted);
+    line-height: 1.45;
+    word-break: break-word;
+  }
+
+  @keyframes toastIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* ===================== MOBILE POLISH ===================== */
+  @media (max-width: 991.98px) {
+    .nav-meta {
+      display: none !important;
+    }
+  }
+
+  @media (max-width: 767.98px) {
+    .brand-logo {
+      width: 46px;
+      height: 46px;
+    }
+
+    .main-container {
+      padding: 0.9rem;
+    }
+
+    .card-header,
+    .card-body,
+    .table-header,
+    .table-footer {
+      padding-left: 0.9rem;
+      padding-right: 0.9rem;
+    }
+
+    .stats-grid {
+      gap: 0.75rem;
+    }
+
+    .stat-card {
+      padding: 0.9rem;
+    }
+
+    .student-name {
+      max-width: 150px;
+    }
+
+    .toast-container {
+      left: 12px;
+      right: 12px;
+      bottom: 12px;
+    }
+
+    .toastx {
+      min-width: 0;
+      max-width: none;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 575.98px) {
+    .navbar-brand {
+      font-size: 1rem;
+      gap: 0.65rem;
+    }
+
+    .scanner-wrapper {
+      aspect-ratio: 1 / 1;
+    }
+
+    .scan-frame {
+      width: min(74vw, 220px);
+      height: min(74vw, 220px);
+    }
+
+    .custom-table {
+      min-width: 640px;
+    }
+
+    .student-cell {
+      gap: 0.7rem;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+    }
+
+    .center-pop-card {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+
+  /* ===================== SCROLLBAR ===================== */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--text-soft);
+    border-radius: 999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+  }
+</style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid px-3 px-md-4">
+      <a class="navbar-brand" href="#">
+        <img class="brand-logo" src="rsu_logo_transparent.png" alt="RSU Logo" />
+        <div class="d-flex flex-column" style="line-height:1.02;">
+          <span class="d-none d-sm-inline">SmartAttendance Pro</span>
+          <span class="d-sm-none">SmartAttend</span>
+          <small style="font-size:.66rem;color:var(--text-muted);font-weight:800;letter-spacing:.08em;text-transform:uppercase;">
+            Smart Admin Scanner
+          </small>
+        </div>
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-lg-center">
+          <li class="nav-item">
+            <a class="nav-link active" href="#scanner" data-bs-toggle="tab">
+              <i class="fa-solid fa-camera me-2"></i>Scanner
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="profile.html">
+              <i class="fa-solid fa-id-card me-2"></i>Profiles
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" id="registrationLink"
+              href="https://script.google.com/macros/s/AKfycbwUd5t6d_n26dn70N_PaVJ-DtkSu1D1OYHBlDM2wZIcG9p1M2hg-hZnYsosa2RUijMNyg/exec?page=register"
+              target="_blank" rel="noopener">
+              <i class="fa-solid fa-user-plus me-2"></i>Registration
+            </a>
+          </li>
+        </ul>
+
+        <div class="nav-meta">
+          <div class="clock-group">
+            <div id="clockTime">--:--:--</div>
+            <div id="clockDate">Loading...</div>
+          </div>
+          <span id="sessionBadge" class="session-badge">Morning</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main-container">
+    <div class="tab-content">
+      <div class="tab-pane fade show active" id="scanner">
+
+        <!-- OVERVIEW STATS -->
+        <section class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-label">Total Today</div>
+              <div class="stat-value" id="statTotal">0</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green">
+              <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-label">Checked In</div>
+              <div class="stat-value" id="statCheckedIn">0</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon purple">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-label">Checked Out</div>
+              <div class="stat-value" id="statCheckedOut">0</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon orange">
+              <i class="fa-solid fa-hourglass-half"></i>
+            </div>
+            <div class="stat-content">
+              <div class="stat-label">Pending</div>
+              <div class="stat-value" id="statPending">0</div>
+            </div>
+          </div>
+        </section>
+
+        <div class="content-grid">
+
+          <!-- LEFT: SCANNER SIDE -->
+          <section class="glass-card" id="scannerCard">
+            <div class="card-header">
+              <div class="card-header-title">
+                <i class="fa-solid fa-camera"></i>
+                QR Scanner
+              </div>
+              <span class="badge-soft" id="scanModeBadge">Auto Detect</span>
+            </div>
+
+            <div class="card-body">
+              <div class="scanner-wrapper" id="scannerContainer">
+                <div id="reader"></div>
+
+                <div class="scan-flash" id="scanFlash"></div>
+
+                <div class="scanner-overlay" id="scannerOverlay">
+                  <div class="scan-frame">
+                    <div class="scan-corner tl"></div>
+                    <div class="scan-corner tr"></div>
+                    <div class="scan-corner bl"></div>
+                    <div class="scan-corner br"></div>
+                    <div class="scan-line"></div>
+                  </div>
+                </div>
+
+                <div class="scanner-placeholder" id="scannerPlaceholder">
+                  <i class="fa-solid fa-camera-slash"></i>
+                  <p style="font-weight:900;font-size:1.05rem;margin:0;">Camera Inactive</p>
+                  <small>Start the scanner to begin reading QR codes</small>
+                </div>
+              </div>
+
+              <div class="controls-grid">
+                <select id="cameraSelect" class="form-select-custom">
+                  <option value="">Select Camera...</option>
+                </select>
+
+                <select id="scanMode" class="form-select-custom"></select>
+              </div>
+
+              <div class="btn-group">
+                <button id="btnStart" class="btn btn-primary">
+                  <i class="fa-solid fa-play"></i>
+                  <span>Start Scanner</span>
+                </button>
+
+                <button id="btnStop" class="btn btn-secondary" disabled>
+                  <i class="fa-solid fa-stop"></i>
+                  <span>Stop</span>
+                </button>
+              </div>
+
+              <!-- SCAN RESULT SUMMARY -->
+              <div style="margin-top:1rem;">
+                <div class="control-label">Latest Scan Result</div>
+                <div class="glass-card" style="border-radius:18px;background:var(--bg-card-strong);box-shadow:none;">
+                  <div class="card-body" style="padding:.95rem 1rem;">
+                    <div id="lastScanInfo" style="display:flex;align-items:flex-start;gap:.65rem;color:var(--text-secondary);font-weight:800;line-height:1.5;">
+                      <i class="fa-solid fa-circle-notch fa-spin"></i>
+                      <span>Loading data from sheet...</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SMART QUICK NOTES -->
+              <div style="margin-top:1rem;display:grid;gap:.75rem;">
+                <div class="glass-card" style="border-radius:18px;background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));box-shadow:none;">
+                  <div class="card-body" style="padding:.95rem 1rem;">
+                    <div style="display:flex;gap:.7rem;align-items:flex-start;">
+                      <div style="width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(34,197,94,.12);color:var(--primary-light);flex-shrink:0;">
+                        <i class="fa-solid fa-bolt"></i>
+                      </div>
+                      <div>
+                        <div style="font-weight:900;font-size:.94rem;">Smart scanning tip</div>
+                        <div style="color:var(--text-muted);font-size:.84rem;font-weight:700;line-height:1.5;">
+                          Use Auto Detect for faster operation. Use manual AM/PM mode only when you need strict control for a session.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="glass-card" style="border-radius:18px;background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.015));box-shadow:none;">
+                  <div class="card-body" style="padding:.95rem 1rem;">
+                    <div style="display:flex;gap:.7rem;align-items:flex-start;">
+                      <div style="width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(14,165,233,.12);color:#7dd3fc;flex-shrink:0;">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                      </div>
+                      <div>
+                        <div style="font-weight:900;font-size:.94rem;">History viewing</div>
+                        <div style="color:var(--text-muted);font-size:.84rem;font-weight:700;line-height:1.5;">
+                          Use the Date dropdown on the right panel to view attendance records previously saved in Google Sheet.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- RIGHT: HISTORY / LIVE ACTIVITY -->
+          <section class="table-container" id="tableCard">
+            <div class="table-header">
+              <div class="table-title-wrap">
+                <div class="card-header-title" style="padding:0;border:none;">
+                  <i class="fa-solid fa-table-list"></i>
+                  Attendance History
+                </div>
+
+                <div class="status-pill">
+                  <span class="status-dot" id="systemStatus"></span>
+                  <span id="systemStatusText">Online</span>
+                </div>
+              </div>
+
+              <div class="table-controls">
+                <div class="control-block">
+                  <div class="control-label">Saved Date History</div>
+                  <select id="dateSelect" class="form-select-custom">
+                    <option value="">Loading dates...</option>
+                  </select>
+                </div>
+
+                <div class="control-block">
+                  <div class="control-label">Session View</div>
+                  <select id="liveSessionFilter" class="form-select-custom">
+                    <option value="auto">Auto (Current)</option>
+                    <option value="am">AM Only</option>
+                    <option value="pm">PM Only</option>
+                    <option value="all">All Day</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div id="liveWrapper" class="table-responsive">
+              <table class="custom-table">
+                <thead>
+                  <tr>
+                    <th>Student</th>
+                    <th class="d-none d-md-table-cell">Date</th>
+                    <th class="col-am">AM In</th>
+                    <th class="col-am">AM Out</th>
+                    <th class="col-pm">PM In</th>
+                    <th class="col-pm">PM Out</th>
+                    <th class="text-end">Total</th>
+                  </tr>
+                </thead>
+                <tbody id="liveLogBody">
+                  <tr>
+                    <td colspan="7" style="padding:0;">
+                      <div class="empty-state">
+                        <i class="fa-solid fa-inbox"></i>
+                        <p>No activity records found.</p>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="table-footer">
+              <i class="fa-solid fa-calendar-days"></i>
+              <span>
+                Select a saved date to view attendance history from Google Sheet.
+              </span>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BEAUTIFUL SUCCESS POPUP -->
+  <div class="center-pop" id="centerPop" aria-hidden="true">
+    <div class="center-pop-card" role="dialog" aria-modal="true" aria-label="Success message">
+      <div class="center-pop-top">
+        <div class="center-pop-icon">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <div>
+          <div class="center-pop-title" id="centerPopTitle">Processed Successfully</div>
+          <div class="center-pop-sub" id="centerPopSub">Saved to sheet</div>
+        </div>
+      </div>
+      <div class="center-pop-body" id="centerPopBody">
+        ✅ Process completed successfully.
+      </div>
+    </div>
+  </div>
+
+  <!-- PIN MODAL -->
+  <div class="modal fade pin-modal" id="pinModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:420px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="modal-title">
+            <i class="fa-solid fa-shield-halved"></i>
+            Admin PIN Required
+            <span class="pin-chip" id="pinChip">Time In</span>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <div class="pin-help" id="pinHelp">Enter admin PIN to continue.</div>
+          <input id="pinInput" class="pin-input" type="password" inputmode="numeric" maxlength="4" placeholder="• • • •" />
+          <div class="pin-error" id="pinError">Incorrect PIN. Try again.</div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="pin-btn" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="pin-btn primary" id="pinOk">Continue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+  const API_URL = "https://script.google.com/macros/s/AKfycbwUd5t6d_n26dn70N_PaVJ-DtkSu1D1OYHBlDM2wZIcG9p1M2hg-hZnYsosa2RUijMNyg/exec";
+  const AUTO_STOP_ON_SUCCESS = true;
+  const SCAN_DEBOUNCE_MS = 2500;
+  const ADMIN_PIN = "0143";
+
+  const VOICE_ENABLED = true;
+  const SFX_ENABLED = true;
+  const VOICE_LANG = "en-US";
+
+  const state = {
+    scanner: null,
+    scanning: false,
+    cameras: [],
+    lastScan: null,
+    lastScanTime: 0,
+    currentSession: "morning",
+    prevSession: "morning",
+    busy: false,
+    todaysLogs: [],
+    allDates: [],
+    liveSessionFilter: "auto",
+    selectedDate: null,
+
+    dropdownStudentId: null,
+    dropdownExisting: null,
+
+    timeInPinGranted: false,
+    pinModal: null,
+    pinResolve: null,
+
+    _syncTimer: null,
+    _centerPopTimer: null,
+    _refreshTimer: null
+  };
+
+  const el = {
+    clockTime: document.getElementById("clockTime"),
+    clockDate: document.getElementById("clockDate"),
+    sessionBadge: document.getElementById("sessionBadge"),
+
+    scanMode: document.getElementById("scanMode"),
+    scanModeBadge: document.getElementById("scanModeBadge"),
+    cameraSelect: document.getElementById("cameraSelect"),
+    btnStart: document.getElementById("btnStart"),
+    btnStop: document.getElementById("btnStop"),
+
+    systemStatus: document.getElementById("systemStatus"),
+    systemStatusText: document.getElementById("systemStatusText"),
+    liveLogBody: document.getElementById("liveLogBody"),
+    lastScanInfo: document.getElementById("lastScanInfo"),
+    toastContainer: document.getElementById("toastContainer"),
+
+    scanFlash: document.getElementById("scanFlash"),
+    scannerOverlay: document.getElementById("scannerOverlay"),
+    scannerPlaceholder: document.getElementById("scannerPlaceholder"),
+
+    liveWrapper: document.getElementById("liveWrapper"),
+    liveSessionFilter: document.getElementById("liveSessionFilter"),
+    dateSelect: document.getElementById("dateSelect"),
+    registrationLink: document.getElementById("registrationLink"),
+
+    scannerCard: document.getElementById("scannerCard"),
+    tableCard: document.getElementById("tableCard"),
+
+    centerPop: document.getElementById("centerPop"),
+    centerPopTitle: document.getElementById("centerPopTitle"),
+    centerPopSub: document.getElementById("centerPopSub"),
+    centerPopBody: document.getElementById("centerPopBody"),
+
+    pinModalEl: document.getElementById("pinModal"),
+    pinChip: document.getElementById("pinChip"),
+    pinHelp: document.getElementById("pinHelp"),
+    pinInput: document.getElementById("pinInput"),
+    pinError: document.getElementById("pinError"),
+    pinOk: document.getElementById("pinOk"),
+
+    stats: {
+      total: document.getElementById("statTotal"),
+      checkedIn: document.getElementById("statCheckedIn"),
+      checkedOut: document.getElementById("statCheckedOut"),
+      pending: document.getElementById("statPending")
+    }
+  };
+
+  /* ===================== BASIC HELPERS ===================== */
+  function escapeHtml(str) {
+    return String(str ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function safe(v) {
+    return (v === null || v === undefined || String(v).trim() === "") ? "-" : String(v);
+  }
+
+  function todayISO() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  }
+
+  function nowLocalTime12() {
+    return new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
+  }
+
+  function timeDisplay(v) {
+    if (!v || v === "-") return "-";
+    const s = String(v).trim();
+
+    if (/^\d{4}-\d{2}-\d{2}T/.test(s)) {
+      const d = new Date(s);
+      if (!isNaN(d)) {
+        return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true });
+      }
+    }
+    return s;
+  }
+
+  function formatDateLabel(iso) {
+    const d = new Date(`${iso}T00:00:00`);
+    if (isNaN(d)) return iso;
+    return d.toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    });
+  }
+
+  function parseTimeToMinutes(t) {
+    t = String(t || "").trim();
+    if (!t || t === "-") return null;
+
+    if (/^\d{4}-\d{2}-\d{2}T/.test(t)) {
+      const d = new Date(t);
+      if (isNaN(d)) return null;
+      return d.getHours() * 60 + d.getMinutes();
+    }
+
+    const d = new Date(`1970-01-01 ${t}`);
+    if (isNaN(d)) return null;
+    return d.getHours() * 60 + d.getMinutes();
+  }
+
+  function calcHours(am_in, am_out, pm_in, pm_out) {
+    const a1 = parseTimeToMinutes(am_in);
+    const a2 = parseTimeToMinutes(am_out);
+    const p1 = parseTimeToMinutes(pm_in);
+    const p2 = parseTimeToMinutes(pm_out);
+    const diff = (x, y) => (x != null && y != null && y > x ? y - x : 0);
+    const mins = diff(a1, a2) + diff(p1, p2);
+    return mins ? (mins / 60).toFixed(2) : "";
+  }
+
+  function formatLogTypeLabel(logType) {
+    const map = {
+      am_in: "AM Time In",
+      am_out: "AM Time Out",
+      pm_in: "PM Time In",
+      pm_out: "PM Time Out"
+    };
+    return map[logType] || String(logType || "").replaceAll("_", " ").toUpperCase();
+  }
+
+  /* ===================== AUDIO / VOICE ===================== */
+  let audioCtx = null;
+  let preferredVoice = null;
+
+  function primeAudio() {
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === "suspended") audioCtx.resume().catch(() => {});
+    } catch (e) {}
+  }
+
+  function beep(duration = 90, freq = 880, vol = 0.06, type = "sine") {
+    if (!SFX_ENABLED) return;
+    try {
+      audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.value = vol;
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      osc.start();
+      setTimeout(() => osc.stop(), duration);
+    } catch (e) {}
+  }
+
+  function sfxScanned() {
+    if (!SFX_ENABLED) return;
+    beep(45, 980, 0.045, "triangle");
+    setTimeout(() => beep(50, 1240, 0.04, "triangle"), 55);
+  }
+
+  function sfxRecorded() {
+    if (!SFX_ENABLED) return;
+    beep(70, 740, 0.05, "sine");
+    setTimeout(() => beep(70, 988, 0.05, "sine"), 90);
+    setTimeout(() => beep(90, 1318, 0.045, "sine"), 180);
+  }
+
+  function sfxError() {
+    if (!SFX_ENABLED) return;
+    beep(120, 220, 0.08, "sawtooth");
+  }
+
+  function initVoice() {
+    if (!VOICE_ENABLED) return;
+    if (!("speechSynthesis" in window)) return;
+
+    const pickVoice = () => {
+      const voices = window.speechSynthesis.getVoices() || [];
+      preferredVoice =
+        voices.find(v => /google/i.test(v.name) && /en/i.test(v.lang)) ||
+        voices.find(v => /en/i.test(v.lang)) ||
+        voices[0] ||
+        null;
+    };
+
+    pickVoice();
+    window.speechSynthesis.onvoiceschanged = pickVoice;
+  }
+
+  function speak(text) {
+    if (!VOICE_ENABLED) return;
+    if (!("speechSynthesis" in window)) return;
+
+    try {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = VOICE_LANG;
+      utterance.rate = 1;
+      utterance.pitch = 1;
+      if (preferredVoice) utterance.voice = preferredVoice;
+      window.speechSynthesis.speak(utterance);
+    } catch (e) {}
+  }
+
+  /* ===================== TOASTS ===================== */
+  function ensureToastStyles() {
+    if (document.getElementById("smart-toast-style")) return;
+
+    const style = document.createElement("style");
+    style.id = "smart-toast-style";
+    style.textContent = `
+      .toastx{
+        background: rgba(15,23,42,.95);
+        border: 1px solid rgba(255,255,255,.12);
+        border-left: 3px solid #22c55e;
+        border-radius: 16px;
+        box-shadow: 0 18px 40px rgba(0,0,0,.35);
+        display:flex;
+        gap:.8rem;
+        padding:.95rem 1rem;
+        min-width:300px;
+        max-width:380px;
+        pointer-events:auto;
+        animation: toastxIn .2s ease;
+        backdrop-filter: blur(14px) saturate(160%);
+      }
+      .toastx.success{ border-left-color:#16a34a; }
+      .toastx.error{ border-left-color:#ef4444; }
+      .toastx.warning{ border-left-color:#f59e0b; }
+      .toastx.info{ border-left-color:#0ea5e9; }
+      .toastx-icon{
+        width:36px;height:36px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+      }
+      .toastx.success .toastx-icon{ background:rgba(22,163,74,.16); color:#34d399; }
+      .toastx.error .toastx-icon{ background:rgba(239,68,68,.16); color:#fca5a5; }
+      .toastx.warning .toastx-icon{ background:rgba(245,158,11,.16); color:#fbbf24; }
+      .toastx.info .toastx-icon{ background:rgba(14,165,233,.16); color:#7dd3fc; }
+      .toastx-content{ min-width:0; }
+      .toastx-title{ font-weight:900; font-size:.92rem; color:#f8fafc; margin-bottom:.1rem; }
+      .toastx-message{ font-size:.84rem; color:#94a3b8; line-height:1.45; word-break:break-word; }
+      @keyframes toastxIn{
+        from{ opacity:0; transform:translateY(8px); }
+        to{ opacity:1; transform:translateY(0); }
+      }
+      .empty-state{
+        text-align:center;
+        padding:2.6rem 1rem;
+        color:#94a3b8;
+        font-weight:800;
+      }
+      .empty-state i{
+        font-size:1.8rem;
+        opacity:.35;
+        margin-bottom:.6rem;
+        display:block;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function showToast(message, type = "info", duration = 3000) {
+    ensureToastStyles();
+
+    const toast = document.createElement("div");
+    toast.className = `toastx ${type}`;
+
+    const icons = {
+      success: "fa-check",
+      error: "fa-xmark",
+      warning: "fa-exclamation",
+      info: "fa-info"
+    };
+
+    const titles = {
+      success: "Success",
+      error: "Error",
+      warning: "Warning",
+      info: "Info"
+    };
+
+    toast.innerHTML = `
+      <div class="toastx-icon"><i class="fa-solid ${icons[type] || icons.info}"></i></div>
+      <div class="toastx-content">
+        <div class="toastx-title">${titles[type] || titles.info}</div>
+        <div class="toastx-message">${escapeHtml(message)}</div>
+      </div>
+    `;
+
+    el.toastContainer.appendChild(toast);
+
+    setTimeout(() => {
+      toast.style.opacity = "0";
+      toast.style.transform = "translateX(18px)";
+      setTimeout(() => toast.remove(), 250);
+    }, duration);
+  }
+
+  /* ===================== VISUAL HELPERS ===================== */
+  function flashGreen() {
+    if (!el.scanFlash) return;
+    el.scanFlash.classList.add("on");
+    setTimeout(() => el.scanFlash.classList.remove("on"), 170);
+  }
+
+  function showCenterPop({ title, sub, body, duration = 1800 } = {}) {
+    clearTimeout(state._centerPopTimer);
+
+    if (title) el.centerPopTitle.textContent = title;
+    if (sub) el.centerPopSub.textContent = sub;
+    if (body) el.centerPopBody.textContent = body;
+
+    el.centerPop.classList.add("show");
+    el.centerPop.setAttribute("aria-hidden", "false");
+
+    state._centerPopTimer = setTimeout(() => {
+      el.centerPop.classList.remove("show");
+      el.centerPop.setAttribute("aria-hidden", "true");
+    }, duration);
+  }
+
+  function syncTableHeightToScanner() {
+    if (!el.scannerCard || !el.tableCard) return;
+    if (window.innerWidth < 1200) {
+      el.tableCard.style.height = "";
+      return;
+    }
+    const leftHeight = Math.round(el.scannerCard.getBoundingClientRect().height);
+    if (leftHeight > 0) el.tableCard.style.height = `${leftHeight}px`;
+  }
+
+  function setScannerVisualState(isActive) {
+    if (isActive) {
+      el.scannerPlaceholder.style.display = "none";
+      el.scannerOverlay?.parentElement?.classList.add("scanning");
+      el.systemStatus.classList.add("scanning");
+      el.systemStatusText.textContent = "Scanning";
+      el.btnStart.disabled = true;
+      el.btnStop.disabled = false;
+    } else {
+      el.scannerPlaceholder.style.display = "flex";
+      el.scannerOverlay?.parentElement?.classList.remove("scanning");
+      el.systemStatus.classList.remove("scanning");
+      el.systemStatusText.textContent = "Online";
+      el.btnStart.disabled = false;
+      el.btnStop.disabled = true;
+    }
+    syncTableHeightToScanner();
+  }
+
+  function updateClock() {
+    const now = new Date();
+    const h = now.getHours();
+
+    el.clockTime.textContent = now.toLocaleTimeString("en-US", { hour12: true });
+    el.clockDate.textContent = now.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric"
+    });
+
+    state.prevSession = state.currentSession;
+    state.currentSession = h < 12 ? "morning" : "afternoon";
+
+    const isMorning = state.currentSession === "morning";
+    el.sessionBadge.textContent = isMorning ? "Morning" : "Afternoon";
+    el.sessionBadge.classList.toggle("afternoon", !isMorning);
+
+    if (state.prevSession !== state.currentSession) {
+      state.timeInPinGranted = false;
+      clearScanModeContext();
+    }
+
+    renderScanModeOptions(state.dropdownExisting || null);
+    updateLiveColumns();
+  }
+
+  /* ===================== STORAGE ===================== */
+  function loadLiveSessionPref() {
+    try {
+      return localStorage.getItem("liveSessionFilter") || "auto";
+    } catch {
+      return "auto";
+    }
+  }
+
+  function saveLiveSessionPref(v) {
+    try {
+      localStorage.setItem("liveSessionFilter", v);
+    } catch {}
+  }
+
+  function loadDatePref() {
+    try {
+      return localStorage.getItem("selectedDate") || "";
+    } catch {
+      return "";
+    }
+  }
+
+  function saveDatePref(v) {
+    try {
+      localStorage.setItem("selectedDate", v);
+    } catch {}
+  }
+
+  /* ===================== API ===================== */
+  async function api(params) {
+    params._ts = Date.now();
+    const qs = new URLSearchParams(params).toString();
+    const res = await fetch(`${API_URL}?${qs}`, { cache: "no-store" });
+    const json = await res.json().catch(() => null);
+    if (!json) throw new Error("Invalid JSON response");
+    return json;
+  }
+
+  /* ===================== PIN MODAL ===================== */
+  function initPinModal() {
+    state.pinModal = new bootstrap.Modal(el.pinModalEl, {
+      backdrop: "static",
+      keyboard: false
+    });
+
+    el.pinInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        el.pinOk.click();
+      }
+    });
+
+    el.pinOk.addEventListener("click", () => {
+      const pin = String(el.pinInput.value || "").trim();
+      if (pin !== ADMIN_PIN) {
+        el.pinError.style.display = "block";
+        sfxError();
+        el.pinInput.focus();
+        return;
+      }
+
+      el.pinError.style.display = "none";
+      el.pinInput.value = "";
+      state.pinModal.hide();
+
+      if (state.pinResolve) {
+        const resolve = state.pinResolve;
+        state.pinResolve = null;
+        resolve(true);
+      }
+    });
+
+    el.pinModalEl.addEventListener("hidden.bs.modal", () => {
+      el.pinError.style.display = "none";
+      el.pinInput.value = "";
+
+      if (state.pinResolve) {
+        const resolve = state.pinResolve;
+        state.pinResolve = null;
+        resolve(false);
+      }
+    });
+  }
+
+  function askAdminPin(purpose, labelText) {
+    if (purpose === "registration") {
+      el.pinChip.textContent = "Registration";
+      el.pinHelp.textContent = "Enter admin PIN to open the Registration page.";
+    } else {
+      el.pinChip.textContent = "Time In";
+      el.pinHelp.textContent = `Enter admin PIN to allow ${labelText || "Time In"} scanning.`;
+    }
+
+    el.pinError.style.display = "none";
+    el.pinInput.value = "";
+    state.pinModal.show();
+
+    setTimeout(() => el.pinInput.focus(), 150);
+
+    return new Promise((resolve) => {
+      state.pinResolve = resolve;
+    });
+  }
+
+  /* ===================== SCAN MODE ===================== */
+  function isTimeInLogType(logType) {
+    return logType === "am_in" || logType === "pm_in";
+  }
+
+  function clearScanModeContext() {
+    state.dropdownStudentId = null;
+    state.dropdownExisting = null;
+    renderScanModeOptions(null);
+  }
+
+  function normalizeExistingRow(row) {
+    if (!row) return null;
+
+    const norm = (v) => {
+      const t = timeDisplay(v);
+      return (t && t !== "-") ? t : "";
+    };
+
+    return {
+      am_in: norm(row.am_in),
+      am_out: norm(row.am_out),
+      pm_in: norm(row.pm_in),
+      pm_out: norm(row.pm_out)
+    };
+  }
+
+  function findExistingRow(studentId, date) {
+    const logs = state.todaysLogs || [];
+    const row = logs.find(r =>
+      String(r.student_id || "").trim() === String(studentId || "").trim() &&
+      String(r.date || "").trim() === String(date || "").trim()
+    );
+    return normalizeExistingRow(row);
+  }
+
+  function setScanModeContextForStudent(studentId, date) {
+    const existing = findExistingRow(studentId, date);
+    state.dropdownStudentId = studentId;
+    state.dropdownExisting = existing;
+    renderScanModeOptions(existing);
+  }
+
+  function renderScanModeOptions(existingRow = null) {
+    const current = el.scanMode.value || "auto";
+    const hasContext = !!existingRow;
+    const has = (k) => !!(existingRow && String(existingRow[k] || "").trim());
+
+    const allowAmIn = !hasContext || !has("am_in");
+    const allowAmOut = !hasContext ? true : (has("am_in") && !has("am_out"));
+    const allowPmIn = !hasContext || !has("pm_in");
+    const allowPmOut = !hasContext ? true : (has("pm_in") && !has("pm_out"));
+
+    el.scanMode.innerHTML = "";
+    el.scanMode.appendChild(new Option("Auto Detect", "auto"));
+
+    const groupAm = document.createElement("optgroup");
+    groupAm.label = "AM";
+    if (allowAmIn) groupAm.appendChild(new Option("AM Time In", "am_in"));
+    if (allowAmOut) groupAm.appendChild(new Option("AM Time Out", "am_out"));
+    if (groupAm.children.length) el.scanMode.appendChild(groupAm);
+
+    const groupPm = document.createElement("optgroup");
+    groupPm.label = "PM";
+    if (allowPmIn) groupPm.appendChild(new Option("PM Time In", "pm_in"));
+    if (allowPmOut) groupPm.appendChild(new Option("PM Time Out", "pm_out"));
+    if (groupPm.children.length) el.scanMode.appendChild(groupPm);
+
+    const exists = [...el.scanMode.options].some(o => o.value === current);
+    el.scanMode.value = exists ? current : "auto";
+    el.scanModeBadge.textContent = el.scanMode.options[el.scanMode.selectedIndex]?.text || "Auto Detect";
+  }
+
+  function pickLogTypeAuto(existingRow) {
+    const isAM = state.currentSession === "morning";
+
+    if (!existingRow) return isAM ? "am_in" : "pm_in";
+
+    if (isAM) {
+      if (!existingRow.am_in) return "am_in";
+      if (existingRow.am_in && !existingRow.am_out) return "am_out";
+      return null;
+    } else {
+      if (!existingRow.pm_in) return "pm_in";
+      if (existingRow.pm_in && !existingRow.pm_out) return "pm_out";
+      return null;
+    }
+  }
+
+  function updateLiveColumns() {
+    if (!el.liveWrapper) return;
+
+    el.liveWrapper.classList.remove("show-am", "show-pm");
+    const pref = state.liveSessionFilter || "auto";
+    if (pref === "all") return;
+
+    const mode = pref === "auto"
+      ? (state.currentSession === "morning" ? "am" : "pm")
+      : pref;
+
+    if (mode === "am") el.liveWrapper.classList.add("show-am");
+    if (mode === "pm") el.liveWrapper.classList.add("show-pm");
+  }
+
+  /* ===================== HISTORY / DATES ===================== */
+  async function loadAvailableDates() {
+    const dateSet = new Set();
+    const today = todayISO();
+    dateSet.add(today);
+
+    try {
+      const todayResp = await api({ action: "get_logs", date: today });
+      if (todayResp.success && Array.isArray(todayResp.logs)) {
+        todayResp.logs.forEach(r => {
+          if (r && r.date) dateSet.add(String(r.date).trim());
+        });
+      }
+    } catch {}
+
+    try {
+      const studentsResp = await api({ action: "get_students" });
+      if (studentsResp.success && Array.isArray(studentsResp.students)) {
+        const sampleStudents = studentsResp.students.slice(0, 20);
+
+        for (const student of sampleStudents) {
+          const sid = String(student.student_id || "").trim();
+          if (!sid) continue;
+
+          try {
+            const logsResp = await api({ action: "get_student_logs", student_id: sid });
+            if (logsResp.success && Array.isArray(logsResp.logs)) {
+              logsResp.logs.forEach(r => {
+                if (r && r.date) dateSet.add(String(r.date).trim());
+              });
+            }
+          } catch {}
+        }
+      }
+    } catch {}
+
+    state.allDates = Array.from(dateSet).filter(Boolean).sort((a, b) => (a > b ? -1 : 1));
+    if (!state.allDates.length) state.allDates = [today];
+  }
+
+  function populateDateSelect(activeDate) {
+    const dates = state.allDates && state.allDates.length ? state.allDates : [todayISO()];
+    el.dateSelect.innerHTML = "";
+
+    dates.forEach(d => {
+      const opt = document.createElement("option");
+      opt.value = d;
+      opt.textContent = formatDateLabel(d);
+      el.dateSelect.appendChild(opt);
+    });
+
+    el.dateSelect.value = dates.includes(activeDate) ? activeDate : dates[0];
+  }
+
+  /* ===================== TABLE / DATA ===================== */
+  function updateStatsFromData() {
+    const logs = state.todaysLogs || [];
+    el.stats.total.textContent = logs.length;
+
+    let checkedIn = 0;
+    let checkedOut = 0;
+    let pending = 0;
+
+    logs.forEach(r => {
+      const amIn = String(timeDisplay(r.am_in) || "").trim();
+      const amOut = String(timeDisplay(r.am_out) || "").trim();
+      const pmIn = String(timeDisplay(r.pm_in) || "").trim();
+      const pmOut = String(timeDisplay(r.pm_out) || "").trim();
+
+      if ((amIn && amIn !== "-") || (pmIn && pmIn !== "-")) checkedIn++;
+      if ((amOut && amOut !== "-") || (pmOut && pmOut !== "-")) checkedOut++;
+
+      const amPending = (amIn && amIn !== "-") && (!amOut || amOut === "-");
+      const pmPending = (pmIn && pmIn !== "-") && (!pmOut || pmOut === "-");
+      if (amPending || pmPending) pending++;
+    });
+
+    el.stats.checkedIn.textContent = checkedIn;
+    el.stats.checkedOut.textContent = checkedOut;
+    el.stats.pending.textContent = pending;
+  }
+
+  function renderEmptyTable(message = "No activity records found for this date.") {
+    el.liveLogBody.innerHTML = `
+      <tr>
+        <td colspan="7" style="padding:0;">
+          <div class="empty-state">
+            <i class="fa-solid fa-inbox"></i>
+            <p>${escapeHtml(message)}</p>
+          </div>
+        </td>
+      </tr>
+    `;
+  }
+
+  function renderLiveTable(logs) {
+    el.liveLogBody.innerHTML = "";
+
+    if (!logs.length) {
+      renderEmptyTable();
+      return;
+    }
+
+    const sortedLogs = logs.slice().sort((a, b) => {
+      const latestTime = (r) => {
+        const times = [r.am_in, r.am_out, r.pm_in, r.pm_out].filter(t => t && t !== "-");
+        if (!times.length) return 0;
+        const parsed = times.map(t => {
+          const d = new Date(t);
+          return isNaN(d) ? 0 : d.getTime();
+        });
+        return Math.max(...parsed, 0);
+      };
+      return latestTime(b) - latestTime(a);
+    });
+
+    sortedLogs.forEach((r) => {
+      const amIn = timeDisplay(r.am_in);
+      const amOut = timeDisplay(r.am_out);
+      const pmIn = timeDisplay(r.pm_in);
+      const pmOut = timeDisplay(r.pm_out);
+      const total = String(r.total_hours || "").trim() || calcHours(amIn, amOut, pmIn, pmOut);
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>
+          <div class="student-cell">
+            <div class="avatar">${String(r.student_name || "?").charAt(0).toUpperCase()}</div>
+            <div class="student-info">
+              <div class="student-name">${escapeHtml(safe(r.student_name))}</div>
+              <div class="student-meta">${escapeHtml(safe(r.login_type))}</div>
+            </div>
+          </div>
+        </td>
+        <td class="d-none d-md-table-cell">${escapeHtml(safe(r.date))}</td>
+        <td class="col-am time-cell">${escapeHtml(safe(amIn))}</td>
+        <td class="col-am time-cell">${escapeHtml(safe(amOut))}</td>
+        <td class="col-pm time-cell">${escapeHtml(safe(pmIn))}</td>
+        <td class="col-pm time-cell">${escapeHtml(safe(pmOut))}</td>
+        <td class="hours-cell">${total ? `${total}h` : "-"}</td>
+      `;
+      el.liveLogBody.appendChild(tr);
+    });
+  }
+
+  async function loadTables(date = todayISO(), opts = {}) {
+    const { silent = false } = opts;
+
+    try {
+      state.selectedDate = date;
+
+      if (!silent) {
+        el.lastScanInfo.innerHTML = `<i class="fa-solid fa-circle-notch fa-spin"></i><span>Loading logs for ${escapeHtml(date)}...</span>`;
+      }
+
+      const resp = await api({ action: "get_logs", date });
+      if (!resp.success) throw new Error(resp.message || "get_logs failed");
+
+      const logs = Array.isArray(resp.logs) ? resp.logs : [];
+      state.todaysLogs = logs;
+
+      if (!state.allDates.includes(date)) {
+        state.allDates.unshift(date);
+        state.allDates = Array.from(new Set(state.allDates)).sort((a, b) => (a > b ? -1 : 1));
+      }
+
+      populateDateSelect(date);
+      renderLiveTable(logs);
+      updateStatsFromData();
+      updateLiveColumns();
+
+      if (!silent) {
+        if (logs.length) {
+          el.lastScanInfo.innerHTML = `<i class="fa-solid fa-check" style="color:var(--success)"></i><span>Loaded ${logs.length} record(s) for ${escapeHtml(formatDateLabel(date))}</span>`;
+        } else {
+          el.lastScanInfo.innerHTML = `<i class="fa-solid fa-inbox"></i><span>No records for ${escapeHtml(formatDateLabel(date))}</span>`;
+        }
+      }
+
+      if (state.dropdownStudentId) {
+        setScanModeContextForStudent(state.dropdownStudentId, date);
+      }
+
+      syncTableHeightToScanner();
+    } catch (err) {
+      console.error(err);
+      if (!silent) {
+        el.lastScanInfo.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:var(--danger)"></i><span>Failed to load logs</span>`;
+        showToast("Failed to load logs", "error", 3000);
+      }
+      syncTableHeightToScanner();
+    }
+  }
+
+  /* ===================== CAMERA ===================== */
+  async function initCameras() {
+    try {
+      state.cameras = await Html5Qrcode.getCameras();
+      el.cameraSelect.innerHTML = '<option value="">Select Camera...</option>';
+
+      if (!state.cameras.length) {
+        showToast("No cameras found. Check permissions.", "error", 4000);
+        return;
+      }
+
+      state.cameras.forEach((cam, i) => {
+        const label = cam.label || `Camera ${i + 1}`;
+        const shortLabel = label.length > 30 ? `${label.substring(0, 30)}...` : label;
+        el.cameraSelect.appendChild(new Option(shortLabel, cam.id));
+      });
+
+      const backCam = state.cameras.find(c =>
+        (c.label || "").toLowerCase().includes("back") ||
+        (c.label || "").toLowerCase().includes("rear") ||
+        (c.label || "").toLowerCase().includes("environment")
+      );
+
+      if (backCam) el.cameraSelect.value = backCam.id;
+    } catch (err) {
+      console.error(err);
+      showToast("Camera access denied. Check permissions.", "error", 4000);
+    }
+  }
+
+  async function startScanner() {
+    if (state.scanning) return;
+
+    clearScanModeContext();
+    primeAudio();
+    initVoice();
+
+    const cameraId = el.cameraSelect.value;
+    if (!cameraId) {
+      showToast("Select a camera first", "warning");
+      return;
+    }
+
+    const mode = el.scanMode.value || "auto";
+    if (mode === "am_in" || mode === "pm_in") {
+      const label = el.scanMode.options[el.scanMode.selectedIndex]?.text || "Time In";
+      const ok = await askAdminPin("timein", label);
+      if (!ok) {
+        showToast("Admin PIN is required for Time In.", "warning", 2500);
+        return;
+      }
+      state.timeInPinGranted = true;
+    } else {
+      state.timeInPinGranted = false;
+    }
+
+    try {
+      if (!state.scanner) state.scanner = new Html5Qrcode("reader");
+
+      await state.scanner.start(
+        cameraId,
+        {
+          fps: 30,
+          qrbox: (viewfinderWidth, viewfinderHeight) => {
+            const minEdge = Math.min(viewfinderWidth, viewfinderHeight);
+            const size = Math.floor(minEdge * 0.75);
+            return { width: size, height: size };
+          },
+          aspectRatio: 1.0,
+          disableFlip: false,
+          experimentalFeatures: { useBarCodeDetectorIfSupported: true },
+          videoConstraints: {
+            facingMode: "environment",
+            focusMode: "continuous",
+            exposureMode: "continuous",
+            whiteBalanceMode: "continuous"
+          }
+        },
+        onScanSuccess,
+        () => {}
+      );
+
+      state.scanning = true;
+      setScannerVisualState(true);
+      showToast("Scanner activated", "success", 2000);
+    } catch (err) {
+      console.error(err);
+      setScannerVisualState(false);
+      showToast("Camera failed to start", "error", 3000);
+    }
+  }
+
+  function stopScanner() {
+    if (!state.scanner || !state.scanning) return;
+
+    state.scanner.stop()
+      .then(() => {
+        state.scanning = false;
+        state.timeInPinGranted = false;
+        clearScanModeContext();
+        setScannerVisualState(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        state.scanning = false;
+        state.timeInPinGranted = false;
+        clearScanModeContext();
+        setScannerVisualState(false);
+      });
+  }
+
+  /* ===================== ATTENDANCE PROCESS ===================== */
+  async function onScanSuccess(decodedText) {
+    const now = Date.now();
+    if (state.busy) return;
+    if (state.lastScan === decodedText && (now - state.lastScanTime) < SCAN_DEBOUNCE_MS) return;
+
+    state.lastScan = decodedText;
+    state.lastScanTime = now;
+    state.busy = true;
+
+    try {
+      await processAttendance(decodedText);
+    } finally {
+      state.busy = false;
+    }
+  }
+
+  async function processAttendance(generated_code) {
+    const date = todayISO();
+
+    if (el.dateSelect && el.dateSelect.value !== date) {
+      state.selectedDate = date;
+      saveDatePref(date);
+    }
+
+    el.lastScanInfo.innerHTML = `
+      <i class="fa-solid fa-circle-notch fa-spin"></i>
+      <span>Processing: ${escapeHtml(generated_code)}...</span>
+    `;
+
+    try {
+      sfxScanned();
+
+      const found = await api({ action: "find_student", generated_code });
+      if (!found.success) {
+        sfxError();
+        showToast("Student not found", "error", 3000);
+        el.lastScanInfo.innerHTML = `<i class="fa-solid fa-xmark" style="color:var(--danger)"></i><span>Invalid code</span>`;
+        return;
+      }
+
+      const student = found.student;
+      speak("Successfully scanned");
+
+      await loadTables(date, { silent: true });
+
+      const existing = findExistingRow(student.student_id, date);
+      setScanModeContextForStudent(student.student_id, date);
+
+      let log_type = el.scanMode.value;
+      if (log_type === "auto") {
+        log_type = pickLogTypeAuto(existing);
+        if (!log_type) {
+          beep(120, 260, 0.06);
+          showToast("Session already completed", "warning", 2500);
+          el.lastScanInfo.innerHTML = `<i class="fa-solid fa-clock-rotate-left" style="color:var(--warning)"></i><span>${escapeHtml(student.student_name)} already completed this session.</span>`;
+          return;
+        }
+      }
+
+      if (isTimeInLogType(log_type) && !state.timeInPinGranted) {
+        beep(120, 260, 0.06);
+        showToast("Admin PIN required for Time In. Select AM/PM Time In then Start Scanner.", "warning", 3500);
+        el.lastScanInfo.innerHTML = `<i class="fa-solid fa-lock" style="color:var(--warning)"></i><span>Time In locked (PIN required)</span>`;
+        return;
+      }
+
+      const time = nowLocalTime12();
+      const resp = await api({
+        action: "log",
+        generated_code,
+        log_type,
+        date,
+        time
+      });
+
+      if (!resp.success) {
+        beep(120, 260, 0.06);
+        showToast(resp.message || "Not recorded", "warning", 3000);
+        el.lastScanInfo.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:var(--warning)"></i><span>${escapeHtml(student.student_name)} • ${escapeHtml(resp.message || "Not recorded")}</span>`;
+        return;
+      }
+
+      flashGreen();
+      sfxRecorded();
+
+      const label = formatLogTypeLabel(log_type);
+      showCenterPop({
+        title: "Scan Saved Successfully",
+        sub: `${label} recorded`,
+        body: `${student.student_name} • ${label} at ${time}`,
+        duration: 2100
+      });
+
+      showToast(`${student.student_name} • ${label} at ${time}`, "success", 3000);
+      el.lastScanInfo.innerHTML = `<i class="fa-solid fa-check" style="color:var(--success)"></i><span>${escapeHtml(student.student_name)} recorded successfully.</span>`;
+
+      await loadTables(date, { silent: true });
+      setScanModeContextForStudent(student.student_id, date);
+
+      if (AUTO_STOP_ON_SUCCESS && state.scanning) {
+        setTimeout(() => stopScanner(), 350);
+      }
+    } catch (err) {
+      console.error(err);
+      sfxError();
+      showToast("Network error", "error", 4000);
+      el.lastScanInfo.innerHTML = `<i class="fa-solid fa-triangle-exclamation" style="color:var(--danger)"></i><span>Connection error</span>`;
+    } finally {
+      syncTableHeightToScanner();
+    }
+  }
+
+  /* ===================== REGISTRATION GATE ===================== */
+  function setupRegistrationGate() {
+    if (!el.registrationLink) return;
+
+    el.registrationLink.addEventListener("click", async (e) => {
+      e.preventDefault();
+      primeAudio();
+
+      const ok = await askAdminPin("registration", "Registration");
+      if (!ok) {
+        showToast("Admin PIN required to open Registration.", "warning", 2500);
+        return;
+      }
+
+      const url = el.registrationLink.getAttribute("href");
+      window.open(url, "_blank", "noopener");
+    }, { passive: false });
+  }
+
+  /* ===================== LIVE REFRESH ===================== */
+  function startAutoRefresh() {
+    clearInterval(state._refreshTimer);
+    state._refreshTimer = setInterval(async () => {
+      if (state.busy || state.scanning) return;
+      const activeDate = state.selectedDate || todayISO();
+      await loadTables(activeDate, { silent: true });
+    }, 15000);
+  }
+
+  /* ===================== EVENTS ===================== */
+  function bindEvents() {
+    window.addEventListener("resize", () => {
+      clearTimeout(state._syncTimer);
+      state._syncTimer = setTimeout(syncTableHeightToScanner, 120);
+    });
+
+    el.btnStart.addEventListener("click", startScanner);
+    el.btnStop.addEventListener("click", stopScanner);
+
+    el.scanMode.addEventListener("change", async () => {
+      el.scanModeBadge.textContent = el.scanMode.options[el.scanMode.selectedIndex]?.text || "Auto Detect";
+      state.timeInPinGranted = false;
+
+      const mode = el.scanMode.value || "auto";
+      if (state.scanning && (mode === "am_in" || mode === "pm_in")) {
+        const label = el.scanMode.options[el.scanMode.selectedIndex]?.text || "Time In";
+        const ok = await askAdminPin("timein", label);
+
+        if (!ok) {
+          el.scanMode.value = "auto";
+          el.scanModeBadge.textContent = el.scanMode.options[el.scanMode.selectedIndex]?.text || "Auto Detect";
+          showToast("PIN required for Time In. Mode reset to Auto.", "warning", 2500);
+          state.timeInPinGranted = false;
+          return;
+        }
+
+        state.timeInPinGranted = true;
+        showToast("Time In unlocked for this scan session.", "success", 1800);
+      }
+    });
+
+    el.liveSessionFilter.addEventListener("change", () => {
+      const v = el.liveSessionFilter.value;
+      state.liveSessionFilter = v;
+      saveLiveSessionPref(v);
+      updateLiveColumns();
+
+      const label = {
+        auto: "Auto (Current)",
+        am: "AM Only",
+        pm: "PM Only",
+        all: "All Day"
+      }[v] || "Auto";
+
+      showToast(`Live table: ${label}`, "info", 1500);
+    });
+
+    el.dateSelect.addEventListener("change", () => {
+      const d = el.dateSelect.value || todayISO();
+      state.selectedDate = d;
+      saveDatePref(d);
+      loadTables(d);
+    });
+
+    document.addEventListener("click", primeAudio, { once: true });
+  }
+
+  /* ===================== INIT ===================== */
+  async function init() {
+    ensureToastStyles();
+    initVoice();
+    initPinModal();
+    setupRegistrationGate();
+    bindEvents();
+
+    state.liveSessionFilter = loadLiveSessionPref();
+    el.liveSessionFilter.value = state.liveSessionFilter;
+
+    const prefDate = loadDatePref();
+    state.selectedDate = prefDate || todayISO();
+
+    updateClock();
+    setInterval(updateClock, 1000);
+    updateLiveColumns();
+    renderScanModeOptions(null);
+    setScannerVisualState(false);
+
+    await Promise.all([
+      initCameras(),
+      loadAvailableDates()
+    ]);
+
+    populateDateSelect(state.selectedDate);
+    await loadTables(state.selectedDate);
+
+    startAutoRefresh();
+    setTimeout(syncTableHeightToScanner, 120);
+    showToast("System ready", "success", 1800);
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
