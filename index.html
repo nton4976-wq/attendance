@@ -2,9 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="data:,">
   <meta charset="utf-8" />
-  <link rel="manifest" href="manifest.webmanifest">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Student Profiles | SmartAttendance Pro</title>
 
@@ -1987,6 +1985,22 @@
     color:var(--text-primary);
   }
 
+@media (max-width:575.98px){
+  .qr-back,
+  .qr-x{
+    top:max(12px, env(safe-area-inset-top));
+    width:46px;
+    height:46px;
+  }
+
+  .qr-back{
+    left:max(12px, env(safe-area-inset-left));
+  }
+
+  .qr-x{
+    right:max(12px, env(safe-area-inset-right));
+  }
+}
   @media (min-width:1200px){
     .main-container{ padding:2rem; }
   }
@@ -2230,6 +2244,42 @@
     .drawer-nav-btn{ padding:.9rem .9rem; }
   }
 
+  .qr-back{
+  position:absolute;
+  top:max(14px, env(safe-area-inset-top));
+  left:max(14px, env(safe-area-inset-left));
+  z-index:20;
+  width:50px;
+  height:50px;
+  border:none;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(6,19,29,.78);
+  color:var(--text-primary);
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  backdrop-filter:blur(16px) saturate(160%);
+  -webkit-backdrop-filter:blur(16px) saturate(160%);
+  transition:all var(--transition-fast);
+  box-shadow:0 14px 30px rgba(0,0,0,.32);
+}
+
+.qr-back:hover{
+  background:rgba(255,255,255,.10);
+  transform:translateY(-1px) scale(1.03);
+}
+
+.qr-back:focus{
+  outline:none;
+  box-shadow:var(--shadow-glow), 0 14px 30px rgba(0,0,0,.32);
+}
+
+.qr-back i{
+  font-size:1rem;
+  pointer-events:none;
+}
+
   @media (max-width:420px){
     .main-container{ padding:.65rem; }
 
@@ -2269,6 +2319,100 @@
       transition:none !important;
     }
   }
+
+  /* make modal appear above navbar */
+#qrModal{
+  z-index:2000 !important;
+}
+
+.modal-backdrop{
+  z-index:1990 !important;
+  background:rgba(2, 6, 16, .88) !important;
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+
+/* full screen QR modal */
+#qrModal .modal-dialog{
+  margin:0;
+  width:100vw;
+  max-width:none;
+  height:100dvh;
+}
+
+#qrModal .modal-content{
+  width:100%;
+  min-height:100dvh;
+  border-radius:0;
+  background:transparent;
+  border:0;
+  box-shadow:none;
+}
+
+#qrModal .qr-id-dialog{
+  width:100vw;
+  max-width:none;
+  height:100dvh;
+  margin:0;
+}
+
+#qrModal .qr-id-card{
+  min-height:100dvh;
+  border-radius:0;
+  padding:max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
+}
+
+/* back button */
+.qr-back{
+  position:absolute;
+  top:max(14px, env(safe-area-inset-top));
+  left:max(14px, env(safe-area-inset-left));
+  z-index:30;
+  width:50px;
+  height:50px;
+  border:none;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(6,19,29,.78);
+  color:var(--text-primary);
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  backdrop-filter:blur(16px) saturate(160%);
+  -webkit-backdrop-filter:blur(16px) saturate(160%);
+  box-shadow:0 14px 30px rgba(0,0,0,.32);
+}
+
+.qr-back:hover{
+  background:rgba(255,255,255,.10);
+  transform:translateY(-1px);
+}
+
+.qr-back i{
+  font-size:1rem;
+}
+
+/* close button stays top-right */
+.qr-x{
+  z-index:30;
+}
+
+@media (max-width:575.98px){
+  .qr-back,
+  .qr-x{
+    width:46px;
+    height:46px;
+    top:max(12px, env(safe-area-inset-top));
+  }
+
+  .qr-back{
+    left:max(12px, env(safe-area-inset-left));
+  }
+
+  .qr-x{
+    right:max(12px, env(safe-area-inset-right));
+  }
+}
 </style>
 
 <body>
@@ -2323,7 +2467,6 @@
           <div class="avatar" id="drawerAvatar">U</div>
           <div style="min-width:0;">
             <div class="drawer-user-name" id="drawerName">User Name</div>
-            <div class="drawer-user-email" id="drawerEmail">email@example.com</div>
           </div>
         </div>
 
@@ -2484,7 +2627,6 @@
               <div class="avatar" id="sidebarAvatar">U</div>
               <div style="min-width:0;">
                 <div class="mini-name" id="sidebarName">User Name</div>
-                <div class="mini-email" id="sidebarEmail">email@example.com</div>
               </div>
             </div>
 
@@ -2580,9 +2722,9 @@
                       </span>
                     </div>
 
-                    <div class="profile-email" id="heroEmail">
-                      <i class="fa-solid fa-envelope"></i>
-                      email@example.com
+                    <div class="profile-email" id="heroStudentId">
+                      <i class="fa-solid fa-hashtag"></i>
+                      Student ID
                     </div>
                   </div>
 
@@ -2779,11 +2921,6 @@
                       <label for="userDeptName">Assigned Department / Section</label>
                       <input id="userDeptName" class="form-control-custom" value="Center For Alumni Relation And Employment Services" />
                     </div>
-
-                    <div class="field">
-                      <label for="userSupervisorName">OJT Supervisor (Printed Name)</label>
-                      <input id="userSupervisorName" class="form-control-custom" placeholder="e.g., Sherryll Fetalvero" />
-                    </div>
                   </div>
 
                   <div class="report-help">
@@ -2802,27 +2939,43 @@
                       <div class="field">
                         <label for="userDailyDate">Date</label>
                         <input type="date" id="userDailyDate" class="form-control-custom">
+                        <div class="date-preview" id="userDailyDatePreview">Select a date to view it in full format.</div>
                       </div>
                     </div>
 
                     <div class="field-row">
                       <div class="field">
                         <label for="userDailyAM">Morning Activities (AM)</label>
-                        <textarea id="userDailyAM" class="form-textarea-custom" placeholder="Write your morning tasks and accomplishments..."></textarea>
+                        <textarea id="userDailyAM" class="form-textarea-custom" placeholder="1. Encode documents&#10;2. Organize files"></textarea>
+                        <div class="list-tools">
+                          <button class="btn btn-secondary btn-inline" id="btnAddAMItem" type="button">
+                            <i class="fa-solid fa-plus"></i>
+                            Add Item
+                          </button>
+                          <button class="btn btn-ghost btn-inline" id="btnRenumberAM" type="button">
+                            <i class="fa-solid fa-list-ol"></i>
+                            Renumber
+                          </button>
+                        </div>
+                        <div class="activity-note">Use numbered items. You can add more items anytime.</div>
                       </div>
                     </div>
 
                     <div class="field-row">
                       <div class="field">
                         <label for="userDailyPM">Afternoon Activities (PM)</label>
-                        <textarea id="userDailyPM" class="form-textarea-custom" placeholder="Write your afternoon tasks and accomplishments..."></textarea>
-                      </div>
-                    </div>
-
-                    <div class="field-row">
-                      <div class="field">
-                        <label for="userDailyRemarks">Remarks (optional)</label>
-                        <textarea id="userDailyRemarks" class="form-textarea-custom" placeholder="Write remarks, concerns, or notes..."></textarea>
+                        <textarea id="userDailyPM" class="form-textarea-custom" placeholder="1. Assist clients&#10;2. Prepare reports"></textarea>
+                        <div class="list-tools">
+                          <button class="btn btn-secondary btn-inline" id="btnAddPMItem" type="button">
+                            <i class="fa-solid fa-plus"></i>
+                            Add Item
+                          </button>
+                          <button class="btn btn-ghost btn-inline" id="btnRenumberPM" type="button">
+                            <i class="fa-solid fa-list-ol"></i>
+                            Renumber
+                          </button>
+                        </div>
+                        <div class="activity-note">Use numbered items. You can add more items anytime.</div>
                       </div>
                     </div>
 
@@ -2876,7 +3029,7 @@
                   </div>
 
                   <div class="report-help">
-                    Save your daily progress from Monday to Friday. Your weekly reflection follows the same weekly logic used by the internship reporting system.
+                    Save your daily progress from Monday to Friday. Weekly reflection submission is available on Friday, Saturday, and Sunday.
                   </div>
 
                   <div class="week-summary" id="userWeekSummary"></div>
@@ -2915,12 +3068,7 @@
                       </span>
                     </div>
 
-                    <div class="profile-email" id="accountEmail">
-                      <i class="fa-solid fa-envelope"></i>
-                      email@example.com
-                    </div>
-
-                    <div class="profile-email" id="accountStudentId" style="margin-top:.45rem;">
+                    <div class="profile-email" id="accountStudentId">
                       <i class="fa-solid fa-hashtag"></i>
                       Student ID
                     </div>
@@ -2963,8 +3111,9 @@
   </div>
 
   <div class="modal fade" id="qrModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered qr-id-dialog">
+    <div class="modal-dialog modal-fullscreen qr-id-dialog">
       <div class="modal-content qr-id-modal">
+
         <button type="button" class="qr-x" data-bs-dismiss="modal" aria-label="Close digital ID">
           <i class="fa-solid fa-xmark"></i>
         </button>
@@ -3074,8 +3223,7 @@
     let userReportStore = {
       meta: {
         orgName: "Romblon State University",
-        deptName: "Center For Alumni Relation And Employment Services",
-        supervisorName: ""
+        deptName: "Center For Alumni Relation And Employment Services"
       },
       daily: {},
       reflections: {}
@@ -3245,6 +3393,23 @@
       return d.toLocaleDateString("en-US", { weekday: "long" });
     }
 
+    function formatDisplayDate(iso) {
+      const d = isoToDate(iso);
+      if (!d) return safe(iso);
+
+      const main = d.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+      });
+
+      const day = d.toLocaleDateString("en-US", {
+        weekday: "long"
+      });
+
+      return `${main} (${day})`;
+    }
+
     function fmtWeekLabel(startISO) {
       const d1 = isoToDate(startISO);
       const d2 = isoToDate(addDaysISO(startISO, 4));
@@ -3273,8 +3438,9 @@
       return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
     }
 
-    function isTodayFriday() {
-      return new Date().getDay() === 5;
+    function canSubmitReflectionToday() {
+      const day = new Date().getDay();
+      return day === 5 || day === 6 || day === 0;
     }
 
     function timeDisplay(v) {
@@ -3326,6 +3492,50 @@
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(() => fn(...args), delay);
       };
+    }
+
+    function normalizeNumberedText(text) {
+      const lines = String(text || "")
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(Boolean)
+        .map(line => line.replace(/^\d+[\.\)]\s*/, ""));
+
+      return lines.map((line, i) => `${i + 1}. ${line}`).join("\n");
+    }
+
+    function getNextItemNumber(text) {
+      const lines = String(text || "")
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(Boolean);
+
+      return lines.length + 1;
+    }
+
+    function appendNextNumber(textareaId) {
+      const el = document.getElementById(textareaId);
+      if (!el) return;
+
+      const current = el.value || "";
+      const next = getNextItemNumber(current);
+      const prefix = current.trim() ? "\n" : "";
+      el.value = `${current}${prefix}${next}. `;
+      el.focus();
+      el.setSelectionRange(el.value.length, el.value.length);
+    }
+
+    function renumberActivity(textareaId) {
+      const el = document.getElementById(textareaId);
+      if (!el) return;
+      el.value = normalizeNumberedText(el.value);
+    }
+
+    function updateDailyDatePreview() {
+      const input = document.getElementById("userDailyDate");
+      const preview = document.getElementById("userDailyDatePreview");
+      if (!input || !preview) return;
+      preview.textContent = input.value ? formatDisplayDate(input.value) : "Select a date to view it in full format.";
     }
 
     function saveUserSession(user) {
@@ -3515,8 +3725,7 @@
       userReportStore = {
         meta: {
           orgName: "Romblon State University",
-          deptName: "Center For Alumni Relation And Employment Services",
-          supervisorName: ""
+          deptName: "Center For Alumni Relation And Employment Services"
         },
         daily: {},
         reflections: {}
@@ -3565,6 +3774,7 @@
       document.getElementById("userDailyDate").value = today;
 
       setActiveWeekByAnyDate(today);
+      updateDailyDatePreview();
     }
 
     function setActiveWeekByAnyDate(anyISO) {
@@ -3592,11 +3802,9 @@
     function bindReportMetaInputs() {
       const orgName = document.getElementById("userOrgName");
       const deptName = document.getElementById("userDeptName");
-      const supervisorName = document.getElementById("userSupervisorName");
 
-      orgName.oninput = () => userReportStore.meta.orgName = orgName.value;
-      deptName.oninput = () => userReportStore.meta.deptName = deptName.value;
-      supervisorName.oninput = () => userReportStore.meta.supervisorName = supervisorName.value;
+      if (orgName) orgName.oninput = () => userReportStore.meta.orgName = orgName.value;
+      if (deptName) deptName.oninput = () => userReportStore.meta.deptName = deptName.value;
     }
 
     function populateUserIdentity() {
@@ -3620,13 +3828,11 @@
 
       setText("sidebarAvatar", initials);
       setText("sidebarName", safe(currentUser.student_name));
-      setText("sidebarEmail", safe(currentUser.email));
       setHTML("sidebarRoleChip", `<i class="fa-solid fa-user-check"></i> ${escapeHtml(role)}`);
       setHTML("sidebarDeptChip", `<i class="fa-solid fa-building"></i> ${escapeHtml(dept)}`);
 
       setText("drawerAvatar", initials);
       setText("drawerName", safe(currentUser.student_name));
-      setText("drawerEmail", safe(currentUser.email));
       setHTML("drawerRoleChip", `<i class="fa-solid fa-user-check"></i> ${escapeHtml(role)}`);
       setHTML("drawerDeptChip", `<i class="fa-solid fa-building"></i> ${escapeHtml(dept)}`);
 
@@ -3637,13 +3843,12 @@
       setHTML("heroRoleChip", `<i class="fa-solid fa-user-graduate"></i> ${escapeHtml(role)}`);
       setHTML("heroDeptChip", `<i class="fa-solid fa-building"></i> ${escapeHtml(dept)}`);
       setHTML("heroCodeChip", `<i class="fa-solid fa-qrcode"></i> Code: ${escapeHtml(code)}`);
-      setHTML("heroEmail", `<i class="fa-solid fa-envelope"></i> ${escapeHtml(safe(currentUser.email))}`);
+      setHTML("heroStudentId", `<i class="fa-solid fa-hashtag"></i> ${escapeHtml(safe(currentUser.student_id))}`);
 
       setText("accountAvatar", initials);
       setText("accountName", safe(currentUser.student_name));
       setHTML("accountRoleChip", `<i class="fa-solid fa-user-check"></i> ${escapeHtml(role)}`);
       setHTML("accountDeptChip", `<i class="fa-solid fa-building"></i> ${escapeHtml(dept)}`);
-      setHTML("accountEmail", `<i class="fa-solid fa-envelope"></i> ${escapeHtml(safe(currentUser.email))}`);
       setHTML("accountStudentId", `<i class="fa-solid fa-hashtag"></i> ${escapeHtml(safe(currentUser.student_id))}`);
       setHTML("accountGeneratedCode", `<i class="fa-solid fa-qrcode"></i> ${escapeHtml(code)}`);
 
@@ -3662,8 +3867,7 @@
       userReportStore = {
         meta: {
           orgName: "Romblon State University",
-          deptName: "Center For Alumni Relation And Employment Services",
-          supervisorName: ""
+          deptName: "Center For Alumni Relation And Employment Services"
         },
         daily: {},
         reflections: {}
@@ -3775,7 +3979,7 @@
       info.innerHTML = `
         <strong style="color:var(--text-primary);">Loaded:</strong>
         ${currentLogs.length} attendance record(s)
-        ${from && to ? ` from <strong style="color:var(--text-primary);">${escapeHtml(from)}</strong> to <strong style="color:var(--text-primary);">${escapeHtml(to)}</strong>.` : "."}
+        ${from && to ? ` from <strong style="color:var(--text-primary);">${escapeHtml(formatDisplayDate(from))}</strong> to <strong style="color:var(--text-primary);">${escapeHtml(formatDisplayDate(to))}</strong>.` : "."}
       `;
 
       updateDashboardStats();
@@ -3809,7 +4013,7 @@
 
         return `
           <tr>
-            <td>${escapeHtml(safe(row.date))}</td>
+            <td>${escapeHtml(formatDisplayDate(safe(row.date)))}</td>
             <td class="time-col">${escapeHtml(safe(amIn))}</td>
             <td class="time-col">${escapeHtml(safe(amOut))}</td>
             <td class="time-col">${escapeHtml(safe(pmIn))}</td>
@@ -3847,7 +4051,7 @@
         return `
           <article class="attendance-mobile-card">
             <div class="attendance-mobile-head">
-              <div class="attendance-mobile-date">${escapeHtml(safe(row.date))}</div>
+              <div class="attendance-mobile-date">${escapeHtml(formatDisplayDate(safe(row.date)))}</div>
               <div class="attendance-mobile-total">${total ? total.toFixed(2) + "h" : "-"}</div>
             </div>
 
@@ -3892,7 +4096,7 @@
         .map(i => addDaysISO(activeWeek.startISO, i))
         .filter(d => {
           const e = userReportStore.daily[d];
-          return !!(e && ((e.am || "").trim() || (e.pm || "").trim() || (e.remarks || "").trim()));
+          return !!(e && ((e.am || "").trim() || (e.pm || "").trim()));
         }).length;
 
       const reflectionText = (userReportStore.reflections[activeWeek.key] || "").trim();
@@ -3912,7 +4116,7 @@
 
       days.forEach(iso => {
         const e = userReportStore.daily[iso];
-        const filled = !!(e && ((e.am || "").trim() || (e.pm || "").trim() || (e.remarks || "").trim()));
+        const filled = !!(e && ((e.am || "").trim() || (e.pm || "").trim()));
         const chipClass = filled ? "status-chip" : "status-chip missing";
         const chipText = filled ? "Saved" : "Missing";
 
@@ -3921,7 +4125,7 @@
         row.innerHTML = `
           <div style="min-width:0;">
             <strong>${escapeHtml(weekdayName(iso))}</strong>
-            <small>${escapeHtml(iso)}</small>
+            <small>${escapeHtml(formatDisplayDate(iso))}</small>
           </div>
           <div style="display:flex; align-items:center; gap:.5rem; flex-shrink:0;">
             <span class="${chipClass}">${chipText}</span>
@@ -3949,6 +4153,7 @@
         dailyDateEl.value = activeWeek.startISO;
       }
 
+      updateDailyDatePreview();
       loadDailyEntryIntoForm(dailyDateEl.value);
       renderWeekSummary();
       renderDashboardWeekSummary();
@@ -3975,8 +4180,7 @@
       (resp.entries || []).forEach(e => {
         userReportStore.daily[e.date] = {
           am: e.am || "",
-          pm: e.pm || "",
-          remarks: e.remarks || ""
+          pm: e.pm || ""
         };
       });
     }
@@ -4004,7 +4208,7 @@
 
       document.getElementById("userDailyAM").value = entry?.am || "";
       document.getElementById("userDailyPM").value = entry?.pm || "";
-      document.getElementById("userDailyRemarks").value = entry?.remarks || "";
+      updateDailyDatePreview();
 
       const hint = document.getElementById("userDailySavedHint");
       hint.textContent = `Selected week: ${fmtWeekLabel(activeWeek.startISO)}`;
@@ -4015,11 +4219,13 @@
       if (!currentUser) return;
 
       const dateISO = document.getElementById("userDailyDate").value || todayISO();
-      const am = (document.getElementById("userDailyAM").value || "").trim();
-      const pm = (document.getElementById("userDailyPM").value || "").trim();
-      const remarks = (document.getElementById("userDailyRemarks").value || "").trim();
+      const am = normalizeNumberedText(document.getElementById("userDailyAM").value || "");
+      const pm = normalizeNumberedText(document.getElementById("userDailyPM").value || "");
 
-      if (!am && !pm && !remarks) {
+      document.getElementById("userDailyAM").value = am;
+      document.getElementById("userDailyPM").value = pm;
+
+      if (!am && !pm) {
         const el = document.getElementById("userDailySavedHint");
         el.textContent = "Nothing to save yet. Please write something first.";
         el.className = "hint warn";
@@ -4029,9 +4235,8 @@
 
       const org = (document.getElementById("userOrgName").value || "").trim();
       const dept = (document.getElementById("userDeptName").value || "").trim();
-      const supervisor = (document.getElementById("userSupervisorName").value || "").trim();
 
-      userReportStore.daily[dateISO] = { am, pm, remarks };
+      userReportStore.daily[dateISO] = { am, pm };
 
       try {
         const resp = await apiPost({
@@ -4043,16 +4248,16 @@
           date: dateISO,
           am,
           pm,
-          remarks,
+          remarks: "",
           org,
           dept,
-          supervisor
+          supervisor: ""
         });
 
         if (!resp.success) throw new Error(resp.message || "Save failed");
 
         const el = document.getElementById("userDailySavedHint");
-        el.textContent = `Saved to Weekly Progress • ${weekdayName(dateISO)} (${dateISO})`;
+        el.textContent = `Saved to Weekly Progress • ${formatDisplayDate(dateISO)}`;
         el.className = "hint";
 
         renderWeekSummary();
@@ -4071,9 +4276,9 @@
     async function saveUserWeeklyReflection() {
       if (!currentUser) return;
 
-      if (!isTodayFriday()) {
+      if (!canSubmitReflectionToday()) {
         updateReflectionButtonState();
-        showToast("warn", "Friday Only", "Weekly reflection can only be submitted on Friday.");
+        showToast("warn", "Submission Closed", "Weekly reflection can only be submitted on Friday, Saturday, or Sunday.");
         return;
       }
 
@@ -4088,7 +4293,6 @@
 
       const org = (document.getElementById("userOrgName").value || "").trim();
       const dept = (document.getElementById("userDeptName").value || "").trim();
-      const supervisor = (document.getElementById("userSupervisorName").value || "").trim();
 
       try {
         const resp = await apiPost({
@@ -4100,7 +4304,7 @@
           reflection: text,
           org,
           dept,
-          supervisor
+          supervisor: ""
         });
 
         if (!resp.success) throw new Error(resp.message || "Save failed");
@@ -4126,7 +4330,6 @@
     function clearUserDailyForm() {
       document.getElementById("userDailyAM").value = "";
       document.getElementById("userDailyPM").value = "";
-      document.getElementById("userDailyRemarks").value = "";
 
       const el = document.getElementById("userDailySavedHint");
       el.textContent = `Selected week: ${fmtWeekLabel(activeWeek.startISO)}`;
@@ -4148,14 +4351,14 @@
       const note = document.getElementById("userReflectionFridayNote");
       if (!btn || !note) return;
 
-      const friday = isTodayFriday();
-      btn.disabled = !friday;
+      const allowed = canSubmitReflectionToday();
+      btn.disabled = !allowed;
 
-      if (friday) {
-        note.textContent = "Reflection submission is enabled today because it is Friday.";
+      if (allowed) {
+        note.textContent = "Reflection submission is enabled today because today is Friday, Saturday, or Sunday.";
         note.className = "report-help hint";
       } else {
-        note.textContent = "Weekly reflection can only be submitted on Friday.";
+        note.textContent = "Weekly reflection can only be submitted on Friday, Saturday, or Sunday.";
         note.className = "report-help hint warn";
       }
     }
@@ -4168,7 +4371,7 @@
 
       days.forEach(iso => {
         const e = userReportStore.daily[iso];
-        const filled = !!(e && ((e.am || "").trim() || (e.pm || "").trim() || (e.remarks || "").trim()));
+        const filled = !!(e && ((e.am || "").trim() || (e.pm || "").trim()));
         const chipClass = filled ? "status-chip" : "status-chip missing";
         const chipText = filled ? "Saved" : "Missing";
 
@@ -4177,7 +4380,7 @@
         row.innerHTML = `
           <div style="min-width:0;">
             <strong>${escapeHtml(weekdayName(iso))}</strong>
-            <small>${escapeHtml(iso)}</small>
+            <small>${escapeHtml(formatDisplayDate(iso))}</small>
           </div>
           <div style="display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;">
             <span class="${chipClass}">${chipText}</span>
@@ -4194,6 +4397,7 @@
         btn.onclick = () => {
           const iso = btn.getAttribute("data-edit");
           document.getElementById("userDailyDate").value = iso;
+          updateDailyDatePreview();
           loadDailyEntryIntoForm(iso);
           setUserPageView("reportsView");
           window.scrollTo({ top: 0, behavior: "smooth" });
@@ -4217,7 +4421,7 @@
           : calcHours(amIn, amOut, pmIn, pmOut);
 
         aoa.push([
-          safe(r.date),
+          formatDisplayDate(safe(r.date)),
           safe(amIn),
           safe(amOut),
           safe(pmIn),
@@ -4254,20 +4458,18 @@
 
       const org = (document.getElementById("userOrgName").value || "").trim();
       const dept = (document.getElementById("userDeptName").value || "").trim();
-      const supervisor = (document.getElementById("userSupervisorName").value || "").trim();
       const weekLabel = fmtWeekLabel(activeWeek.startISO);
 
-      const progressHeaders = ["Date", "Day", "Morning Activities (AM)", "Afternoon Activities (PM)", "Remarks"];
+      const progressHeaders = ["Date", "Day", "Morning Activities (AM)", "Afternoon Activities (PM)"];
       const progressAoa = [progressHeaders];
 
       [0, 1, 2, 3, 4].map(i => addDaysISO(activeWeek.startISO, i)).forEach(d => {
         const e = userReportStore.daily[d] || {};
         progressAoa.push([
-          d,
+          formatDisplayDate(d),
           weekdayName(d),
           e.am || "",
-          e.pm || "",
-          e.remarks || ""
+          e.pm || ""
         ]);
       });
 
@@ -4277,8 +4479,8 @@
 
       const reflectionAoa = [
         ["Week", weekLabel],
-        ["Week Start", activeWeek.startISO],
-        ["Week End", activeWeek.endISO],
+        ["Week Start", formatDisplayDate(activeWeek.startISO)],
+        ["Week End", formatDisplayDate(activeWeek.endISO)],
         ["Reflection", reflectionText]
       ];
 
@@ -4290,7 +4492,6 @@
         ["Email", safe(currentUser.email)],
         ["Organization", org],
         ["Assigned Department / Section", dept],
-        ["OJT Supervisor", supervisor],
         ["Week", weekLabel],
         ["Export Date", todayISO()]
       ];
@@ -4396,6 +4597,7 @@
       const mobileMenuBackdrop = document.getElementById("mobileMenuBackdrop");
       const qrModalEl = document.getElementById("qrModal");
       const qrCloseBtn = document.querySelector("#qrModal .qr-x");
+      const qrBackBtn = document.getElementById("qrBackBtn");
 
       document.getElementById("btnUserLogin").addEventListener("click", async () => {
         try {
@@ -4445,9 +4647,8 @@
       document.getElementById("btnDashboardViewQR").addEventListener("click", openQrModal);
       document.getElementById("btnAccountViewQR").addEventListener("click", openQrModal);
 
-      if (qrCloseBtn) {
-        qrCloseBtn.addEventListener("click", closeQrModal);
-      }
+      if (qrCloseBtn) qrCloseBtn.addEventListener("click", closeQrModal);
+      if (qrBackBtn) qrBackBtn.addEventListener("click", closeQrModal);
 
       if (qrModalEl) {
         qrModalEl.addEventListener("shown.bs.modal", () => {
@@ -4556,8 +4757,14 @@
 
       document.getElementById("userDailyDate").addEventListener("change", () => {
         const iso = document.getElementById("userDailyDate").value || todayISO();
+        updateDailyDatePreview();
         loadDailyEntryIntoForm(iso);
       });
+
+      document.getElementById("btnAddAMItem").addEventListener("click", () => appendNextNumber("userDailyAM"));
+      document.getElementById("btnRenumberAM").addEventListener("click", () => renumberActivity("userDailyAM"));
+      document.getElementById("btnAddPMItem").addEventListener("click", () => appendNextNumber("userDailyPM"));
+      document.getElementById("btnRenumberPM").addEventListener("click", () => renumberActivity("userDailyPM"));
 
       document.getElementById("btnUserSaveDaily").addEventListener("click", saveUserDailyEntry);
       document.getElementById("btnUserClearDaily").addEventListener("click", clearUserDailyForm);
@@ -4607,6 +4814,7 @@
       updateReflectionButtonState();
       syncMenuMode();
       setupScrollableTables();
+      updateDailyDatePreview();
 
       const cards = document.getElementById("userAttendanceCards");
       if (cards) {
@@ -4649,5 +4857,3 @@
   </script>
 </body>
 </html>
-
-
