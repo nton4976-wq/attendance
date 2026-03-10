@@ -2361,6 +2361,58 @@
   border-radius:0;
   padding:max(24px, env(safe-area-inset-top)) 20px max(24px, env(safe-area-inset-bottom));
 }
+
+/* back button */
+.qr-back{
+  position:absolute;
+  top:max(14px, env(safe-area-inset-top));
+  left:max(14px, env(safe-area-inset-left));
+  z-index:30;
+  width:50px;
+  height:50px;
+  border:none;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(6,19,29,.78);
+  color:var(--text-primary);
+  display:grid;
+  place-items:center;
+  cursor:pointer;
+  backdrop-filter:blur(16px) saturate(160%);
+  -webkit-backdrop-filter:blur(16px) saturate(160%);
+  box-shadow:0 14px 30px rgba(0,0,0,.32);
+}
+
+.qr-back:hover{
+  background:rgba(255,255,255,.10);
+  transform:translateY(-1px);
+}
+
+.qr-back i{
+  font-size:1rem;
+}
+
+/* close button stays top-right */
+.qr-x{
+  z-index:30;
+}
+
+@media (max-width:575.98px){
+  .qr-back,
+  .qr-x{
+    width:46px;
+    height:46px;
+    top:max(12px, env(safe-area-inset-top));
+  }
+
+  .qr-back{
+    left:max(12px, env(safe-area-inset-left));
+  }
+
+  .qr-x{
+    right:max(12px, env(safe-area-inset-right));
+  }
+}
 </style>
 
 <body>
@@ -4805,4 +4857,3 @@
   </script>
 </body>
 </html>
-
