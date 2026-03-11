@@ -6,6 +6,4983 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Student Profiles | SmartAttendance Pro</title>
 
+  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Student Profiles | SmartAttendance Pro</title>
+  <link rel="icon" href="data:,">
+  <link rel="shortcut icon" href="data:,">
+  <link rel="apple-touch-icon" href="data:,">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- XLSX for real Excel export -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<style>
+  :root{
+    --primary:#0b5d1e;
+    --primary-light:#22c55e;
+    --primary-dark:#064117;
+    --primary-soft:rgba(34,197,94,.14);
+
+    --success:#16a34a;
+    --warning:#f59e0b;
+    --danger:#ef4444;
+    --info:#0ea5e9;
+
+    --bg-primary:#07131d;
+    --bg-secondary:#0f172a;
+    --bg-tertiary:#162234;
+    --bg-card:rgba(12,18,30,.78);
+    --bg-card-strong:rgba(10,16,27,.92);
+    --bg-glass:rgba(3,8,18,.42);
+    --bg-soft:rgba(255,255,255,.035);
+
+    --text-primary:#f8fafc;
+    --text-secondary:#d7e2ee;
+    --text-muted:#95a7bb;
+    --text-subtle:#66788d;
+
+    --border-subtle:rgba(255,255,255,.06);
+    --border-default:rgba(255,255,255,.10);
+    --border-strong:rgba(255,255,255,.16);
+    --border-focus:rgba(34,197,94,.42);
+
+    --shadow-sm:0 2px 8px rgba(0,0,0,.18);
+    --shadow:0 10px 30px rgba(0,0,0,.26);
+    --shadow-lg:0 20px 50px rgba(0,0,0,.38);
+    --shadow-xl:0 32px 80px rgba(0,0,0,.48);
+    --shadow-glow:0 0 0 3px rgba(34,197,94,.14);
+
+    --radius-sm:10px;
+    --radius:14px;
+    --radius-lg:20px;
+    --radius-xl:28px;
+    --radius-2xl:36px;
+
+    --transition-fast:150ms cubic-bezier(.4,0,.2,1);
+    --transition:250ms cubic-bezier(.4,0,.2,1);
+    --transition-slow:350ms cubic-bezier(.4,0,.2,1);
+
+    --container-max:1480px;
+    --navbar-h:84px;
+    --mobile-drawer-w:min(88vw, 360px);
+
+    --panel-pad:1.15rem;
+    --panel-pad-lg:1.45rem;
+  }
+
+  *,
+  *::before,
+  *::after{ box-sizing:border-box; }
+
+  html{
+    scroll-behavior:smooth;
+    -webkit-text-size-adjust:100%;
+  }
+
+  body{
+    margin:0;
+    padding:0;
+    font-family:'Plus Jakarta Sans',sans-serif;
+    min-height:100vh;
+    color:var(--text-primary);
+    line-height:1.5;
+    background:
+      radial-gradient(circle at 12% 12%, rgba(34,197,94,.10) 0%, transparent 24%),
+      radial-gradient(circle at 88% 16%, rgba(14,165,233,.08) 0%, transparent 18%),
+      radial-gradient(circle at 18% 88%, rgba(34,197,94,.08) 0%, transparent 22%),
+      linear-gradient(180deg,#06111a 0%, #0b1522 42%, #0f1b29 100%);
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    text-rendering:optimizeLegibility;
+  }
+
+  body::before{
+    content:'';
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:-2;
+    background:
+      radial-gradient(ellipse 70% 40% at 18% 78%, rgba(34,197,94,.06) 0%, transparent 52%),
+      radial-gradient(ellipse 48% 30% at 82% 70%, rgba(16,185,129,.05) 0%, transparent 45%);
+  }
+
+  body::after{
+    content:'';
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:-1;
+    opacity:.022;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  img, svg, canvas{ display:block; max-width:100%; }
+  button, input, textarea, select{ font:inherit; }
+  input, textarea, select{ min-width:0; }
+  .hidden{ display:none !important; }
+
+  ::-webkit-scrollbar{ width:6px; height:6px; }
+  ::-webkit-scrollbar-track{ background:transparent; }
+  ::-webkit-scrollbar-thumb{
+    background:rgba(149,167,187,.55);
+    border-radius:999px;
+  }
+  ::-webkit-scrollbar-thumb:hover{ background:rgba(149,167,187,.80); }
+
+  .navbar{
+    position:sticky;
+    top:0;
+    z-index:1100;
+    min-height:var(--navbar-h);
+    padding:.8rem 0;
+    background:rgba(7,19,29,.86);
+    border-bottom:1px solid var(--border-subtle);
+    backdrop-filter:blur(18px) saturate(180%);
+    -webkit-backdrop-filter:blur(18px) saturate(180%);
+  }
+
+  .navbar .container-fluid{
+    width:100%;
+    max-width:var(--container-max);
+    margin:0 auto;
+    min-width:0;
+  }
+
+  .navbar-brand{
+    display:flex;
+    align-items:center;
+    gap:.85rem;
+    color:var(--text-primary);
+    text-decoration:none;
+    font-size:1.08rem;
+    font-weight:900;
+    letter-spacing:-.03em;
+    min-width:0;
+    max-width:min(100%, 680px);
+  }
+
+  .navbar-brand:hover{ color:var(--text-primary); opacity:.98; }
+  .navbar-brand > div{ min-width:0; }
+  .navbar-brand span,
+  .navbar-brand small{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+
+  .brand-logo{
+    width:46px;
+    height:46px;
+    object-fit:contain;
+    flex-shrink:0;
+    filter:drop-shadow(0 10px 24px rgba(34,197,94,.20));
+  }
+
+  .navbar-actions{
+    display:flex;
+    align-items:center;
+    gap:.65rem;
+    margin-left:auto;
+    flex-shrink:0;
+  }
+
+  .topbar-clock{
+    display:flex;
+    align-items:center;
+    gap:.75rem;
+    padding:.55rem .8rem;
+    border-radius:999px;
+    border:1px solid var(--border-subtle);
+    background:rgba(255,255,255,.04);
+    min-width:0;
+    max-width:100%;
+  }
+
+  .clock-group{ min-width:0; }
+
+  #clockTime{
+    font-weight:900;
+    font-size:.95rem;
+    color:var(--text-primary);
+    letter-spacing:-.02em;
+    line-height:1.05;
+    white-space:nowrap;
+  }
+
+  #clockDate{
+    color:var(--text-muted);
+    font-size:.65rem;
+    font-weight:800;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    margin-top:.15rem;
+    white-space:nowrap;
+  }
+
+  .session-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:.45rem;
+    padding:.42rem .84rem;
+    border-radius:999px;
+    border:1px solid var(--border-default);
+    background:rgba(255,255,255,.04);
+    color:var(--text-secondary);
+    font-size:.7rem;
+    font-weight:900;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+
+  .session-badge::before{
+    content:'';
+    width:7px;
+    height:7px;
+    border-radius:999px;
+    background:var(--success);
+    box-shadow:0 0 10px rgba(22,163,74,.55);
+  }
+
+  .session-badge.afternoon::before{
+    background:var(--warning);
+    box-shadow:0 0 10px rgba(245,158,11,.45);
+  }
+
+  .menu-toggle{
+    width:48px;
+    height:48px;
+    border:none;
+    border-radius:18px;
+    color:var(--text-primary);
+    background:rgba(255,255,255,.05);
+    border:1px solid var(--border-subtle);
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    transition:all var(--transition-fast);
+    flex-shrink:0;
+  }
+
+  .menu-toggle:hover{
+    background:rgba(255,255,255,.08);
+    transform:translateY(-1px);
+  }
+
+  .menu-toggle:focus{
+    outline:none;
+    box-shadow:var(--shadow-glow);
+  }
+
+  .menu-toggle i{ font-size:1.05rem; }
+
+  .main-container{
+    max-width:var(--container-max);
+    margin:0 auto;
+    padding:1rem;
+    width:100%;
+  }
+
+  .view-section{
+    animation:fadeIn .35s ease;
+    min-width:0;
+  }
+
+  @keyframes fadeIn{
+    from{opacity:0;transform:translateY(10px)}
+    to{opacity:1;transform:translateY(0)}
+  }
+
+  .page-transition{ animation:pageSlide .32s cubic-bezier(.22,1,.36,1); }
+
+  @keyframes pageSlide{
+    from{opacity:0;transform:translateY(14px) scale(.992)}
+    to{opacity:1;transform:translateY(0) scale(1)}
+  }
+
+  .page-enter{
+    opacity:0;
+    transform:translateY(14px) scale(.992);
+    will-change:transform, opacity;
+  }
+
+  .page-enter.page-enter-active{
+    opacity:1;
+    transform:translateY(0) scale(1);
+    transition:opacity .32s cubic-bezier(.22,1,.36,1), transform .32s cubic-bezier(.22,1,.36,1);
+  }
+
+  .glass-panel{
+    background:var(--bg-glass);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:var(--radius-xl);
+    box-shadow:var(--shadow);
+    backdrop-filter:blur(16px) saturate(160%);
+    -webkit-backdrop-filter:blur(16px) saturate(160%);
+  }
+
+  .auth-shell{
+    min-height:calc(100vh - var(--navbar-h) - 28px);
+    display:grid;
+    place-items:center;
+    padding:.5rem 0 1rem;
+  }
+
+  .auth-card{
+    width:min(1120px,100%);
+    display:grid;
+    grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);
+    overflow:hidden;
+    border-radius:34px;
+    background:rgba(8,16,27,.74);
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:var(--shadow-xl);
+    backdrop-filter:blur(18px) saturate(170%);
+    -webkit-backdrop-filter:blur(18px) saturate(170%);
+  }
+
+  .auth-brand-panel{
+    position:relative;
+    padding:clamp(1.25rem, 3vw, 2.2rem);
+    min-height:600px;
+    background:
+      radial-gradient(circle at 14% 20%, rgba(34,197,94,.20) 0%, transparent 28%),
+      radial-gradient(circle at 24% 84%, rgba(34,197,94,.11) 0%, transparent 26%),
+      linear-gradient(135deg, rgba(11,93,30,.18) 0%, rgba(6,18,28,.96) 62%);
+    border-right:1px solid rgba(255,255,255,.06);
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    gap:1.5rem;
+    isolation:isolate;
+    min-width:0;
+  }
+
+  .auth-brand-panel::after{
+    content:'';
+    position:absolute;
+    inset:16px;
+    border-radius:28px;
+    border:1px solid rgba(255,255,255,.05);
+    pointer-events:none;
+  }
+
+  .auth-brand-top{
+    display:flex;
+    align-items:center;
+    gap:1rem;
+    flex-wrap:wrap;
+    min-width:0;
+  }
+
+  .auth-brand-logo{
+    width:72px;
+    height:72px;
+    object-fit:contain;
+    flex-shrink:0;
+    filter:drop-shadow(0 10px 24px rgba(34,197,94,.22));
+  }
+
+  .auth-brand-title{
+    font-size:clamp(1.7rem, 4vw, 2.5rem);
+    line-height:1.02;
+    font-weight:1000;
+    letter-spacing:-.05em;
+    word-break:break-word;
+  }
+
+  .auth-brand-sub{
+    margin-top:.45rem;
+    color:rgba(255,255,255,.72);
+    font-weight:600;
+    max-width:520px;
+    line-height:1.6;
+  }
+
+  .auth-badge-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.55rem;
+    margin-top:1rem;
+  }
+
+  .soft-chip{
+    display:inline-flex;
+    align-items:center;
+    gap:.42rem;
+    padding:.45rem .78rem;
+    border-radius:999px;
+    font-size:.76rem;
+    font-weight:900;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:rgba(187,247,208,1);
+    background:rgba(34,197,94,.10);
+    border:1px solid rgba(34,197,94,.16);
+    max-width:100%;
+  }
+
+  .auth-feature-list{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:.9rem;
+  }
+
+  .auth-feature{
+    display:flex;
+    align-items:flex-start;
+    gap:.9rem;
+    padding:1rem;
+    border-radius:22px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.06);
+    transition:transform var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+    min-width:0;
+  }
+
+  .auth-feature:hover{
+    transform:translateY(-2px);
+    border-color:rgba(255,255,255,.11);
+    background:rgba(255,255,255,.05);
+  }
+
+  .auth-feature-icon{
+    width:44px;
+    height:44px;
+    border-radius:14px;
+    display:grid;
+    place-items:center;
+    background:linear-gradient(135deg,var(--primary),var(--primary-light));
+    color:#fff;
+    flex-shrink:0;
+    box-shadow:0 10px 24px rgba(34,197,94,.15);
+  }
+
+  .auth-feature h4{
+    font-size:1rem;
+    font-weight:900;
+    letter-spacing:-.02em;
+    margin:0 0 .15rem;
+  }
+
+  .auth-feature p{
+    margin:0;
+    font-size:.92rem;
+    color:var(--text-muted);
+    font-weight:600;
+    line-height:1.5;
+  }
+
+  .auth-form-panel{
+    padding:clamp(1.25rem, 3vw, 2.25rem);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-height:600px;
+    min-width:0;
+  }
+
+  .auth-form-wrap{
+    width:min(440px,100%);
+    min-width:0;
+  }
+
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:.45rem;
+    padding:.45rem .82rem;
+    border-radius:999px;
+    background:rgba(34,197,94,.10);
+    border:1px solid rgba(34,197,94,.16);
+    color:rgba(187,247,208,1);
+    font-size:.76rem;
+    font-weight:900;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    margin-bottom:1rem;
+    max-width:100%;
+  }
+
+  .auth-title{
+    font-size:clamp(1.8rem, 4vw, 2.4rem);
+    line-height:1.02;
+    font-weight:1000;
+    letter-spacing:-.05em;
+    margin-bottom:.65rem;
+    word-break:break-word;
+  }
+
+  .auth-subtitle{
+    color:var(--text-muted);
+    font-weight:600;
+    line-height:1.6;
+    margin-bottom:1.5rem;
+  }
+
+  .field-group{ margin-bottom:1rem; }
+
+  .field-label{
+    display:block;
+    margin-bottom:.45rem;
+    font-size:.78rem;
+    color:var(--text-muted);
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    font-weight:900;
+  }
+
+  .form-control-custom,
+  .form-textarea-custom,
+  .select-custom{
+    width:100%;
+    background:rgba(15,23,42,.88);
+    border:1px solid var(--border-subtle);
+    color:var(--text-primary);
+    border-radius:16px;
+    padding:.9rem 1rem;
+    font-weight:700;
+    transition:all var(--transition-fast);
+    outline:none;
+    appearance:none;
+    min-height:48px;
+  }
+
+  .form-control-custom::placeholder,
+  .form-textarea-custom::placeholder{
+    color:#7f93a9;
+    font-weight:600;
+  }
+
+  .form-textarea-custom{
+    min-height:150px;
+    resize:vertical;
+    line-height:1.55;
+  }
+
+  .form-control-custom:focus,
+  .form-textarea-custom:focus,
+  .select-custom:focus{
+    border-color:var(--border-focus);
+    box-shadow:var(--shadow-glow);
+  }
+
+  .input-with-icon{ position:relative; }
+
+  .input-with-icon i{
+    position:absolute;
+    left:1rem;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--text-subtle);
+    pointer-events:none;
+  }
+
+  .input-with-icon input{ padding-left:2.85rem; }
+
+  .helper-text{
+    margin-top:.55rem;
+    color:var(--text-muted);
+    font-size:.88rem;
+    font-weight:600;
+    line-height:1.5;
+  }
+
+  .helper-card{
+    margin-top:1rem;
+    padding:.95rem 1rem;
+    border-radius:18px;
+    background:rgba(255,255,255,.04);
+    border:1px solid rgba(255,255,255,.06);
+    color:var(--text-muted);
+    font-size:.9rem;
+    font-weight:600;
+    line-height:1.55;
+    overflow-wrap:anywhere;
+  }
+
+  .app-shell{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:1rem;
+    align-items:start;
+    min-width:0;
+  }
+
+  .content-stack{
+    display:grid;
+    gap:1rem;
+    min-width:0;
+  }
+
+  @media (min-width:1141px){
+    .app-shell{
+      grid-template-columns:minmax(270px, 320px) minmax(0, 1fr);
+      gap:1.2rem;
+    }
+  }
+
+  .mobile-menu-backdrop{
+    position:fixed;
+    inset:0;
+    background:rgba(2,6,16,.62);
+    backdrop-filter:blur(4px);
+    -webkit-backdrop-filter:blur(4px);
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+    transition:opacity var(--transition), visibility var(--transition);
+    z-index:1190;
+  }
+
+  .mobile-menu-backdrop.show{
+    opacity:1;
+    visibility:visible;
+    pointer-events:auto;
+  }
+
+  .mobile-drawer{
+    position:fixed;
+    top:0;
+    right:0;
+    width:var(--mobile-drawer-w);
+    max-width:100%;
+    height:100dvh;
+    background:rgba(7,17,27,.96);
+    border-left:1px solid rgba(255,255,255,.08);
+    box-shadow:var(--shadow-xl);
+    backdrop-filter:blur(18px) saturate(170%);
+    -webkit-backdrop-filter:blur(18px) saturate(170%);
+    transform:translateX(100%);
+    transition:transform var(--transition-slow);
+    z-index:1200;
+    display:flex;
+    flex-direction:column;
+    overflow:hidden;
+  }
+
+  .mobile-drawer.show{ transform:translateX(0); }
+
+  .drawer-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    padding:1rem 1rem .9rem;
+    border-bottom:1px solid rgba(255,255,255,.07);
+    background:
+      radial-gradient(circle at 12% 18%, rgba(34,197,94,.14) 0%, transparent 32%),
+      linear-gradient(135deg, rgba(11,93,30,.12), rgba(5,16,27,.82));
+  }
+
+  .drawer-brand{
+    display:flex;
+    align-items:center;
+    gap:.8rem;
+    min-width:0;
+  }
+
+  .drawer-brand-logo{
+    width:42px;
+    height:42px;
+    object-fit:contain;
+    flex-shrink:0;
+    filter:drop-shadow(0 8px 20px rgba(34,197,94,.22));
+  }
+
+  .drawer-brand-title{
+    font-size:1rem;
+    line-height:1.05;
+    font-weight:1000;
+    letter-spacing:-.03em;
+  }
+
+  .drawer-brand-sub{
+    margin-top:.15rem;
+    color:var(--text-muted);
+    font-size:.68rem;
+    font-weight:800;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+  }
+
+  .drawer-close{
+    width:42px;
+    height:42px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.05);
+    color:var(--text-primary);
+    display:grid;
+    place-items:center;
+    transition:all var(--transition-fast);
+    flex-shrink:0;
+  }
+
+  .drawer-close:hover{
+    background:rgba(255,255,255,.09);
+    transform:translateY(-1px);
+  }
+
+  .drawer-body{
+    flex:1;
+    overflow:auto;
+    padding:1rem;
+    display:flex;
+    flex-direction:column;
+    gap:1rem;
+    min-width:0;
+  }
+
+  .drawer-user-card{
+    padding:1rem;
+    border-radius:24px;
+    background:
+      radial-gradient(circle at 22% 20%, rgba(34,197,94,.17) 0%, transparent 28%),
+      linear-gradient(135deg, rgba(11,93,30,.16) 0%, rgba(12,18,30,.92) 72%);
+    border:1px solid rgba(255,255,255,.08);
+    overflow:hidden;
+    position:relative;
+  }
+
+  .drawer-user-card::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(120deg, transparent 0%, rgba(255,255,255,.03) 38%, transparent 70%);
+    pointer-events:none;
+  }
+
+  .drawer-user-top{
+    display:flex;
+    align-items:center;
+    gap:.85rem;
+    margin-bottom:.8rem;
+    min-width:0;
+  }
+
+  .drawer-user-name{
+    font-size:1rem;
+    font-weight:1000;
+    line-height:1.08;
+    letter-spacing:-.02em;
+    word-break:break-word;
+  }
+
+  .drawer-user-email{
+    margin-top:.2rem;
+    color:var(--text-muted);
+    font-size:.84rem;
+    font-weight:600;
+    line-height:1.45;
+    overflow-wrap:anywhere;
+  }
+
+  .drawer-chips{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.45rem;
+  }
+
+  .drawer-nav{
+    display:grid;
+    gap:.55rem;
+  }
+
+  .drawer-nav-btn{
+    width:100%;
+    border:1px solid transparent;
+    text-align:left;
+    display:flex;
+    align-items:center;
+    gap:.8rem;
+    padding:.98rem 1rem;
+    border-radius:18px;
+    background:transparent;
+    color:var(--text-secondary);
+    font-weight:800;
+    transition:all var(--transition-fast);
+    min-width:0;
+  }
+
+  .drawer-nav-btn i{
+    width:18px;
+    text-align:center;
+    color:var(--text-subtle);
+    flex-shrink:0;
+  }
+
+  .drawer-nav-btn:hover{
+    background:rgba(255,255,255,.04);
+    color:var(--text-primary);
+  }
+
+  .drawer-nav-btn.active{
+    background:rgba(34,197,94,.10);
+    color:var(--text-primary);
+    border-color:rgba(34,197,94,.14);
+  }
+
+  .drawer-nav-btn.active i{ color:var(--primary-light); }
+
+  .drawer-footer{
+    padding-top:.3rem;
+    border-top:1px solid rgba(255,255,255,.06);
+  }
+
+  .drawer-logout{
+    color:#fecaca;
+    border-color:rgba(239,68,68,.16);
+    background:rgba(239,68,68,.06);
+  }
+
+  .drawer-logout i{ color:#fca5a5 !important; }
+
+  body.drawer-open{
+    overflow:hidden;
+    touch-action:none;
+  }
+
+  @media (min-width:1141px){
+    .mobile-drawer,
+    .mobile-menu-backdrop,
+    .menu-toggle{
+      display:none !important;
+    }
+  }
+
+  .sidebar-panel{
+    position:sticky;
+    top:calc(var(--navbar-h) + 12px);
+    padding:1rem;
+    border-radius:var(--radius-xl);
+    background:var(--bg-card);
+    border:1px solid var(--border-subtle);
+    box-shadow:var(--shadow);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    margin-bottom:1rem;
+    align-self:start;
+    min-width:0;
+  }
+
+  @media (max-width:1140px){
+    .sidebar-panel{ display:none !important; }
+  }
+
+  .user-mini-card{
+    padding:1rem;
+    border-radius:24px;
+    background:
+      radial-gradient(circle at 22% 20%, rgba(34,197,94,.17) 0%, transparent 28%),
+      linear-gradient(135deg, rgba(11,93,30,.16) 0%, rgba(12,18,30,.92) 72%);
+    border:1px solid rgba(255,255,255,.08);
+    margin-bottom:1rem;
+    overflow:hidden;
+    position:relative;
+  }
+
+  .user-mini-card::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(120deg, transparent 0%, rgba(255,255,255,.035) 38%, transparent 70%);
+    pointer-events:none;
+  }
+
+  .user-mini-top{
+    display:flex;
+    align-items:center;
+    gap:.85rem;
+    margin-bottom:.9rem;
+    min-width:0;
+  }
+
+  .avatar{
+    width:58px;
+    height:58px;
+    border-radius:18px;
+    display:grid;
+    place-items:center;
+    color:#fff;
+    font-size:1.35rem;
+    font-weight:1000;
+    background:linear-gradient(135deg,var(--primary),var(--primary-light));
+    box-shadow:0 12px 28px rgba(34,197,94,.16);
+    flex-shrink:0;
+  }
+
+  .avatar.lg{
+    width:88px;
+    height:88px;
+    border-radius:24px;
+    font-size:2rem;
+  }
+
+  .mini-name{
+    font-size:1rem;
+    font-weight:1000;
+    letter-spacing:-.02em;
+    line-height:1.1;
+    word-break:break-word;
+  }
+
+  .mini-email{
+    font-size:.86rem;
+    color:var(--text-muted);
+    margin-top:.22rem;
+    overflow-wrap:anywhere;
+    font-weight:600;
+    line-height:1.45;
+  }
+
+  .mini-badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.45rem;
+  }
+
+  .chip{
+    display:inline-flex;
+    align-items:center;
+    gap:.45rem;
+    padding:.45rem .72rem;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.10);
+    background:rgba(255,255,255,.04);
+    color:var(--text-secondary);
+    font-weight:900;
+    font-size:.77rem;
+    white-space:nowrap;
+    min-width:0;
+    max-width:100%;
+  }
+
+  .chip.success{
+    background:rgba(34,197,94,.10);
+    color:rgba(187,247,208,1);
+    border-color:rgba(34,197,94,.18);
+  }
+
+  .chip.warn{
+    background:rgba(245,158,11,.10);
+    color:rgba(253,230,138,1);
+    border-color:rgba(245,158,11,.18);
+  }
+
+  .side-nav{
+    display:grid;
+    gap:.45rem;
+  }
+
+  .side-nav-btn{
+    width:100%;
+    border:1px solid transparent;
+    text-align:left;
+    display:flex;
+    align-items:center;
+    gap:.75rem;
+    padding:.92rem 1rem;
+    border-radius:16px;
+    background:transparent;
+    color:var(--text-secondary);
+    font-weight:800;
+    transition:all var(--transition-fast);
+    min-width:0;
+  }
+
+  .side-nav-btn i{
+    width:18px;
+    text-align:center;
+    color:var(--text-subtle);
+    flex-shrink:0;
+  }
+
+  .side-nav-btn:hover{
+    background:rgba(255,255,255,.04);
+    color:var(--text-primary);
+  }
+
+  .side-nav-btn.active{
+    background:rgba(34,197,94,.10);
+    color:var(--text-primary);
+    border-color:rgba(34,197,94,.14);
+  }
+
+  .side-nav-btn.active i{ color:var(--primary-light); }
+
+  .page-hero{
+    display:flex;
+    align-items:flex-start;
+    justify-content:space-between;
+    gap:1rem;
+    flex-wrap:wrap;
+    min-width:0;
+  }
+
+  .page-hero > div:first-child{
+    min-width:0;
+    flex:1 1 320px;
+  }
+
+  .page-title{
+    font-size:clamp(1.45rem, 3vw, 2rem);
+    line-height:1.04;
+    font-weight:1000;
+    letter-spacing:-.04em;
+    margin-bottom:.25rem;
+    word-break:break-word;
+  }
+
+  .page-subtitle{
+    color:var(--text-muted);
+    font-weight:600;
+    line-height:1.55;
+    max-width:760px;
+  }
+
+  .hero-actions{
+    display:flex;
+    gap:.65rem;
+    flex-wrap:wrap;
+    width:100%;
+  }
+
+  @media (min-width:768px){
+    .hero-actions{
+      width:auto;
+      justify-content:flex-end;
+    }
+  }
+
+  .panel-card{
+    background:var(--bg-card);
+    border:1px solid var(--border-subtle);
+    border-radius:var(--radius-xl);
+    box-shadow:var(--shadow);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+    overflow:hidden;
+    min-width:0;
+  }
+
+  .panel-body{
+    padding:var(--panel-pad);
+    min-width:0;
+  }
+
+  .section-header{
+    padding:var(--panel-pad);
+    border-bottom:1px solid var(--border-subtle);
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:.8rem;
+    min-width:0;
+  }
+
+  .section-title{
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+    font-size:1rem;
+    font-weight:1000;
+    letter-spacing:-.02em;
+    min-width:0;
+    word-break:break-word;
+  }
+
+  .section-title i{ color:var(--primary-light); }
+
+  .stats-grid{
+    display:grid;
+    grid-template-columns:repeat(4, minmax(0,1fr));
+    gap:.9rem;
+  }
+
+  .stat-card{
+    padding:1rem;
+    border-radius:22px;
+    background:rgba(15,23,42,.74);
+    border:1px solid var(--border-subtle);
+    transition:all var(--transition-fast);
+    min-width:0;
+  }
+
+  .stat-card:hover{
+    transform:translateY(-2px);
+    border-color:var(--border-default);
+    background:rgba(15,23,42,.84);
+  }
+
+  .stat-label{
+    color:var(--text-muted);
+    font-size:.74rem;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    font-weight:900;
+    margin-bottom:.45rem;
+  }
+
+  .stat-value{
+    font-size:clamp(1.55rem, 3vw, 2rem);
+    line-height:1;
+    font-weight:1000;
+    letter-spacing:-.05em;
+    margin-bottom:.35rem;
+    word-break:break-word;
+  }
+
+  .stat-note{
+    color:var(--text-subtle);
+    font-size:.86rem;
+    font-weight:700;
+    line-height:1.45;
+  }
+
+  .btn{
+    border:none;
+    border-radius:999px;
+    font-weight:900;
+    font-size:.94rem;
+    padding:.82rem 1.08rem;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.55rem;
+    transition:all var(--transition-fast);
+    cursor:pointer;
+    white-space:nowrap;
+    min-height:46px;
+    text-decoration:none;
+  }
+
+  .btn-primary{
+    background:linear-gradient(135deg,var(--primary),var(--primary-light));
+    color:#fff;
+    box-shadow:0 14px 32px rgba(34,197,94,.14);
+  }
+
+  .btn-primary:hover:not(:disabled){
+    transform:translateY(-1px);
+    box-shadow:0 18px 40px rgba(34,197,94,.20);
+  }
+
+  .btn-secondary{
+    background:var(--bg-tertiary);
+    color:var(--text-secondary);
+    border:1px solid var(--border-subtle);
+  }
+
+  .btn-secondary:hover:not(:disabled){
+    background:var(--bg-secondary);
+    color:var(--text-primary);
+    transform:translateY(-1px);
+  }
+
+  .btn-ghost{
+    background:rgba(255,255,255,.05);
+    color:var(--text-primary);
+    border:1px solid rgba(255,255,255,.08);
+  }
+
+  .btn-ghost:hover:not(:disabled){
+    background:rgba(255,255,255,.09);
+    transform:translateY(-1px);
+  }
+
+  .btn-danger{
+    background:rgba(239,68,68,.14);
+    color:#fecaca;
+    border:1px solid rgba(239,68,68,.18);
+  }
+
+  .btn-danger:hover:not(:disabled){
+    transform:translateY(-1px);
+    background:rgba(239,68,68,.18);
+  }
+
+  .btn:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+    transform:none !important;
+    box-shadow:none !important;
+  }
+
+  .btn-inline{
+    min-height:40px;
+    padding:.62rem .9rem;
+    font-size:.86rem;
+    border-radius:14px;
+  }
+
+  .filter-bar{
+    display:flex;
+    gap:.6rem;
+    flex-wrap:wrap;
+    align-items:center;
+    width:100%;
+    min-width:0;
+  }
+
+  .filter-bar > *{
+    min-width:0;
+    flex:1 1 160px;
+  }
+
+  @media (min-width:768px){
+    .filter-bar{ width:auto; }
+  }
+
+  .table-responsive{
+    width:100%;
+    overflow:auto;
+    overflow-y:auto;
+    overflow-x:auto;
+    max-width:100%;
+    max-height:min(62vh, 680px);
+    -webkit-overflow-scrolling:touch;
+    border-radius:0 0 var(--radius-xl) var(--radius-xl);
+    overscroll-behavior:contain;
+    touch-action:pan-x pan-y;
+    background:rgba(2,6,23,.18);
+    border-top:1px solid rgba(255,255,255,.06);
+  }
+
+  .table-responsive:focus{
+    outline:none;
+    box-shadow:var(--shadow-glow);
+  }
+
+  .custom-table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0;
+    font-size:.92rem;
+    min-width:760px;
+  }
+
+  .custom-table thead{
+    position:sticky;
+    top:0;
+    z-index:10;
+  }
+
+  .custom-table th{
+    position:sticky;
+    top:0;
+    background:rgba(15,23,42,.96);
+    color:var(--text-muted);
+    font-size:.72rem;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    font-weight:1000;
+    text-align:left;
+    padding:1rem 1.05rem;
+    border-bottom:1px solid var(--border-subtle);
+    white-space:nowrap;
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+  }
+
+  .custom-table td{
+    padding:1rem 1.05rem;
+    color:var(--text-secondary);
+    border-bottom:1px solid var(--border-subtle);
+    vertical-align:middle;
+    background:transparent;
+  }
+
+  .custom-table tbody tr{
+    transition:background var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .custom-table tbody tr:nth-child(even){
+    background:rgba(255,255,255,.012);
+  }
+
+  .custom-table tbody tr:hover{
+    background:rgba(34,197,94,.05);
+  }
+
+  .custom-table tbody tr:last-child td{ border-bottom:none; }
+
+  .custom-table th:first-child,
+  .custom-table td:first-child{
+    position:sticky;
+    left:0;
+    z-index:11;
+    background:rgba(12,18,30,.92);
+    box-shadow:10px 0 18px rgba(0,0,0,.18);
+  }
+
+  .custom-table th:first-child{ z-index:12; }
+
+  .time-col{
+    font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-weight:900;
+    white-space:nowrap;
+    letter-spacing:.01em;
+  }
+
+  .hours-col{
+    text-align:right;
+    font-weight:1000;
+    color:#86efac;
+    white-space:nowrap;
+  }
+
+  .custom-table td.hours-col{
+    font-variant-numeric:tabular-nums;
+  }
+
+  .empty-state{
+    text-align:center;
+    padding:3rem 1.2rem;
+    color:var(--text-muted);
+    font-weight:800;
+  }
+
+  .empty-state i{
+    font-size:2rem;
+    opacity:.35;
+    margin-bottom:.75rem;
+  }
+
+  .empty-state p{ margin:0; }
+
+  .attendance-mobile-list{
+    display:none;
+    gap:.85rem;
+    padding:.9rem;
+  }
+
+  .attendance-mobile-card{
+    background:linear-gradient(180deg, rgba(15,23,42,.86), rgba(9,16,30,.92));
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:20px;
+    overflow:hidden;
+    box-shadow:0 14px 30px rgba(0,0,0,.20);
+  }
+
+  .attendance-mobile-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.75rem;
+    padding:.95rem 1rem;
+    border-bottom:1px solid rgba(255,255,255,.06);
+    background:
+      radial-gradient(circle at 10% 20%, rgba(34,197,94,.10) 0%, transparent 32%),
+      linear-gradient(90deg, rgba(11,93,30,.08), rgba(255,255,255,.01));
+  }
+
+  .attendance-mobile-date{
+    font-weight:1000;
+    letter-spacing:-.02em;
+    color:var(--text-primary);
+    line-height:1.15;
+    word-break:break-word;
+  }
+
+  .attendance-mobile-total{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:.42rem .75rem;
+    border-radius:999px;
+    background:rgba(34,197,94,.12);
+    border:1px solid rgba(34,197,94,.18);
+    color:#bbf7d0;
+    font-weight:1000;
+    font-size:.82rem;
+    white-space:nowrap;
+  }
+
+  .attendance-mobile-body{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:.7rem;
+    padding:1rem;
+  }
+
+  .attendance-mobile-item{
+    min-width:0;
+    padding:.8rem .85rem;
+    border-radius:16px;
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.06);
+  }
+
+  .attendance-mobile-label{
+    font-size:.68rem;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    color:var(--text-muted);
+    font-weight:900;
+    margin-bottom:.35rem;
+  }
+
+  .attendance-mobile-value{
+    color:var(--text-primary);
+    font-weight:900;
+    line-height:1.2;
+    word-break:break-word;
+    font-variant-numeric:tabular-nums;
+  }
+
+  .attendance-mobile-empty{
+    text-align:center;
+    padding:2rem 1rem;
+    color:var(--text-muted);
+    font-weight:800;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.03);
+  }
+
+  .attendance-mobile-empty i{
+    font-size:1.7rem;
+    opacity:.35;
+    margin-bottom:.7rem;
+  }
+
+  .report-grid{
+    display:grid;
+    grid-template-columns:repeat(2, minmax(0,1fr));
+    gap:1rem;
+  }
+
+  .report-card{
+    background:rgba(15,23,42,.38);
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:24px;
+    padding:1rem;
+    box-shadow:var(--shadow-sm);
+    min-width:0;
+    transition:transform var(--transition-fast), border-color var(--transition-fast), background var(--transition-fast);
+  }
+
+  .report-card:hover{
+    transform:translateY(-1px);
+    border-color:rgba(255,255,255,.11);
+    background:rgba(15,23,42,.44);
+  }
+
+  .report-title{
+    display:flex;
+    align-items:center;
+    gap:.6rem;
+    font-weight:1000;
+    letter-spacing:-.02em;
+    margin-bottom:.75rem;
+    font-size:1rem;
+    min-width:0;
+  }
+
+  .report-title i{ color:var(--primary-light); }
+
+  .report-help{
+    color:var(--text-muted);
+    font-size:.9rem;
+    line-height:1.55;
+    font-weight:700;
+    margin-top:.35rem;
+  }
+
+  .field-row{
+    display:flex;
+    flex-direction:column;
+    gap:.65rem;
+    margin-bottom:.9rem;
+  }
+
+  .field-row.inline{
+    flex-direction:row;
+    flex-wrap:wrap;
+    gap:.75rem;
+  }
+
+  .field{
+    flex:1 1 220px;
+    min-width:220px;
+  }
+
+  .field label{
+    display:block;
+    font-size:.78rem;
+    font-weight:1000;
+    color:var(--text-muted);
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    margin-bottom:.3rem;
+  }
+
+  .date-preview{
+    margin-top:.55rem;
+    color:var(--text-secondary);
+    font-size:.88rem;
+    font-weight:800;
+    line-height:1.45;
+    padding:.7rem .85rem;
+    border-radius:14px;
+    background:rgba(255,255,255,.03);
+    border:1px solid rgba(255,255,255,.06);
+  }
+
+  .list-tools{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.55rem;
+    margin-top:.75rem;
+  }
+
+  .activity-note{
+    margin-top:.6rem;
+    color:var(--text-muted);
+    font-size:.85rem;
+    font-weight:700;
+    line-height:1.5;
+  }
+
+  .mini-actions{
+    display:flex;
+    gap:.6rem;
+    flex-wrap:wrap;
+    margin-top:.8rem;
+  }
+
+  .hint{
+    margin-top:.65rem;
+    font-weight:900;
+    font-size:.88rem;
+    color:rgba(187,247,208,1);
+    line-height:1.5;
+  }
+
+  .hint.warn{ color:rgba(253,230,138,1); }
+  .hint.err{ color:#fca5a5; }
+
+  .week-summary{
+    margin-top:.85rem;
+    border-top:1px solid rgba(255,255,255,.08);
+    padding-top:.85rem;
+    display:grid;
+    gap:.58rem;
+  }
+
+  .week-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:.75rem;
+    padding:.85rem .9rem;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(2,6,23,.22);
+    flex-wrap:wrap;
+    transition:all var(--transition-fast);
+    min-width:0;
+  }
+
+  .week-row:hover{
+    background:rgba(255,255,255,.03);
+    border-color:rgba(255,255,255,.11);
+  }
+
+  .week-row strong{
+    font-weight:1000;
+    color:var(--text-primary);
+  }
+
+  .week-row small{
+    display:block;
+    color:var(--text-muted);
+    margin-top:.15rem;
+    font-weight:800;
+  }
+
+  .status-chip{
+    font-size:.72rem;
+    font-weight:1000;
+    padding:.3rem .62rem;
+    border-radius:999px;
+    white-space:nowrap;
+    border:1px solid rgba(34,197,94,.22);
+    background:rgba(34,197,94,.10);
+    color:rgba(187,247,208,1);
+  }
+
+  .status-chip.missing{
+    border-color:rgba(245,158,11,.25);
+    background:rgba(245,158,11,.10);
+    color:rgba(253,230,138,1);
+  }
+
+  .profile-hero{
+    display:flex;
+    align-items:flex-start;
+    gap:1rem;
+    flex-wrap:wrap;
+    min-width:0;
+  }
+
+  .profile-main{
+    flex:1 1 280px;
+    min-width:280px;
+  }
+
+  .profile-name{
+    font-size:clamp(1.45rem, 3vw, 2rem);
+    line-height:1.03;
+    font-weight:1000;
+    letter-spacing:-.05em;
+    margin-bottom:.35rem;
+    word-break:break-word;
+  }
+
+  .profile-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.5rem;
+    margin-bottom:.7rem;
+  }
+
+  .profile-email{
+    color:var(--text-muted);
+    font-weight:700;
+    overflow-wrap:anywhere;
+    display:flex;
+    align-items:flex-start;
+    gap:.55rem;
+    line-height:1.55;
+  }
+
+  .profile-email i{
+    margin-top:.18rem;
+    flex-shrink:0;
+  }
+
+  .profile-side{
+    display:flex;
+    gap:.7rem;
+    flex-wrap:wrap;
+    align-items:center;
+    width:100%;
+  }
+
+  /* =========================
+     QR MODAL - FIXED
+     ========================= */
+
+  #qrModal{
+    z-index:2000 !important;
+    padding:0 !important;
+  }
+
+  .modal-backdrop{
+    z-index:1990 !important;
+    background:rgba(2,6,16,.90) !important;
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+  }
+
+  #qrModal .modal-dialog{
+    margin:0 !important;
+    width:100vw !important;
+    max-width:100vw !important;
+    height:100dvh !important;
+  }
+
+  .qr-id-dialog{
+    width:100vw !important;
+    max-width:100vw !important;
+    height:100dvh !important;
+    margin:0 !important;
+  }
+
+  .modal-content.qr-id-modal{
+    position:relative;
+    width:100%;
+    min-height:100dvh;
+    height:100dvh;
+    background:transparent;
+    border:0;
+    border-radius:0;
+    box-shadow:none;
+    overflow:hidden;
+  }
+
+  .qr-id-card{
+    position:relative;
+    min-height:100dvh;
+    height:100dvh;
+    overflow:auto;
+    border:0;
+    border-radius:0;
+    background:
+      radial-gradient(circle at 12% 82%, rgba(34,197,94,.24) 0%, transparent 22%),
+      radial-gradient(circle at 16% 20%, rgba(34,197,94,.16) 0%, transparent 14%),
+      radial-gradient(circle at 86% 26%, rgba(14,165,233,.10) 0%, transparent 18%),
+      linear-gradient(135deg, rgba(18,76,50,.34) 0%, rgba(4,14,24,.90) 48%, rgba(2,7,14,.98) 100%);
+    box-shadow:none;
+    backdrop-filter:blur(20px) saturate(175%);
+    -webkit-backdrop-filter:blur(20px) saturate(175%);
+    padding:
+      max(88px, calc(env(safe-area-inset-top) + 24px))
+      24px
+      max(24px, calc(env(safe-area-inset-bottom) + 18px));
+  }
+
+  .qr-id-card::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:
+      linear-gradient(135deg, rgba(255,255,255,.06), transparent 34%, transparent 64%, rgba(255,255,255,.03)),
+      radial-gradient(circle at 85% 18%, rgba(255,255,255,.06) 0%, transparent 16%);
+    pointer-events:none;
+  }
+
+  .qr-id-card::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    opacity:.08;
+    pointer-events:none;
+    background-image:radial-gradient(circle at 1px 1px, rgba(255,255,255,.22) 1px, transparent 0);
+    background-size:18px 18px;
+    mask-image:radial-gradient(circle at 50% 45%, #000 0%, #000 62%, transparent 82%);
+    -webkit-mask-image:radial-gradient(circle at 50% 45%, #000 0%, #000 62%, transparent 82%);
+  }
+
+  .qr-id-layout{
+    position:relative;
+    z-index:1;
+    display:grid;
+    grid-template-columns:minmax(0,1.06fr) minmax(0,.94fr);
+    gap:24px;
+    align-items:center;
+    min-height:calc(100dvh - 112px);
+  }
+
+  .qr-id-left{
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    gap:1.3rem;
+  }
+
+  .qr-id-brand{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    flex-wrap:wrap;
+    min-width:0;
+  }
+
+  .qr-id-brand-logo{
+    width:72px;
+    height:72px;
+    object-fit:contain;
+    filter:drop-shadow(0 0 18px rgba(34,197,94,.28));
+    flex-shrink:0;
+  }
+
+  .qr-id-app{
+    font-weight:1000;
+    letter-spacing:-.04em;
+    font-size:clamp(1.45rem,2.9vw,2.25rem);
+    line-height:1.02;
+    word-break:break-word;
+  }
+
+  .qr-id-sub{
+    color:rgba(255,255,255,.74);
+    font-size:clamp(.92rem,1.4vw,1.08rem);
+    margin-top:.35rem;
+    font-weight:650;
+    line-height:1.45;
+  }
+
+  .qr-id-profile{
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:.25rem;
+  }
+
+  .qr-id-avatar{
+    width:150px;
+    height:150px;
+    border-radius:999px;
+    display:grid;
+    place-items:center;
+    font-size:4.1rem;
+    font-weight:1000;
+    color:rgba(255,255,255,.96);
+    background:
+      radial-gradient(circle at 30% 28%, rgba(255,255,255,.18) 0%, transparent 34%),
+      linear-gradient(135deg, rgba(200,255,220,.14) 0%, rgba(35,83,53,.28) 28%, rgba(3,13,23,.76) 78%);
+    border:1px solid rgba(255,255,255,.12);
+    box-shadow:0 18px 30px rgba(0,0,0,.32);
+    margin:.9rem 0 1rem;
+    flex-shrink:0;
+  }
+
+  .qr-id-name{
+    font-size:clamp(1.85rem,4.8vw,3.1rem);
+    line-height:1.03;
+    letter-spacing:-.05em;
+    font-weight:1000;
+    word-break:break-word;
+    max-width:100%;
+  }
+
+  .qr-id-role{
+    margin-top:.65rem;
+    font-size:clamp(.84rem,1.45vw,1.02rem);
+    letter-spacing:.20em;
+    text-transform:uppercase;
+    color:rgba(255,255,255,.78);
+    font-weight:1000;
+  }
+
+  .qr-id-meta{
+    margin-top:1rem;
+    display:flex;
+    flex-wrap:wrap;
+    gap:.55rem;
+  }
+
+  .qr-id-pill{
+    display:inline-flex;
+    align-items:center;
+    gap:.5rem;
+    padding:.55rem .9rem;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.12);
+    background:rgba(255,255,255,.06);
+    color:var(--text-secondary);
+    font-weight:900;
+    font-size:.78rem;
+    max-width:100%;
+  }
+
+  .qr-id-pill i{ color:rgba(167,243,208,.9); }
+
+  .qr-id-pill strong{
+    color:var(--text-primary);
+    font-variant-numeric:tabular-nums;
+  }
+
+  .qr-id-right{
+    position:relative;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    min-width:0;
+  }
+
+  .qr-id-right::before{
+    content:'';
+    position:absolute;
+    left:-12px;
+    top:10%;
+    bottom:10%;
+    width:1px;
+    background:linear-gradient(180deg, transparent 0%, rgba(255,255,255,.10) 18%, rgba(34,197,94,.14) 50%, rgba(255,255,255,.10) 82%, transparent 100%);
+  }
+
+  .qr-id-qrwrap{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:14px;
+  }
+
+  .qr-id-qrbox{
+    width:min(420px,100%);
+    background:#fff;
+    border-radius:26px;
+    padding:18px;
+    border:1px solid rgba(0,0,0,.10);
+    box-shadow:
+      0 26px 54px rgba(0,0,0,.40),
+      0 0 0 6px rgba(255,255,255,.05),
+      0 0 0 10px rgba(34,197,94,.10);
+    transition:transform var(--transition);
+  }
+
+  .qr-id-qrbox:hover{ transform:translateY(-2px) scale(1.01); }
+
+  #qrCanvas{
+    width:100%;
+    aspect-ratio:1/1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:16px;
+    overflow:hidden;
+    background:#fff;
+  }
+
+  #qrCanvas img,
+  #qrCanvas canvas{
+    width:100% !important;
+    height:100% !important;
+    display:block;
+    background:#fff;
+    image-rendering:pixelated;
+  }
+
+  .qr-id-hint{
+    color:rgba(255,255,255,.78);
+    font-weight:650;
+    font-size:1rem;
+    text-align:center;
+    line-height:1.5;
+    max-width:380px;
+  }
+
+  .qr-id-strip{
+    margin-top:1rem;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:.8rem;
+    padding:.9rem 1.05rem;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.10);
+    background:
+      radial-gradient(circle at 18% 30%, rgba(34,197,94,.12) 0%, transparent 38%),
+      rgba(255,255,255,.045);
+    flex-wrap:wrap;
+  }
+
+  .qr-id-strip-left{
+    display:flex;
+    align-items:center;
+    gap:.65rem;
+    color:var(--text-secondary);
+    font-weight:850;
+    min-width:0;
+  }
+
+  .qr-id-strip-left i{
+    color:var(--primary-light);
+    flex-shrink:0;
+    filter:drop-shadow(0 6px 14px rgba(34,197,94,.18));
+  }
+
+  .qr-id-strip-right{
+    font-size:.78rem;
+    color:var(--text-muted);
+    font-weight:850;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    white-space:nowrap;
+  }
+
+  .qr-back,
+  .qr-x{
+    position:absolute;
+    top:max(14px, env(safe-area-inset-top));
+    z-index:30;
+    width:50px;
+    height:50px;
+    border:none;
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.16);
+    background:rgba(6,19,29,.78);
+    color:var(--text-primary);
+    display:grid;
+    place-items:center;
+    cursor:pointer;
+    backdrop-filter:blur(16px) saturate(160%);
+    -webkit-backdrop-filter:blur(16px) saturate(160%);
+    transition:all var(--transition-fast);
+    box-shadow:0 14px 30px rgba(0,0,0,.32);
+  }
+
+  .qr-back{
+    left:max(14px, env(safe-area-inset-left));
+  }
+
+  .qr-x{
+    right:max(14px, env(safe-area-inset-right));
+  }
+
+  .qr-back:hover,
+  .qr-x:hover{
+    background:rgba(255,255,255,.10);
+    transform:translateY(-1px) scale(1.03);
+  }
+
+  .qr-back:focus,
+  .qr-x:focus{
+    outline:none;
+    box-shadow:var(--shadow-glow), 0 14px 30px rgba(0,0,0,.32);
+  }
+
+  .qr-back i,
+  .qr-x i{
+    font-size:1.05rem;
+    pointer-events:none;
+  }
+
+  .app-modal .modal-content{
+    background:rgba(8,17,27,.94);
+    border:1px solid rgba(255,255,255,.12);
+    color:var(--text-primary);
+    border-radius:var(--radius-xl);
+    backdrop-filter:blur(18px) saturate(160%);
+    -webkit-backdrop-filter:blur(18px) saturate(160%);
+    box-shadow:var(--shadow-xl);
+    overflow:hidden;
+  }
+
+  .app-modal .modal-header,
+  .app-modal .modal-footer{
+    border-color:rgba(255,255,255,.08);
+  }
+
+  .toast{
+    background:rgba(8,17,27,.94);
+    border:1px solid rgba(255,255,255,.12);
+    color:var(--text-primary);
+    backdrop-filter:blur(12px) saturate(160%);
+    -webkit-backdrop-filter:blur(12px) saturate(160%);
+    box-shadow:var(--shadow-lg);
+    border-radius:16px;
+    overflow:hidden;
+  }
+
+  .toast .toast-header{
+    background:rgba(255,255,255,.06);
+    border-bottom:1px solid rgba(255,255,255,.10);
+    color:var(--text-primary);
+  }
+
+  @media (min-width:1200px){
+    .main-container{ padding:2rem; }
+  }
+
+  @media (min-width:768px){
+    .main-container{ padding:1.5rem; }
+    .panel-body{ padding:var(--panel-pad-lg); }
+    .section-header{ padding:var(--panel-pad-lg); }
+  }
+
+  @media (min-width:992px){
+    .profile-side{
+      width:auto;
+      justify-content:flex-end;
+    }
+  }
+
+  @media (min-width:576px){
+    .brand-logo{
+      width:54px;
+      height:54px;
+    }
+    .navbar-brand{ font-size:1.18rem; }
+  }
+
+  @media (max-width:1100px){
+    .stats-grid{ grid-template-columns:repeat(2, minmax(0,1fr)); }
+  }
+
+  @media (max-width:992px){
+    .auth-card{ grid-template-columns:1fr; }
+
+    .auth-brand-panel{
+      min-height:auto;
+      border-right:none;
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+
+    .auth-form-panel{ min-height:auto; }
+    .report-grid{ grid-template-columns:1fr; }
+    .page-hero{ gap:.85rem; }
+    .page-title{ font-size:clamp(1.3rem, 5vw, 1.8rem); }
+
+    .section-header,
+    .panel-body{
+      padding-left:1rem;
+      padding-right:1rem;
+    }
+  }
+
+  @media (max-width:900px){
+    .qr-id-layout{
+      grid-template-columns:1fr;
+      min-height:auto;
+      gap:22px;
+    }
+
+    .qr-id-profile{
+      align-items:center;
+      text-align:center;
+    }
+
+    .qr-id-brand{
+      justify-content:center;
+      text-align:center;
+    }
+
+    .qr-id-meta{ justify-content:center; }
+    .qr-id-right::before{ display:none; }
+  }
+
+  @media (max-width:767.98px){
+    .topbar-clock{
+      padding:.45rem .65rem;
+      gap:.55rem;
+    }
+
+    #clockTime{ font-size:.82rem; }
+    #clockDate{ font-size:.58rem; }
+
+    .main-container{ padding:.85rem; }
+
+    .section-header,
+    .panel-body{
+      padding-left:.9rem;
+      padding-right:.9rem;
+    }
+
+    .report-card{
+      border-radius:20px;
+      padding:.9rem;
+    }
+
+    .stats-grid{ gap:.75rem; }
+    .profile-main{ min-width:0; }
+    .profile-side{ width:100%; }
+    .profile-meta{ gap:.45rem; }
+
+    .custom-table{ min-width:720px; }
+    .table-responsive{ max-height:58vh; }
+
+    .filter-bar{ width:100%; }
+    .filter-bar > *{ flex:1 1 100%; }
+
+    .field-row.inline{ flex-direction:column; }
+    .field{ min-width:100%; }
+  }
+
+  @media (max-width:600px){
+    .stats-grid{ grid-template-columns:1fr; }
+  }
+
+  @media (max-width:575.98px){
+    .topbar-clock{ display:none; }
+
+    .navbar{ min-height:74px; padding:.65rem 0; }
+
+    .brand-logo{
+      width:42px;
+      height:42px;
+    }
+
+    .navbar-brand{
+      gap:.7rem;
+      font-size:1rem;
+      max-width:calc(100% - 56px);
+    }
+
+    .navbar-brand small{ font-size:.62rem !important; }
+    .menu-toggle{ width:44px; height:44px; border-radius:16px; }
+    .main-container{ padding:.75rem; }
+    .auth-card{ border-radius:26px; }
+
+    .section-header,
+    .panel-body{
+      padding-left:.8rem;
+      padding-right:.8rem;
+    }
+
+    .panel-card,
+    .report-card{
+      border-radius:22px;
+    }
+
+    .field-row.inline{ gap:.65rem; }
+
+    .profile-hero{
+      gap:.85rem;
+      flex-direction:column;
+    }
+
+    .profile-main{
+      width:100%;
+      min-width:0;
+    }
+
+    .profile-name{ font-size:1.35rem; }
+
+    .page-subtitle,
+    .report-help,
+    .helper-card,
+    .helper-text{
+      font-size:.86rem;
+    }
+
+    .week-row{ padding:.8rem; }
+
+    .toast-container{
+      left:12px !important;
+      right:12px !important;
+      bottom:12px !important;
+    }
+
+    .toast{ width:100%; }
+
+    .table-responsive{
+      display:none !important;
+    }
+
+    .attendance-mobile-list{
+      display:grid;
+      padding:.85rem;
+    }
+
+    .attendance-mobile-body{
+      grid-template-columns:1fr;
+    }
+
+    .btn{ width:100%; }
+
+    .hero-actions .btn,
+    .mini-actions .btn,
+    .profile-side .btn,
+    .filter-bar .btn{
+      flex:1 1 100%;
+    }
+
+    .avatar.lg{
+      width:76px;
+      height:76px;
+      font-size:1.7rem;
+    }
+
+    .qr-id-dialog{
+      width:100vw !important;
+      height:100dvh !important;
+      max-width:none !important;
+      margin:0 !important;
+    }
+
+    .qr-id-card{
+      min-height:100dvh;
+      height:100dvh;
+      border-radius:0;
+      padding:
+        max(82px, calc(env(safe-area-inset-top) + 20px))
+        18px
+        max(22px, calc(env(safe-area-inset-bottom) + 14px));
+    }
+
+    .qr-back,
+    .qr-x{
+      top:max(12px, env(safe-area-inset-top));
+      width:46px;
+      height:46px;
+    }
+
+    .qr-back{
+      left:max(12px, env(safe-area-inset-left));
+    }
+
+    .qr-x{
+      right:max(12px, env(safe-area-inset-right));
+    }
+
+    .qr-id-avatar{
+      width:118px;
+      height:118px;
+      font-size:3rem;
+      margin:.4rem 0 1rem;
+    }
+
+    .qr-id-qrbox{
+      width:min(330px,100%);
+      padding:14px;
+      border-radius:20px;
+    }
+
+    .qr-id-hint{ font-size:.92rem; }
+    .qr-id-strip{ justify-content:center; text-align:center; }
+    .qr-id-strip-right{ white-space:normal; }
+    .drawer-body{ padding:.85rem; }
+    .drawer-nav-btn{ padding:.9rem .9rem; }
+  }
+
+  @media (max-width:420px){
+    .main-container{ padding:.65rem; }
+
+    .navbar .container-fluid{
+      padding-left:.8rem !important;
+      padding-right:.8rem !important;
+    }
+
+    .page-title{ font-size:1.2rem; }
+    .section-title{ font-size:.95rem; }
+
+    .auth-brand-logo{
+      width:58px;
+      height:58px;
+    }
+
+    .auth-brand-title{ font-size:1.45rem; }
+    .auth-title{ font-size:1.5rem; }
+
+    .chip,
+    .qr-id-pill,
+    .soft-chip{
+      font-size:.72rem;
+    }
+
+    .qr-id-name{ font-size:1.55rem; }
+    .qr-id-role{ font-size:.82rem; letter-spacing:.12em; }
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    html{ scroll-behavior:auto; }
+
+    *,
+    *::before,
+    *::after{
+      animation:none !important;
+      transition:none !important;
+    }
+  }
+</style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container-fluid px-3 px-md-4">
+      <a class="navbar-brand" href="users.html" aria-label="SmartAttend User Portal Home">
+        <img class="brand-logo" src="rsu_logo_transparent.png" alt="RSU Logo" />
+        <div class="d-flex flex-column" style="line-height:1.02; min-width:0;">
+          <span>SmartAttend</span>
+          <small style="font-size:.68rem; color:var(--text-muted); font-weight:800; letter-spacing:.08em; text-transform:uppercase;">
+            User Portal
+          </small>
+        </div>
+      </a>
+
+      <div class="navbar-actions">
+        <div class="topbar-clock" aria-live="polite">
+          <div class="clock-group">
+            <div id="clockTime">--:--:--</div>
+            <div id="clockDate">Loading...</div>
+          </div>
+          <span id="sessionBadge" class="session-badge">Morning</span>
+        </div>
+
+        <button class="menu-toggle hidden" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobileDrawer">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="mobile-menu-backdrop" id="mobileMenuBackdrop"></div>
+
+  <aside class="mobile-drawer" id="mobileDrawer" aria-hidden="true">
+    <div class="drawer-header">
+      <div class="drawer-brand">
+        <img src="rsu_logo_transparent.png" alt="RSU Logo" class="drawer-brand-logo" />
+        <div style="min-width:0;">
+          <div class="drawer-brand-title">SmartAttend</div>
+          <div class="drawer-brand-sub">User Portal</div>
+        </div>
+      </div>
+
+      <button class="drawer-close" id="drawerClose" type="button" aria-label="Close menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <div class="drawer-body">
+      <div class="drawer-user-card">
+        <div class="drawer-user-top">
+          <div class="avatar" id="drawerAvatar">U</div>
+          <div style="min-width:0;">
+            <div class="drawer-user-name" id="drawerName">User Name</div>
+          </div>
+        </div>
+
+        <div class="drawer-chips">
+          <span class="chip success" id="drawerRoleChip">
+            <i class="fa-solid fa-user-check"></i>
+            Student
+          </span>
+          <span class="chip" id="drawerDeptChip">
+            <i class="fa-solid fa-building"></i>
+            Department
+          </span>
+        </div>
+      </div>
+
+      <div class="drawer-nav">
+        <button class="drawer-nav-btn active" data-user-view="dashboardView" type="button">
+          <i class="fa-solid fa-chart-line"></i>
+          Dashboard
+        </button>
+
+        <button class="drawer-nav-btn" data-user-view="attendanceView" type="button">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          Attendance History
+        </button>
+
+        <button class="drawer-nav-btn" data-user-view="reportsView" type="button">
+          <i class="fa-solid fa-clipboard-check"></i>
+          Internship Reports
+        </button>
+
+        <button class="drawer-nav-btn" data-user-view="accountView" type="button">
+          <i class="fa-solid fa-id-card"></i>
+          My Account
+        </button>
+
+        <button class="drawer-nav-btn" id="btnDrawerViewQR" type="button">
+          <i class="fa-solid fa-qrcode"></i>
+          View Digital ID
+        </button>
+
+        <div class="drawer-footer">
+          <button class="drawer-nav-btn drawer-logout" id="btnDrawerLogout" type="button">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-container">
+    <section id="loginView" class="view-section">
+      <div class="auth-shell">
+        <div class="auth-card">
+          <div class="auth-brand-panel">
+            <div>
+              <div class="auth-brand-top">
+              </div>
+
+              <div class="auth-badge-row">
+                <span class="soft-chip"><i class="fa-solid fa-shield-halved"></i> Secure Access</span>
+                <span class="soft-chip"><i class="fa-solid fa-qrcode"></i> QR Ready</span>
+                <span class="soft-chip"><i class="fa-solid fa-clipboard-check"></i> Weekly Reports</span>
+              </div>
+            </div>
+
+            <div class="auth-feature-list">
+              <div class="auth-feature">
+                <div class="auth-feature-icon">
+                  <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <div>
+                  <h4>Personal Dashboard</h4>
+                  <p>See your attendance summary, total rendered hours, weekly progress, and reflection status in one place.</p>
+                </div>
+              </div>
+
+              <div class="auth-feature">
+                <div class="auth-feature-icon">
+                  <i class="fa-solid fa-id-card"></i>
+                </div>
+                <div>
+                  <h4>Digital ID & QR Code</h4>
+                  <p>Open your digital ID instantly and present your QR code quickly whenever attendance verification is needed.</p>
+                </div>
+              </div>
+
+              <div class="auth-feature">
+                <div class="auth-feature-icon">
+                  <i class="fa-solid fa-file-excel"></i>
+                </div>
+                <div>
+                  <h4>Reports & Exports</h4>
+                  <p>Save your weekly entries, reflection, and export your attendance or report records whenever required.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="auth-form-panel">
+            <div class="auth-form-wrap">
+              <div class="eyebrow">
+                <i class="fa-solid fa-lock"></i>
+                Registered users only
+              </div>
+
+              <div class="auth-title">Sign in with your registered email</div>
+              <div class="auth-subtitle">
+                Use the same email you registered in the attendance system to open your personal portal.
+              </div>
+
+              <div class="field-group">
+                <label class="field-label" for="loginEmail">Registered Email Address</label>
+                <div class="input-with-icon">
+                  <i class="fa-solid fa-envelope"></i>
+                  <input id="loginEmail" type="email" class="form-control-custom" placeholder="name@example.com" autocomplete="email" />
+                </div>
+                <div class="helper-text" id="loginHelperText">
+                  Your portal will open only if your email is found in the registered users list.
+                </div>
+              </div>
+
+              <div class="d-grid gap-2">
+                <button class="btn btn-primary" id="btnUserLogin" type="button">
+                  <i class="fa-solid fa-right-to-bracket"></i>
+                  Continue to Portal
+                </button>
+
+                <button class="btn btn-ghost" id="btnUseSavedSession" type="button">
+                  <i class="fa-solid fa-user-clock"></i>
+                  Use Saved Session
+                </button>
+              </div>
+
+              <div class="helper-card">
+                <strong style="color:var(--text-primary);">Quick note:</strong>
+                Only your own registered account data will be shown here, including your attendance records, internship reports, and digital ID.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="appView" class="view-section hidden">
+      <div class="app-shell">
+        <aside class="sidebar-panel">
+          <div class="user-mini-card">
+            <div class="user-mini-top">
+              <div class="avatar" id="sidebarAvatar">U</div>
+              <div style="min-width:0;">
+                <div class="mini-name" id="sidebarName">User Name</div>
+              </div>
+            </div>
+
+            <div class="mini-badges">
+              <span class="chip success" id="sidebarRoleChip">
+                <i class="fa-solid fa-user-check"></i>
+                Student
+              </span>
+              <span class="chip" id="sidebarDeptChip">
+                <i class="fa-solid fa-building"></i>
+                Department
+              </span>
+            </div>
+          </div>
+
+          <div class="side-nav">
+            <button class="side-nav-btn active" data-user-view="dashboardView" type="button">
+              <i class="fa-solid fa-chart-line"></i>
+              Dashboard
+            </button>
+
+            <button class="side-nav-btn" data-user-view="attendanceView" type="button">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+              Attendance History
+            </button>
+
+            <button class="side-nav-btn" data-user-view="reportsView" type="button">
+              <i class="fa-solid fa-clipboard-check"></i>
+              Internship Reports
+            </button>
+
+            <button class="side-nav-btn" data-user-view="accountView" type="button">
+              <i class="fa-solid fa-id-card"></i>
+              My Account
+            </button>
+
+            <button class="side-nav-btn" id="btnSidebarViewQR" type="button">
+              <i class="fa-solid fa-qrcode"></i>
+              View Digital ID
+            </button>
+
+            <button class="side-nav-btn" id="btnLogoutUser" type="button">
+              <i class="fa-solid fa-right-from-bracket"></i>
+              Logout
+            </button>
+          </div>
+        </aside>
+
+        <main class="content-stack">
+          <section id="dashboardView" class="user-page-view page-transition">
+            <div class="page-hero">
+              <div>
+                <div class="page-title">Welcome back, <span id="dashboardWelcomeName">User</span></div>
+                <div class="page-subtitle">
+                  Here is your quick overview for attendance, internship progress, reflection status, and your digital ID.
+                </div>
+              </div>
+
+              <div class="hero-actions">
+                <button class="btn btn-secondary" id="btnDashboardViewQR" type="button">
+                  <i class="fa-solid fa-qrcode"></i>
+                  My QR ID
+                </button>
+                <button class="btn btn-primary" id="btnDashboardExportAttendance" type="button">
+                  <i class="fa-solid fa-file-excel"></i>
+                  Export Attendance
+                </button>
+              </div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-body">
+                <div class="profile-hero">
+                  <div class="avatar lg" id="heroAvatar">U</div>
+
+                  <div class="profile-main">
+                    <div class="profile-name" id="heroName">User Name</div>
+
+                    <div class="profile-meta">
+                      <span class="chip success" id="heroRoleChip">
+                        <i class="fa-solid fa-user-graduate"></i>
+                        Student
+                      </span>
+
+                      <span class="chip" id="heroDeptChip">
+                        <i class="fa-solid fa-building"></i>
+                        Department
+                      </span>
+
+                      <span class="chip" id="heroCodeChip">
+                        <i class="fa-solid fa-qrcode"></i>
+                        Code: ----
+                      </span>
+                    </div>
+
+                    <div class="profile-email" id="heroStudentId">
+                      <i class="fa-solid fa-hashtag"></i>
+                      Student ID
+                    </div>
+                  </div>
+
+                  <div class="profile-side">
+                    <button class="btn btn-secondary" id="btnQuickOpenReports" type="button">
+                      <i class="fa-solid fa-clipboard-list"></i>
+                      Open Reports
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-body">
+                <div class="stats-grid">
+                  <div class="stat-card">
+                    <div class="stat-label">Days Present</div>
+                    <div class="stat-value" id="dashDaysPresent">0</div>
+                    <div class="stat-note">Recorded attendance days</div>
+                  </div>
+
+                  <div class="stat-card">
+                    <div class="stat-label">Total Hours</div>
+                    <div class="stat-value" id="dashTotalHours">0.0</div>
+                    <div class="stat-note">Accumulated logged hours</div>
+                  </div>
+
+                  <div class="stat-card">
+                    <div class="stat-label">This Week Progress</div>
+                    <div class="stat-value" id="dashWeekEntries">0/5</div>
+                    <div class="stat-note">Saved daily progress entries</div>
+                  </div>
+
+                  <div class="stat-card">
+                    <div class="stat-label">Reflection Status</div>
+                    <div class="stat-value" id="dashReflectionStatus">Pending</div>
+                    <div class="stat-note">Current selected week reflection</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-card">
+              <div class="section-header">
+                <div class="section-title">
+                  <i class="fa-solid fa-calendar-week"></i>
+                  Current Week Summary
+                </div>
+
+                <div class="filter-bar">
+                  <input type="date" id="dashWeekPicker" class="form-control-custom" style="min-width:220px;" />
+                  <button class="btn btn-primary" id="btnDashLoadWeek" type="button">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    Load Week
+                  </button>
+                </div>
+              </div>
+
+              <div class="panel-body">
+                <div class="week-summary" id="dashboardWeekSummary"></div>
+              </div>
+            </div>
+          </section>
+
+          <section id="attendanceView" class="user-page-view hidden">
+            <div class="page-hero">
+              <div>
+                <div class="page-title">My Attendance History</div>
+                <div class="page-subtitle">
+                  Review your attendance logs clearly by date, time, and total rendered hours.
+                </div>
+              </div>
+
+              <div class="hero-actions">
+                <button class="btn btn-primary" id="btnAttendanceExport" type="button">
+                  <i class="fa-solid fa-file-excel"></i>
+                  Export My Attendance
+                </button>
+              </div>
+            </div>
+
+            <div class="panel-card">
+              <div class="section-header">
+                <div class="section-title">
+                  <i class="fa-solid fa-clock-rotate-left"></i>
+                  Attendance Records
+                </div>
+
+                <div class="filter-bar">
+                  <input type="date" id="attendanceStart" class="form-control-custom" aria-label="Attendance start date">
+                  <input type="date" id="attendanceEnd" class="form-control-custom" aria-label="Attendance end date">
+                  <button class="btn btn-primary" id="btnUserApplyAttendanceFilter" type="button">
+                    <i class="fa-solid fa-filter"></i>
+                    Filter
+                  </button>
+                  <button class="btn btn-secondary" id="btnUserResetAttendanceFilter" type="button">
+                    <i class="fa-solid fa-rotate-left"></i>
+                    Reset
+                  </button>
+                </div>
+              </div>
+
+              <div class="panel-body" style="padding-top:.9rem; display:grid; gap:.75rem;">
+                <div class="helper-card" style="margin-top:0;">
+                  <strong style="color:var(--text-primary);">Tip:</strong>
+                  On smaller screens, attendance records automatically switch to stacked mobile cards for easier reading.
+                </div>
+
+                <div class="helper-card" id="attendanceRangeInfo" style="margin-top:0;">
+                  Attendance records will appear here after login.
+                </div>
+              </div>
+
+              <div class="table-responsive" tabindex="0" aria-label="Scrollable attendance history table">
+                <table class="custom-table">
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>AM In</th>
+                      <th>AM Out</th>
+                      <th>PM In</th>
+                      <th>PM Out</th>
+                      <th class="hours-col">Total</th>
+                    </tr>
+                  </thead>
+                  <tbody id="userAttendanceTableBody">
+                    <tr>
+                      <td colspan="6" class="empty-state">
+                        <i class="fa-solid fa-inbox"></i>
+                        <p>Login to load your attendance records.</p>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div id="userAttendanceCards" class="attendance-mobile-list">
+                <div class="attendance-mobile-empty">
+                  <i class="fa-solid fa-inbox"></i>
+                  <p>Login to load your attendance records.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="reportsView" class="user-page-view hidden">
+            <div class="page-hero">
+              <div>
+                <div class="page-title">My Internship Reports</div>
+                <div class="page-subtitle">
+                  Save your daily progress and weekly reflection using the same reporting logic connected to your attendance system.
+                </div>
+              </div>
+
+              <div class="hero-actions">
+                <button class="btn btn-secondary" id="btnReportsExportWeek" type="button">
+                  <i class="fa-solid fa-file-excel"></i>
+                  Export Selected Week
+                </button>
+              </div>
+            </div>
+
+            <div class="panel-card">
+              <div class="section-header">
+                <div class="section-title">
+                  <i class="fa-solid fa-calendar-days"></i>
+                  Week Selection
+                </div>
+
+                <div class="filter-bar">
+                  <input type="date" id="userWeekPicker" class="form-control-custom" title="Pick any date within the week">
+                  <button class="btn btn-primary" id="btnUserLoadWeek" type="button">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    Load Week
+                  </button>
+                </div>
+              </div>
+
+              <div class="panel-body">
+                <div class="report-card" style="margin-bottom:1rem;">
+                  <div class="report-title">
+                    <i class="fa-solid fa-gear"></i>
+                    Report Details
+                  </div>
+
+                  <div class="field-row inline">
+                    <div class="field">
+                      <label for="userOrgName">Organization</label>
+                      <input id="userOrgName" class="form-control-custom" value="Romblon State University" />
+                    </div>
+
+                    <div class="field">
+                      <label for="userDeptName">Assigned Department / Section</label>
+                      <input id="userDeptName" class="form-control-custom" value="Center For Alumni Relation And Employment Services" />
+                    </div>
+                  </div>
+
+                  <div class="report-help">
+                    These values are saved together with your weekly report entries and included in your Excel exports.
+                  </div>
+                </div>
+
+                <div class="report-grid">
+                  <div class="report-card">
+                    <div class="report-title">
+                      <i class="fa-solid fa-calendar-day"></i>
+                      Daily Progress
+                    </div>
+
+                    <div class="field-row">
+                      <div class="field">
+                        <label for="userDailyDate">Date</label>
+                        <input type="date" id="userDailyDate" class="form-control-custom">
+                        <div class="date-preview" id="userDailyDatePreview">Select a date to view it in full format.</div>
+                      </div>
+                    </div>
+
+                    <div class="field-row">
+                      <div class="field">
+                        <label for="userDailyAM">Morning Activities (AM)</label>
+                        <textarea id="userDailyAM" class="form-textarea-custom" placeholder="1. Encode documents&#10;2. Organize files"></textarea>
+                        <div class="list-tools">
+                          <button class="btn btn-secondary btn-inline" id="btnAddAMItem" type="button">
+                            <i class="fa-solid fa-plus"></i>
+                            Add Item
+                          </button>
+                          <button class="btn btn-ghost btn-inline" id="btnRenumberAM" type="button">
+                            <i class="fa-solid fa-list-ol"></i>
+                            Renumber
+                          </button>
+                        </div>
+                        <div class="activity-note">Use numbered items. You can add more items anytime.</div>
+                      </div>
+                    </div>
+
+                    <div class="field-row">
+                      <div class="field">
+                        <label for="userDailyPM">Afternoon Activities (PM)</label>
+                        <textarea id="userDailyPM" class="form-textarea-custom" placeholder="1. Assist clients&#10;2. Prepare reports"></textarea>
+                        <div class="list-tools">
+                          <button class="btn btn-secondary btn-inline" id="btnAddPMItem" type="button">
+                            <i class="fa-solid fa-plus"></i>
+                            Add Item
+                          </button>
+                          <button class="btn btn-ghost btn-inline" id="btnRenumberPM" type="button">
+                            <i class="fa-solid fa-list-ol"></i>
+                            Renumber
+                          </button>
+                        </div>
+                        <div class="activity-note">Use numbered items. You can add more items anytime.</div>
+                      </div>
+                    </div>
+
+                    <div class="mini-actions">
+                      <button class="btn btn-primary" id="btnUserSaveDaily" type="button">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        Save Daily Entry
+                      </button>
+                      <button class="btn btn-secondary" id="btnUserClearDaily" type="button">
+                        <i class="fa-solid fa-eraser"></i>
+                        Clear
+                      </button>
+                    </div>
+
+                    <div class="hint" id="userDailySavedHint"></div>
+                  </div>
+
+                  <div class="report-card">
+                    <div class="report-title">
+                      <i class="fa-solid fa-lightbulb"></i>
+                      Weekly Internship Reflection
+                    </div>
+
+                    <div class="field-row">
+                      <div class="field">
+                        <label for="userWeeklyReflectionText">Reflection (saved per selected week)</label>
+                        <textarea id="userWeeklyReflectionText" class="form-textarea-custom" style="min-height:240px;" placeholder="What important lessons (technical, social, or personal) did you learn this week?"></textarea>
+                      </div>
+                    </div>
+
+                    <div class="mini-actions">
+                      <button class="btn btn-primary" id="btnUserSaveReflection" type="button">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        Save Reflection
+                      </button>
+                      <button class="btn btn-secondary" id="btnUserClearReflection" type="button">
+                        <i class="fa-solid fa-eraser"></i>
+                        Clear
+                      </button>
+                    </div>
+
+                    <div class="hint" id="userReflectionSavedHint"></div>
+                    <div class="report-help" id="userReflectionFridayNote"></div>
+                  </div>
+                </div>
+
+                <div class="report-card" style="margin-top:1rem;">
+                  <div class="report-title">
+                    <i class="fa-solid fa-list-check"></i>
+                    Week Summary
+                  </div>
+
+                  <div class="report-help">
+                    Save your daily progress from Monday to Friday. Weekly reflection submission is available on Friday, Saturday, and Sunday.
+                  </div>
+
+                  <div class="week-summary" id="userWeekSummary"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section id="accountView" class="user-page-view hidden">
+            <div class="page-hero">
+              <div>
+                <div class="page-title">My Account</div>
+                <div class="page-subtitle">
+                  Review your registered account information and open your digital ID anytime.
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-card">
+              <div class="panel-body">
+                <div class="profile-hero">
+                  <div class="avatar lg" id="accountAvatar">U</div>
+
+                  <div class="profile-main">
+                    <div class="profile-name" id="accountName">User Name</div>
+
+                    <div class="profile-meta">
+                      <span class="chip success" id="accountRoleChip">
+                        <i class="fa-solid fa-user-check"></i>
+                        Student
+                      </span>
+
+                      <span class="chip" id="accountDeptChip">
+                        <i class="fa-solid fa-building"></i>
+                        Department
+                      </span>
+                    </div>
+
+                    <div class="profile-email" id="accountStudentId">
+                      <i class="fa-solid fa-hashtag"></i>
+                      Student ID
+                    </div>
+
+                    <div class="profile-email" id="accountGeneratedCode" style="margin-top:.45rem;">
+                      <i class="fa-solid fa-qrcode"></i>
+                      Generated Code
+                    </div>
+                  </div>
+
+                  <div class="profile-side">
+                    <button class="btn btn-secondary" id="btnAccountViewQR" type="button">
+                      <i class="fa-solid fa-qrcode"></i>
+                      Open Digital ID
+                    </button>
+                    <button class="btn btn-danger" id="btnAccountLogout" type="button">
+                      <i class="fa-solid fa-right-from-bracket"></i>
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </main>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:2000;">
+    <div id="appToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="toast-header">
+        <i id="toastIcon" class="fa-solid fa-circle-info me-2"></i>
+        <strong id="toastTitle" class="me-auto">Notice</strong>
+        <small id="toastTime" class="text-muted">now</small>
+        <button type="button" class="btn-close btn-close-white ms-2 mb-1" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body" id="toastBody">...</div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="qrModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen qr-id-dialog">
+      <div class="modal-content qr-id-modal">
+
+        <button type="button" class="qr-x" data-bs-dismiss="modal" aria-label="Close digital ID">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="qr-id-card" id="qrIdCard">
+          <div class="qr-id-layout">
+            <div class="qr-id-left">
+              <div>
+                <div class="qr-id-profile">
+                  <div class="qr-id-avatar" id="qrAvatar">U</div>
+                  <div class="qr-id-name" id="qrName">User Name</div>
+                  <div class="qr-id-role" id="qrRole">STUDENT</div>
+
+                  <div class="qr-id-meta">
+                    <span class="qr-id-pill" id="qrMetaDept">
+                      <i class="fa-solid fa-building"></i>
+                      <strong>Department</strong>
+                    </span>
+                    <span class="qr-id-pill" id="qrMetaCode">
+                      <i class="fa-solid fa-hashtag"></i>
+                      <strong>0000</strong>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="qr-id-strip">
+                <div class="qr-id-strip-left">
+                  <i class="fa-solid fa-shield-check"></i>
+                  <span>Verified SmartAttendance user profile</span>
+                </div>
+                <div class="qr-id-strip-right">Scan for attendance verification</div>
+              </div>
+            </div>
+
+            <div class="qr-id-right">
+              <div class="qr-id-qrwrap">
+                <div style="text-align:center;">
+                  <div style="font-size:.78rem; font-weight:1000; letter-spacing:.16em; text-transform:uppercase; color:rgba(255,255,255,.58); margin-bottom:.7rem;">
+                    Secure QR Access
+                  </div>
+                </div>
+
+                <div class="qr-id-qrbox">
+                  <div id="qrCanvas"></div>
+                </div>
+
+                <div class="qr-id-hint">
+                  Present this digital ID when your attendance QR code needs to be scanned.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade app-modal" id="logoutModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="max-width:420px;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold">
+            <i class="fa-solid fa-right-from-bracket me-2"></i>
+            Logout Session
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          Are you sure you want to log out from the user portal?
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger" id="btnConfirmLogout">Logout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<script>
+  const API_URL = "https://script.google.com/macros/s/AKfycbwUd5t6d_n26dn70N_PaVJ-DtkSu1D1OYHBlDM2wZIcG9p1M2hg-hZnYsosa2RUijMNyg/exec";
+  const USER_SESSION_KEY = "smartattend_user_session_v2";
+
+  let allStudents = [];
+  let currentUser = null;
+  let currentLogs = [];
+  let toastInstance = null;
+  let qrModalInstance = null;
+  let logoutModalInstance = null;
+  let mobileDrawerOpen = false;
+  let resizeTimer = null;
+  let pendingQrValue = "";
+  let isLoggingOut = false;
+
+  let userReportStore = {
+    meta: {
+      orgName: "Romblon State University",
+      deptName: "Center For Alumni Relation And Employment Services"
+    },
+    daily: {},
+    reflections: {}
+  };
+
+  let activeWeek = { startISO: null, endISO: null, key: null };
+
+  function byId(id) {
+    return document.getElementById(id);
+  }
+
+  function on(id, eventName, handler, options) {
+    const el = byId(id);
+    if (!el) return null;
+    el.addEventListener(eventName, handler, options);
+    return el;
+  }
+
+  function showToast(type, title, message) {
+    const el = byId("appToast");
+    const icon = byId("toastIcon");
+    const tTitle = byId("toastTitle");
+    const tBody = byId("toastBody");
+    const tTime = byId("toastTime");
+
+    if (!el || !icon || !tTitle || !tBody || !tTime || !window.bootstrap) return;
+
+    const now = new Date();
+    tTime.textContent = now.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+
+    let iconClass = "fa-circle-info";
+    if (type === "success") iconClass = "fa-circle-check";
+    if (type === "warn") iconClass = "fa-triangle-exclamation";
+    if (type === "error") iconClass = "fa-circle-xmark";
+
+    icon.className = `fa-solid ${iconClass} me-2`;
+    tTitle.textContent = title || "Notice";
+    tBody.textContent = message || "";
+
+    toastInstance = toastInstance || new bootstrap.Toast(el, { delay: 3200 });
+    toastInstance.show();
+  }
+
+  function updateClock() {
+    const elTime = byId("clockTime");
+    const elDate = byId("clockDate");
+    const elBadge = byId("sessionBadge");
+    if (!elTime || !elDate || !elBadge) return;
+
+    const now = new Date();
+    const hour = now.getHours();
+
+    elTime.textContent = now.toLocaleTimeString("en-US", { hour12: true });
+    elDate.textContent = now.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric"
+    });
+
+    const isMorning = hour < 12;
+    elBadge.textContent = isMorning ? "Morning" : "Afternoon";
+    elBadge.classList.toggle("afternoon", !isMorning);
+  }
+
+  async function api(params) {
+    params._ts = Date.now();
+    const qs = new URLSearchParams(params).toString();
+
+    const res = await fetch(`${API_URL}?${qs}`, {
+      cache: "no-store"
+    });
+
+    const json = await res.json().catch(() => null);
+
+    if (!res.ok) {
+      throw new Error(`Request failed (${res.status})`);
+    }
+
+    if (!json) {
+      throw new Error("Invalid JSON response");
+    }
+
+    return json;
+  }
+
+  async function apiPost(payload) {
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload),
+      cache: "no-store",
+      redirect: "follow"
+    });
+
+    const text = await res.text();
+    let json = null;
+
+    try {
+      json = JSON.parse(text);
+    } catch (e) {}
+
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status} ${res.statusText}: ${text.slice(0, 200)}`);
+    }
+
+    if (!json) {
+      throw new Error("Invalid JSON response: " + text.slice(0, 200));
+    }
+
+    return json;
+  }
+
+  function safe(v) {
+    return (v === null || v === undefined || String(v).trim() === "") ? "-" : String(v);
+  }
+
+  function escapeHtml(str) {
+    return String(str ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function normalizeEmail(email) {
+    return String(email || "").trim().toLowerCase();
+  }
+
+  function todayISO() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+  }
+
+  function startOfMonthISO() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-01`;
+  }
+
+  function isoToDate(iso) {
+    const d = new Date(String(iso || "") + "T00:00:00");
+    return isNaN(d) ? null : d;
+  }
+
+  function dateToISO(d) {
+    const x = (d instanceof Date) ? d : new Date(d);
+    if (isNaN(x)) return "";
+    return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, "0")}-${String(x.getDate()).padStart(2, "0")}`;
+  }
+
+  function addDaysISO(iso, days) {
+    const d = isoToDate(iso);
+    if (!d) return iso;
+    const x = new Date(d);
+    x.setDate(d.getDate() + days);
+    return dateToISO(x);
+  }
+
+  function getWeekStartMondayISO(anyISO) {
+    const d = isoToDate(anyISO) || new Date();
+    const day = d.getDay();
+    const diff = day === 0 ? -6 : 1 - day;
+    const monday = new Date(d);
+    monday.setDate(d.getDate() + diff);
+    return dateToISO(monday);
+  }
+
+  function weekKeyFromStart(startISO) {
+    return `${startISO}__${addDaysISO(startISO, 4)}`;
+  }
+
+  function weekdayName(iso) {
+    const d = isoToDate(iso);
+    if (!d) return iso;
+    return d.toLocaleDateString("en-US", { weekday: "long" });
+  }
+
+  function formatDisplayDate(iso) {
+    const d = isoToDate(iso);
+    if (!d) return safe(iso);
+
+    const main = d.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric"
+    });
+
+    const day = d.toLocaleDateString("en-US", {
+      weekday: "long"
+    });
+
+    return `${main} (${day})`;
+  }
+
+  function fmtWeekLabel(startISO) {
+    const d1 = isoToDate(startISO);
+    const d2 = isoToDate(addDaysISO(startISO, 4));
+    if (!d1 || !d2) return `${startISO} - ${addDaysISO(startISO, 4)}`;
+
+    const a = d1.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric"
+    }).replace(/,/g, "");
+
+    const b = d2.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric"
+    }).replace(/,/g, "");
+
+    return `${a} – ${b}`;
+  }
+
+  function getInitials(name) {
+    const clean = String(name || "").trim();
+    if (!clean) return "U";
+    const parts = clean.split(/\s+/).filter(Boolean);
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+  }
+
+  function canSubmitReflectionToday() {
+    const day = new Date().getDay();
+    return day === 5 || day === 6 || day === 0;
+  }
+
+  function timeDisplay(v) {
+    if (!v || v === "-") return "-";
+    const s = String(v).trim();
+
+    if (/^\d{4}-\d{2}-\d{2}T/.test(s)) {
+      const d = new Date(s);
+      if (!isNaN(d)) {
+        return d.toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true
+        });
+      }
+    }
+
+    return s;
+  }
+
+  function parseTimeToMinutes(t) {
+    t = String(t || "").trim();
+    if (!t || t === "-") return null;
+
+    if (/^\d{4}-\d{2}-\d{2}T/.test(t)) {
+      const d = new Date(t);
+      if (isNaN(d)) return null;
+      return d.getHours() * 60 + d.getMinutes();
+    }
+
+    const d = new Date("1970-01-01 " + t);
+    if (isNaN(d)) return null;
+    return d.getHours() * 60 + d.getMinutes();
+  }
+
+  function calcHours(am_in, am_out, pm_in, pm_out) {
+    const a1 = parseTimeToMinutes(am_in);
+    const a2 = parseTimeToMinutes(am_out);
+    const p1 = parseTimeToMinutes(pm_in);
+    const p2 = parseTimeToMinutes(pm_out);
+
+    const diff = (x, y) => (x != null && y != null && y > x ? (y - x) : 0);
+    const mins = diff(a1, a2) + diff(p1, p2);
+    return mins ? mins / 60 : 0;
+  }
+
+  function debounce(fn, delay = 180) {
+    return (...args) => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => fn(...args), delay);
+    };
+  }
+
+  function normalizeNumberedText(text) {
+    const lines = String(text || "")
+      .split(/\r?\n/)
+      .map(line => line.trim())
+      .filter(Boolean)
+      .map(line => line.replace(/^\d+[\.\)]\s*/, ""));
+
+    return lines.map((line, i) => `${i + 1}. ${line}`).join("\n");
+  }
+
+  function getNextItemNumber(text) {
+    const lines = String(text || "")
+      .split(/\r?\n/)
+      .map(line => line.trim())
+      .filter(Boolean);
+
+    return lines.length + 1;
+  }
+
+  function appendNextNumber(textareaId) {
+    const el = byId(textareaId);
+    if (!el) return;
+
+    const current = el.value || "";
+    const next = getNextItemNumber(current);
+    const prefix = current.trim() ? "\n" : "";
+    el.value = `${current}${prefix}${next}. `;
+    el.focus();
+    el.setSelectionRange(el.value.length, el.value.length);
+  }
+
+  function renumberActivity(textareaId) {
+    const el = byId(textareaId);
+    if (!el) return;
+    el.value = normalizeNumberedText(el.value);
+  }
+
+  function updateDailyDatePreview() {
+    const input = byId("userDailyDate");
+    const preview = byId("userDailyDatePreview");
+    if (!input || !preview) return;
+    preview.textContent = input.value ? formatDisplayDate(input.value) : "Select a date to view it in full format.";
+  }
+
+  function saveUserSession(user) {
+    if (!user) return;
+
+    localStorage.setItem(USER_SESSION_KEY, JSON.stringify({
+      student_id: user.student_id,
+      email: normalizeEmail(user.email),
+      login_type: String(user.login_type || "").trim().toLowerCase()
+    }));
+  }
+
+  function getUserSession() {
+    try {
+      return JSON.parse(localStorage.getItem(USER_SESSION_KEY) || "null");
+    } catch {
+      return null;
+    }
+  }
+
+  function clearUserSession() {
+    localStorage.removeItem(USER_SESSION_KEY);
+  }
+
+  function shouldUseMobileMenu() {
+    return window.innerWidth <= 1140;
+  }
+
+  function openMobileDrawer() {
+    const drawer = byId("mobileDrawer");
+    const backdrop = byId("mobileMenuBackdrop");
+    const toggle = byId("menuToggle");
+
+    if (!drawer || !backdrop || !toggle || !shouldUseMobileMenu()) return;
+
+    drawer.classList.add("show");
+    backdrop.classList.add("show");
+    document.body.classList.add("drawer-open");
+    drawer.setAttribute("aria-hidden", "false");
+    toggle.setAttribute("aria-expanded", "true");
+    mobileDrawerOpen = true;
+  }
+
+  function closeMobileDrawer() {
+    const drawer = byId("mobileDrawer");
+    const backdrop = byId("mobileMenuBackdrop");
+    const toggle = byId("menuToggle");
+
+    if (!drawer || !backdrop || !toggle) return;
+
+    drawer.classList.remove("show");
+    backdrop.classList.remove("show");
+    document.body.classList.remove("drawer-open");
+    drawer.setAttribute("aria-hidden", "true");
+    toggle.setAttribute("aria-expanded", "false");
+    mobileDrawerOpen = false;
+  }
+
+  function toggleMobileDrawer() {
+    mobileDrawerOpen ? closeMobileDrawer() : openMobileDrawer();
+  }
+
+  function syncMenuMode() {
+    const toggle = byId("menuToggle");
+    if (!toggle) return;
+
+    if (shouldUseMobileMenu()) {
+      toggle.classList.remove("hidden");
+    } else {
+      toggle.classList.add("hidden");
+      closeMobileDrawer();
+    }
+  }
+
+  function syncActiveNavButtons(viewId) {
+    document.querySelectorAll(".side-nav-btn[data-user-view], .drawer-nav-btn[data-user-view]").forEach(btn => {
+      btn.classList.toggle("active", btn.getAttribute("data-user-view") === viewId);
+    });
+  }
+
+  function setupScrollableTables() {
+    document.querySelectorAll(".table-responsive").forEach(wrapper => {
+      if (wrapper.dataset.enhanced === "true") return;
+      wrapper.dataset.enhanced = "true";
+
+      wrapper.addEventListener("wheel", (e) => {
+        const canScrollX = wrapper.scrollWidth > wrapper.clientWidth;
+        if (!canScrollX) return;
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+          wrapper.scrollLeft += e.deltaY;
+        }
+      }, { passive: true });
+    });
+  }
+
+  async function loadAllStudents() {
+    const resp = await api({ action: "get_students" });
+    if (!resp.success) throw new Error(resp.message || "Failed to load students");
+    allStudents = resp.students || [];
+    return allStudents;
+  }
+
+  function findUserByEmail(email) {
+    const normalized = normalizeEmail(email);
+    return (allStudents || []).find(s => normalizeEmail(s.email) === normalized) || null;
+  }
+
+  async function loginWithEmail(email) {
+    const helper = byId("loginHelperText");
+    const cleanEmail = normalizeEmail(email);
+
+    if (!cleanEmail) {
+      if (helper) helper.textContent = "Please enter your registered email address.";
+      showToast("warn", "Email Required", "Please enter your registered email address.");
+      return;
+    }
+
+    if (!allStudents.length) {
+      await loadAllStudents();
+    }
+
+    const user = findUserByEmail(cleanEmail);
+
+    if (!user) {
+      if (helper) helper.textContent = "This email was not found in the registered users list.";
+      showToast("error", "Access Denied", "This email is not registered in the attendance system.");
+      return;
+    }
+
+    if (helper) helper.textContent = "Login successful. Opening your portal...";
+
+    currentUser = user;
+    saveUserSession(user);
+
+    const loginType = String(user.login_type || "").trim().toLowerCase();
+
+    if (loginType === "admin") {
+      window.location.href = "Masters.html";
+      return;
+    }
+
+    await openUserPortal();
+    showToast("success", "Welcome", `Signed in as ${safe(user.student_name)}.`);
+  }
+
+  async function trySavedSession() {
+    const session = getUserSession();
+    if (!session) return false;
+
+    if (!allStudents.length) {
+      await loadAllStudents();
+    }
+
+    const found = (allStudents || []).find(s =>
+      String(s.student_id || "") === String(session.student_id || "") &&
+      normalizeEmail(s.email) === normalizeEmail(session.email)
+    );
+
+    if (!found) {
+      clearUserSession();
+      showToast("warn", "Session Expired", "Saved session is no longer valid. Please log in again.");
+      return false;
+    }
+
+    currentUser = found;
+    saveUserSession(found);
+
+    const loginType = String(found.login_type || "").trim().toLowerCase();
+
+    if (loginType === "admin") {
+      window.location.href = "Masters.html";
+      return true;
+    }
+
+    await openUserPortal();
+    showToast("success", "Session Restored", `Welcome back, ${safe(found.student_name)}.`);
+    return true;
+  }
+
+  function setViewVisibility(id, shouldShow) {
+    const el = byId(id);
+    if (!el) return;
+    el.classList.toggle("hidden", !shouldShow);
+  }
+
+  function forceCloseModalElement(modalId) {
+    const modalEl = byId(modalId);
+    if (!modalEl) return;
+
+    try {
+      const instance = window.bootstrap?.Modal?.getInstance(modalEl);
+      instance?.hide();
+    } catch (e) {}
+
+    modalEl.classList.remove("show");
+    modalEl.style.display = "none";
+    modalEl.setAttribute("aria-hidden", "true");
+    modalEl.removeAttribute("aria-modal");
+    modalEl.removeAttribute("role");
+  }
+
+  function cleanupModalArtifacts() {
+    document.body.classList.remove("modal-open", "drawer-open");
+    document.body.style.removeProperty("padding-right");
+    document.querySelectorAll(".modal-backdrop").forEach(el => el.remove());
+  }
+
+  function logoutUser() {
+    if (isLoggingOut) return;
+    isLoggingOut = true;
+
+    clearUserSession();
+    currentUser = null;
+    currentLogs = [];
+    pendingQrValue = "";
+
+    userReportStore = {
+      meta: {
+        orgName: "Romblon State University",
+        deptName: "Center For Alumni Relation And Employment Services"
+      },
+      daily: {},
+      reflections: {}
+    };
+
+    activeWeek = { startISO: null, endISO: null, key: null };
+
+    closeMobileDrawer();
+
+    forceCloseModalElement("logoutModal");
+    forceCloseModalElement("qrModal");
+
+    try { qrModalInstance?.hide(); } catch (e) {}
+    try { logoutModalInstance?.hide(); } catch (e) {}
+
+    qrModalInstance = null;
+    logoutModalInstance = null;
+
+    cleanupModalArtifacts();
+
+    setViewVisibility("loginView", true);
+    setViewVisibility("appView", false);
+
+    const loginEmail = byId("loginEmail");
+    const loginHelperText = byId("loginHelperText");
+    const attendanceRangeInfo = byId("attendanceRangeInfo");
+    const attendanceTableBody = byId("userAttendanceTableBody");
+    const cards = byId("userAttendanceCards");
+    const qrCanvas = byId("qrCanvas");
+    const userDailyAM = byId("userDailyAM");
+    const userDailyPM = byId("userDailyPM");
+    const userWeeklyReflectionText = byId("userWeeklyReflectionText");
+    const userDailySavedHint = byId("userDailySavedHint");
+    const userReflectionSavedHint = byId("userReflectionSavedHint");
+    const dashboardWeekSummary = byId("dashboardWeekSummary");
+    const userWeekSummary = byId("userWeekSummary");
+    const userOrgName = byId("userOrgName");
+    const userDeptName = byId("userDeptName");
+
+    if (loginEmail) loginEmail.value = "";
+    if (loginHelperText) {
+      loginHelperText.textContent = "Your portal will open only if your email is found in the registered users list.";
+    }
+
+    if (attendanceRangeInfo) {
+      attendanceRangeInfo.textContent = "Attendance records will appear here after login.";
+    }
+
+    if (attendanceTableBody) {
+      attendanceTableBody.innerHTML = `
+        <tr>
+          <td colspan="6" class="empty-state">
+            <i class="fa-solid fa-inbox"></i>
+            <p>Login to load your attendance records.</p>
+          </td>
+        </tr>
+      `;
+    }
+
+    if (cards) {
+      cards.innerHTML = `
+        <div class="attendance-mobile-empty">
+          <i class="fa-solid fa-inbox"></i>
+          <p>Login to load your attendance records.</p>
+        </div>
+      `;
+    }
+
+    if (qrCanvas) qrCanvas.innerHTML = "";
+    if (userDailyAM) userDailyAM.value = "";
+    if (userDailyPM) userDailyPM.value = "";
+    if (userWeeklyReflectionText) userWeeklyReflectionText.value = "";
+    if (dashboardWeekSummary) dashboardWeekSummary.innerHTML = "";
+    if (userWeekSummary) userWeekSummary.innerHTML = "";
+
+    if (userOrgName) userOrgName.value = "Romblon State University";
+    if (userDeptName) userDeptName.value = "Center For Alumni Relation And Employment Services";
+
+    if (userDailySavedHint) {
+      userDailySavedHint.textContent = "";
+      userDailySavedHint.className = "hint";
+    }
+
+    if (userReflectionSavedHint) {
+      userReflectionSavedHint.textContent = "";
+      userReflectionSavedHint.className = "hint";
+    }
+
+    document.querySelectorAll(".user-page-view").forEach(section => {
+      section.classList.add("hidden");
+    });
+
+    const dashboardView = byId("dashboardView");
+    if (dashboardView) dashboardView.classList.remove("hidden");
+
+    setDefaultInputs();
+    syncActiveNavButtons("dashboardView");
+    updateReflectionButtonState();
+    updateDailyDatePreview();
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    showToast("success", "Logged Out", "You have been logged out successfully.");
+
+    requestAnimationFrame(() => {
+      loginEmail?.focus();
+      isLoggingOut = false;
+    });
+  }
+
+  function setDefaultInputs() {
+    const today = todayISO();
+    const som = startOfMonthISO();
+
+    const attendanceStart = byId("attendanceStart");
+    const attendanceEnd = byId("attendanceEnd");
+    const dashWeekPicker = byId("dashWeekPicker");
+    const userWeekPicker = byId("userWeekPicker");
+    const userDailyDate = byId("userDailyDate");
+
+    if (attendanceStart) attendanceStart.value = som;
+    if (attendanceEnd) attendanceEnd.value = today;
+    if (dashWeekPicker) dashWeekPicker.value = today;
+    if (userWeekPicker) userWeekPicker.value = today;
+    if (userDailyDate) userDailyDate.value = today;
+
+    setActiveWeekByAnyDate(today);
+    updateDailyDatePreview();
+  }
+
+  function setActiveWeekByAnyDate(anyISO) {
+    const startISO = getWeekStartMondayISO(anyISO);
+    activeWeek.startISO = startISO;
+    activeWeek.endISO = addDaysISO(startISO, 4);
+    activeWeek.key = weekKeyFromStart(startISO);
+
+    const dailyHint = byId("userDailySavedHint");
+    const reflectionHint = byId("userReflectionSavedHint");
+
+    if (dailyHint) {
+      dailyHint.textContent = `Selected week: ${fmtWeekLabel(activeWeek.startISO)}`;
+      dailyHint.className = "hint";
+    }
+
+    if (reflectionHint) {
+      reflectionHint.textContent = `Selected week: ${fmtWeekLabel(activeWeek.startISO)}`;
+      reflectionHint.className = "hint";
+    }
+
+    updateReflectionButtonState();
+  }
+
+  function bindReportMetaInputs() {
+    const orgName = byId("userOrgName");
+    const deptName = byId("userDeptName");
+
+    if (orgName) orgName.oninput = () => userReportStore.meta.orgName = orgName.value;
+    if (deptName) deptName.oninput = () => userReportStore.meta.deptName = deptName.value;
+  }
+
+  function populateUserIdentity() {
+    if (!currentUser) return;
+
+    const initials = getInitials(currentUser.student_name);
+    const role = safe(currentUser.login_type);
+    const dept = safe(currentUser.course_dept);
+    const code = safe(currentUser.generated_code);
+    const shortCode = String(code).slice(-4);
+
+    const setHTML = (id, html) => {
+      const el = byId(id);
+      if (el) el.innerHTML = html;
+    };
+
+    const setText = (id, text) => {
+      const el = byId(id);
+      if (el) el.textContent = text;
+    };
+
+    setText("sidebarAvatar", initials);
+    setText("sidebarName", safe(currentUser.student_name));
+    setHTML("sidebarRoleChip", `<i class="fa-solid fa-user-check"></i> ${escapeHtml(role)}`);
+    setHTML("sidebarDeptChip", `<i class="fa-solid fa-building"></i> ${escapeHtml(dept)}`);
+
+    setText("drawerAvatar", initials);
+    setText("drawerName", safe(currentUser.student_name));
+    setHTML("drawerRoleChip", `<i class="fa-solid fa-user-check"></i> ${escapeHtml(role)}`);
+    setHTML("drawerDeptChip", `<i class="fa-solid fa-building"></i> ${escapeHtml(dept)}`);
+
+    setText("dashboardWelcomeName", safe(currentUser.student_name).split(" ")[0] || safe(currentUser.student_name));
+
+    setText("heroAvatar", initials);
+    setText("heroName", safe(currentUser.student_name));
+    setHTML("heroRoleChip", `<i class="fa-solid fa-user-graduate"></i> ${escapeHtml(role)}`);
+    setHTML("heroDeptChip", `<i class="fa-solid fa-building"></i> ${escapeHtml(dept)}`);
+    setHTML("heroCodeChip", `<i class="fa-solid fa-qrcode"></i> Code: ${escapeHtml(code)}`);
+    setHTML("heroStudentId", `<i class="fa-solid fa-hashtag"></i> ${escapeHtml(safe(currentUser.student_id))}`);
+
+    setText("accountAvatar", initials);
+    setText("accountName", safe(currentUser.student_name));
+    setHTML("accountRoleChip", `<i class="fa-solid fa-user-check"></i> ${escapeHtml(role)}`);
+    setHTML("accountDeptChip", `<i class="fa-solid fa-building"></i> ${escapeHtml(dept)}`);
+    setHTML("accountStudentId", `<i class="fa-solid fa-hashtag"></i> ${escapeHtml(safe(currentUser.student_id))}`);
+    setHTML("accountGeneratedCode", `<i class="fa-solid fa-qrcode"></i> ${escapeHtml(code)}`);
+
+    const qrMetaDept = byId("qrMetaDept");
+    const qrMetaCode = byId("qrMetaCode");
+    if (qrMetaDept) qrMetaDept.innerHTML = `<i class="fa-solid fa-building"></i><strong>${escapeHtml(dept)}</strong>`;
+    if (qrMetaCode) qrMetaCode.innerHTML = `<i class="fa-solid fa-hashtag"></i><strong>${escapeHtml(shortCode)}</strong>`;
+  }
+
+  async function openUserPortal() {
+    if (!currentUser) return;
+
+    setViewVisibility("loginView", false);
+    setViewVisibility("appView", true);
+
+    userReportStore = {
+      meta: {
+        orgName: "Romblon State University",
+        deptName: "Center For Alumni Relation And Employment Services"
+      },
+      daily: {},
+      reflections: {}
+    };
+
+    populateUserIdentity();
+    setDefaultInputs();
+    bindReportMetaInputs();
+    setUserPageView("dashboardView");
+    setupScrollableTables();
+
+    try {
+      await Promise.all([
+        loadUserAttendance(
+          byId("attendanceStart")?.value || "",
+          byId("attendanceEnd")?.value || ""
+        ),
+        loadWeekDataForUser(activeWeek.startISO)
+      ]);
+
+      updateDashboardStats();
+      syncMenuMode();
+    } catch (err) {
+      console.error(err);
+      showToast("warn", "Partial Load", err.message || "Some user data could not be loaded.");
+    }
+  }
+
+  function animatePageIn(target) {
+    if (!target) return;
+
+    target.classList.remove("page-enter", "page-enter-active");
+    target.classList.add("page-enter");
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        target.classList.add("page-enter-active");
+        setTimeout(() => {
+          target.classList.remove("page-enter", "page-enter-active");
+        }, 340);
+      });
+    });
+  }
+
+  function setUserPageView(viewId) {
+    document.querySelectorAll(".user-page-view").forEach(el => el.classList.add("hidden"));
+    const target = byId(viewId);
+
+    if (target) {
+      target.classList.remove("hidden");
+      animatePageIn(target);
+    }
+
+    syncActiveNavButtons(viewId);
+
+    if (shouldUseMobileMenu()) {
+      closeMobileDrawer();
+    }
+
+    setupScrollableTables();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  async function loadUserAttendance(from, to) {
+    if (!currentUser) return;
+
+    if (from && to && from > to) {
+      showToast("warn", "Invalid Range", "Start date cannot be later than end date.");
+      return;
+    }
+
+    const tbody = byId("userAttendanceTableBody");
+    const cards = byId("userAttendanceCards");
+    const info = byId("attendanceRangeInfo");
+
+    if (tbody) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" class="empty-state">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+            <p>Loading records...</p>
+          </td>
+        </tr>
+      `;
+    }
+
+    if (cards) {
+      cards.innerHTML = `
+        <div class="attendance-mobile-empty">
+          <i class="fa-solid fa-circle-notch fa-spin"></i>
+          <p>Loading records...</p>
+        </div>
+      `;
+    }
+
+    if (info) info.textContent = "Loading attendance records...";
+
+    const resp = await api({
+      action: "get_student_logs",
+      student_id: currentUser.student_id,
+      from,
+      to
+    });
+
+    if (!resp.success) throw new Error(resp.message || "Failed to load attendance logs");
+
+    currentLogs = resp.logs || [];
+    renderUserAttendanceTable(currentLogs);
+    renderUserAttendanceCards(currentLogs);
+
+    if (info) {
+      info.innerHTML = `
+        <strong style="color:var(--text-primary);">Loaded:</strong>
+        ${currentLogs.length} attendance record(s)
+        ${from && to ? ` from <strong style="color:var(--text-primary);">${escapeHtml(formatDisplayDate(from))}</strong> to <strong style="color:var(--text-primary);">${escapeHtml(formatDisplayDate(to))}</strong>.` : "."}
+      `;
+    }
+
+    updateDashboardStats();
+    setupScrollableTables();
+  }
+
+  function renderUserAttendanceTable(data) {
+    const tbody = byId("userAttendanceTableBody");
+    if (!tbody) return;
+
+    if (!data.length) {
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="6" class="empty-state">
+            <i class="fa-solid fa-inbox"></i>
+            <p>No records found for the selected date range.</p>
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    tbody.innerHTML = data.map(row => {
+      const amIn = timeDisplay(row.am_in);
+      const amOut = timeDisplay(row.am_out);
+      const pmIn = timeDisplay(row.pm_in);
+      const pmOut = timeDisplay(row.pm_out);
+
+      const total = String(row.total_hours || "").trim() !== ""
+        ? (Number(String(row.total_hours).replace(/[^\d.]/g, "")) || 0)
+        : calcHours(amIn, amOut, pmIn, pmOut);
+
+      return `
+        <tr>
+          <td>${escapeHtml(formatDisplayDate(safe(row.date)))}</td>
+          <td class="time-col">${escapeHtml(safe(amIn))}</td>
+          <td class="time-col">${escapeHtml(safe(amOut))}</td>
+          <td class="time-col">${escapeHtml(safe(pmIn))}</td>
+          <td class="time-col">${escapeHtml(safe(pmOut))}</td>
+          <td class="hours-col">${total ? total.toFixed(2) + "h" : "-"}</td>
+        </tr>
+      `;
+    }).join("");
+  }
+
+  function renderUserAttendanceCards(data) {
+    const wrap = byId("userAttendanceCards");
+    if (!wrap) return;
+
+    if (!data.length) {
+      wrap.innerHTML = `
+        <div class="attendance-mobile-empty">
+          <i class="fa-solid fa-inbox"></i>
+          <p>No records found for the selected date range.</p>
+        </div>
+      `;
+      return;
+    }
+
+    wrap.innerHTML = data.map(row => {
+      const amIn = timeDisplay(row.am_in);
+      const amOut = timeDisplay(row.am_out);
+      const pmIn = timeDisplay(row.pm_in);
+      const pmOut = timeDisplay(row.pm_out);
+
+      const total = String(row.total_hours || "").trim() !== ""
+        ? (Number(String(row.total_hours).replace(/[^\d.]/g, "")) || 0)
+        : calcHours(amIn, amOut, pmIn, pmOut);
+
+      return `
+        <article class="attendance-mobile-card">
+          <div class="attendance-mobile-head">
+            <div class="attendance-mobile-date">${escapeHtml(formatDisplayDate(safe(row.date)))}</div>
+            <div class="attendance-mobile-total">${total ? total.toFixed(2) + "h" : "-"}</div>
+          </div>
+
+          <div class="attendance-mobile-body">
+            <div class="attendance-mobile-item">
+              <div class="attendance-mobile-label">AM In</div>
+              <div class="attendance-mobile-value">${escapeHtml(safe(amIn))}</div>
+            </div>
+
+            <div class="attendance-mobile-item">
+              <div class="attendance-mobile-label">AM Out</div>
+              <div class="attendance-mobile-value">${escapeHtml(safe(amOut))}</div>
+            </div>
+
+            <div class="attendance-mobile-item">
+              <div class="attendance-mobile-label">PM In</div>
+              <div class="attendance-mobile-value">${escapeHtml(safe(pmIn))}</div>
+            </div>
+
+            <div class="attendance-mobile-item">
+              <div class="attendance-mobile-label">PM Out</div>
+              <div class="attendance-mobile-value">${escapeHtml(safe(pmOut))}</div>
+            </div>
+          </div>
+        </article>
+      `;
+    }).join("");
+  }
+
+  function updateDashboardStats() {
+    const dashDaysPresent = byId("dashDaysPresent");
+    const dashTotalHours = byId("dashTotalHours");
+    const dashWeekEntries = byId("dashWeekEntries");
+    const dashReflectionStatus = byId("dashReflectionStatus");
+
+    if (!dashDaysPresent || !dashTotalHours || !dashWeekEntries || !dashReflectionStatus || !activeWeek.startISO) return;
+
+    const totalDays = currentLogs.length;
+
+    let totalHours = 0;
+    currentLogs.forEach(r => {
+      const h = String(r.total_hours || "").trim() !== ""
+        ? (Number(String(r.total_hours).replace(/[^\d.]/g, "")) || 0)
+        : calcHours(timeDisplay(r.am_in), timeDisplay(r.am_out), timeDisplay(r.pm_in), timeDisplay(r.pm_out));
+      totalHours += h;
+    });
+
+    const savedEntriesCount = [0, 1, 2, 3, 4]
+      .map(i => addDaysISO(activeWeek.startISO, i))
+      .filter(d => {
+        const e = userReportStore.daily[d];
+        return !!(e && ((e.am || "").trim() || (e.pm || "").trim()));
+      }).length;
+
+    const reflectionText = (userReportStore.reflections[activeWeek.key] || "").trim();
+    const reflectionStatus = reflectionText ? "Saved" : "Pending";
+
+    dashDaysPresent.textContent = totalDays;
+    dashTotalHours.textContent = totalHours.toFixed(1);
+    dashWeekEntries.textContent = `${savedEntriesCount}/5`;
+    dashReflectionStatus.textContent = reflectionStatus;
+  }
+
+  function renderDashboardWeekSummary() {
+    const wrap = byId("dashboardWeekSummary");
+    if (!wrap || !activeWeek.startISO) return;
+
+    wrap.innerHTML = "";
+
+    const days = [0, 1, 2, 3, 4].map(i => addDaysISO(activeWeek.startISO, i));
+
+    days.forEach(iso => {
+      const e = userReportStore.daily[iso];
+      const filled = !!(e && ((e.am || "").trim() || (e.pm || "").trim()));
+      const chipClass = filled ? "status-chip" : "status-chip missing";
+      const chipText = filled ? "Saved" : "Missing";
+
+      const row = document.createElement("div");
+      row.className = "week-row";
+      row.innerHTML = `
+        <div style="min-width:0;">
+          <strong>${escapeHtml(weekdayName(iso))}</strong>
+          <small>${escapeHtml(formatDisplayDate(iso))}</small>
+        </div>
+        <div style="display:flex; align-items:center; gap:.5rem; flex-shrink:0;">
+          <span class="${chipClass}">${chipText}</span>
+        </div>
+      `;
+      wrap.appendChild(row);
+    });
+  }
+
+  async function loadWeekDataForUser(anyISO) {
+    if (!currentUser) return;
+
+    setActiveWeekByAnyDate(anyISO);
+
+    await Promise.all([
+      loadWeekProgressFromServer(),
+      loadReflectionFromServer()
+    ]);
+
+    const dailyDateEl = byId("userDailyDate");
+    const dISO = dailyDateEl?.value || activeWeek.startISO;
+    const inWeek = dISO >= activeWeek.startISO && dISO <= activeWeek.endISO;
+
+    if (dailyDateEl && !inWeek) {
+      dailyDateEl.value = activeWeek.startISO;
+    }
+
+    updateDailyDatePreview();
+    loadDailyEntryIntoForm(dailyDateEl?.value || activeWeek.startISO);
+    renderWeekSummary();
+    renderDashboardWeekSummary();
+    updateDashboardStats();
+  }
+
+  async function loadWeekProgressFromServer() {
+    if (!currentUser) return;
+
+    const resp = await api({
+      action: "get_weekly_progress",
+      student_id: currentUser.student_id,
+      week_start: activeWeek.startISO,
+      week_end: activeWeek.endISO
+    });
+
+    if (!resp.success) throw new Error(resp.message || "Failed to load weekly progress");
+
+    [0, 1, 2, 3, 4].forEach(i => {
+      const d = addDaysISO(activeWeek.startISO, i);
+      delete userReportStore.daily[d];
+    });
+
+    (resp.entries || []).forEach(e => {
+      userReportStore.daily[e.date] = {
+        am: e.am || "",
+        pm: e.pm || ""
+      };
+    });
+  }
+
+  async function loadReflectionFromServer() {
+    if (!currentUser) return;
+
+    const resp = await api({
+      action: "get_weekly_reflection",
+      student_id: currentUser.student_id,
+      week_start: activeWeek.startISO
+    });
+
+    if (!resp.success) throw new Error(resp.message || "Failed to load reflection");
+
+    const text = resp.reflection || "";
+    userReportStore.reflections[activeWeek.key] = text;
+
+    const reflectionBox = byId("userWeeklyReflectionText");
+    if (reflectionBox) reflectionBox.value = text;
+
+    updateReflectionButtonState();
+  }
+
+  function loadDailyEntryIntoForm(dateISO) {
+    const d = String(dateISO || "").trim();
+    const entry = userReportStore.daily[d];
+
+    const am = byId("userDailyAM");
+    const pm = byId("userDailyPM");
+    const hint = byId("userDailySavedHint");
+
+    if (am) am.value = entry?.am || "";
+    if (pm) pm.value = entry?.pm || "";
+
+    updateDailyDatePreview();
+
+    if (hint && activeWeek.startISO) {
+      hint.textContent = `Selected week: ${fmtWeekLabel(activeWeek.startISO)}`;
+      hint.className = "hint";
+    }
+  }
+
+  async function saveUserDailyEntry() {
+    if (!currentUser) return;
+
+    const dateInput = byId("userDailyDate");
+    const amInput = byId("userDailyAM");
+    const pmInput = byId("userDailyPM");
+    const hint = byId("userDailySavedHint");
+    const orgInput = byId("userOrgName");
+    const deptInput = byId("userDeptName");
+
+    const dateISO = dateInput?.value || todayISO();
+    const am = normalizeNumberedText(amInput?.value || "");
+    const pm = normalizeNumberedText(pmInput?.value || "");
+
+    if (amInput) amInput.value = am;
+    if (pmInput) pmInput.value = pm;
+
+    if (!am && !pm) {
+      if (hint) {
+        hint.textContent = "Nothing to save yet. Please write something first.";
+        hint.className = "hint warn";
+      }
+      showToast("warn", "No Content", "Write something before saving.");
+      return;
+    }
+
+    const org = (orgInput?.value || "").trim();
+    const dept = (deptInput?.value || "").trim();
+
+    userReportStore.daily[dateISO] = { am, pm };
+
+    try {
+      const resp = await apiPost({
+        action: "save_daily_progress",
+        student_id: currentUser.student_id,
+        student_name: currentUser.student_name,
+        week_start: activeWeek.startISO,
+        week_end: activeWeek.endISO,
+        date: dateISO,
+        am,
+        pm,
+        remarks: "",
+        org,
+        dept,
+        supervisor: ""
+      });
+
+      if (!resp.success) throw new Error(resp.message || "Save failed");
+
+      if (hint) {
+        hint.textContent = `Saved to Weekly Progress • ${formatDisplayDate(dateISO)}`;
+        hint.className = "hint";
+      }
+
+      renderWeekSummary();
+      renderDashboardWeekSummary();
+      updateDashboardStats();
+      showToast("success", "Saved", "Daily progress saved to Google Sheet.");
+    } catch (err) {
+      console.error(err);
+      if (hint) {
+        hint.textContent = `Saved locally but failed to sync: ${err.message}`;
+        hint.className = "hint err";
+      }
+      showToast("error", "Sync Failed", err.message);
+    }
+  }
+
+  async function saveUserWeeklyReflection() {
+    if (!currentUser) return;
+
+    if (!canSubmitReflectionToday()) {
+      updateReflectionButtonState();
+      showToast("warn", "Submission Closed", "Weekly reflection can only be submitted on Friday, Saturday, or Sunday.");
+      return;
+    }
+
+    const reflectionBox = byId("userWeeklyReflectionText");
+    const hint = byId("userReflectionSavedHint");
+    const orgInput = byId("userOrgName");
+    const deptInput = byId("userDeptName");
+
+    const text = (reflectionBox?.value || "").trim();
+    if (!text) {
+      if (hint) {
+        hint.textContent = "Nothing to save yet. Please write your reflection first.";
+        hint.className = "hint warn";
+      }
+      showToast("warn", "No Content", "Write your reflection before saving.");
+      return;
+    }
+
+    const org = (orgInput?.value || "").trim();
+    const dept = (deptInput?.value || "").trim();
+
+    try {
+      const resp = await apiPost({
+        action: "save_weekly_reflection",
+        student_id: currentUser.student_id,
+        student_name: currentUser.student_name,
+        week_start: activeWeek.startISO,
+        week_end: activeWeek.endISO,
+        reflection: text,
+        org,
+        dept,
+        supervisor: ""
+      });
+
+      if (!resp.success) throw new Error(resp.message || "Save failed");
+
+      userReportStore.reflections[activeWeek.key] = text;
+
+      if (hint) {
+        hint.textContent = `Saved to Weekly Reflection • Week: ${fmtWeekLabel(activeWeek.startISO)}`;
+        hint.className = "hint";
+      }
+
+      updateReflectionButtonState();
+      updateDashboardStats();
+      showToast("success", "Saved", "Weekly reflection saved to Google Sheet.");
+    } catch (err) {
+      console.error(err);
+      if (hint) {
+        hint.textContent = `Failed to sync: ${err.message}`;
+        hint.className = "hint err";
+      }
+      showToast("error", "Sync Failed", err.message);
+    }
+  }
+
+  function clearUserDailyForm() {
+    const am = byId("userDailyAM");
+    const pm = byId("userDailyPM");
+    const hint = byId("userDailySavedHint");
+
+    if (am) am.value = "";
+    if (pm) pm.value = "";
+
+    if (hint && activeWeek.startISO) {
+      hint.textContent = `Selected week: ${fmtWeekLabel(activeWeek.startISO)}`;
+      hint.className = "hint";
+    }
+  }
+
+  function clearUserReflectionForm() {
+    const reflection = byId("userWeeklyReflectionText");
+    const hint = byId("userReflectionSavedHint");
+
+    if (reflection) reflection.value = "";
+
+    if (hint && activeWeek.startISO) {
+      hint.textContent = `Selected week: ${fmtWeekLabel(activeWeek.startISO)}`;
+      hint.className = "hint";
+    }
+
+    updateReflectionButtonState();
+  }
+
+  function updateReflectionButtonState() {
+    const btn = byId("btnUserSaveReflection");
+    const note = byId("userReflectionFridayNote");
+    if (!btn || !note) return;
+
+    const allowed = canSubmitReflectionToday();
+    btn.disabled = !allowed;
+
+    if (allowed) {
+      note.textContent = "Reflection submission is enabled today because today is Friday, Saturday, or Sunday.";
+      note.className = "report-help hint";
+    } else {
+      note.textContent = "Weekly reflection can only be submitted on Friday, Saturday, or Sunday.";
+      note.className = "report-help hint warn";
+    }
+  }
+
+  function renderWeekSummary() {
+    const wrap = byId("userWeekSummary");
+    if (!wrap || !activeWeek.startISO) return;
+
+    wrap.innerHTML = "";
+
+    const days = [0, 1, 2, 3, 4].map(i => addDaysISO(activeWeek.startISO, i));
+
+    days.forEach(iso => {
+      const e = userReportStore.daily[iso];
+      const filled = !!(e && ((e.am || "").trim() || (e.pm || "").trim()));
+      const chipClass = filled ? "status-chip" : "status-chip missing";
+      const chipText = filled ? "Saved" : "Missing";
+
+      const row = document.createElement("div");
+      row.className = "week-row";
+      row.innerHTML = `
+        <div style="min-width:0;">
+          <strong>${escapeHtml(weekdayName(iso))}</strong>
+          <small>${escapeHtml(formatDisplayDate(iso))}</small>
+        </div>
+        <div style="display:flex; align-items:center; gap:.5rem; flex-wrap:wrap;">
+          <span class="${chipClass}">${chipText}</span>
+          <button class="btn btn-secondary" style="padding:.58rem .9rem; font-size:.85rem; min-height:auto;" data-edit="${iso}" type="button">
+            <i class="fa-solid fa-pen-to-square"></i>
+            Edit
+          </button>
+        </div>
+      `;
+      wrap.appendChild(row);
+    });
+
+    wrap.querySelectorAll("button[data-edit]").forEach(btn => {
+      btn.onclick = () => {
+        const iso = btn.getAttribute("data-edit");
+        const dailyDate = byId("userDailyDate");
+        if (dailyDate) dailyDate.value = iso;
+        updateDailyDatePreview();
+        loadDailyEntryIntoForm(iso);
+        setUserPageView("reportsView");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      };
+    });
+  }
+
+  function exportMyAttendanceExcel() {
+    if (!currentUser) return;
+
+    const headers = ["Date", "AM In", "AM Out", "PM In", "PM Out", "Total Hours"];
+    const aoa = [headers];
+
+    (currentLogs || []).slice().sort((a, b) => String(a.date).localeCompare(String(b.date))).forEach(r => {
+      const amIn = timeDisplay(r.am_in);
+      const amOut = timeDisplay(r.am_out);
+      const pmIn = timeDisplay(r.pm_in);
+      const pmOut = timeDisplay(r.pm_out);
+      const total = String(r.total_hours || "").trim() !== ""
+        ? (Number(String(r.total_hours).replace(/[^\d.]/g, "")) || 0)
+        : calcHours(amIn, amOut, pmIn, pmOut);
+
+      aoa.push([
+        formatDisplayDate(safe(r.date)),
+        safe(amIn),
+        safe(amOut),
+        safe(pmIn),
+        safe(pmOut),
+        total ? Number(total.toFixed(2)) : ""
+      ]);
+    });
+
+    const wb = XLSX.utils.book_new();
+
+    const meta = [
+      ["Student Name", safe(currentUser.student_name)],
+      ["Student ID", safe(currentUser.student_id)],
+      ["Role", safe(currentUser.login_type)],
+      ["Department", safe(currentUser.course_dept)],
+      ["Email", safe(currentUser.email)],
+      ["Export Date", todayISO()]
+    ];
+
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(meta), "Meta");
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(aoa), "Attendance");
+
+    const fname = `my_attendance_${safe(currentUser.student_id)}_${todayISO()}.xlsx`;
+    XLSX.writeFile(wb, fname);
+    showToast("success", "Exported", `Downloaded ${fname}`);
+  }
+
+  function exportMyWeeklyExcel() {
+    if (!currentUser) return;
+
+    if (!activeWeek.startISO) {
+      setActiveWeekByAnyDate(byId("userWeekPicker")?.value || todayISO());
+    }
+
+    const org = (byId("userOrgName")?.value || "").trim();
+    const dept = (byId("userDeptName")?.value || "").trim();
+    const weekLabel = fmtWeekLabel(activeWeek.startISO);
+
+    const progressHeaders = ["Date", "Day", "Morning Activities (AM)", "Afternoon Activities (PM)"];
+    const progressAoa = [progressHeaders];
+
+    [0, 1, 2, 3, 4].map(i => addDaysISO(activeWeek.startISO, i)).forEach(d => {
+      const e = userReportStore.daily[d] || {};
+      progressAoa.push([
+        formatDisplayDate(d),
+        weekdayName(d),
+        e.am || "",
+        e.pm || ""
+      ]);
+    });
+
+    const reflectionText =
+      userReportStore.reflections[activeWeek.key] ||
+      (byId("userWeeklyReflectionText")?.value || "");
+
+    const reflectionAoa = [
+      ["Week", weekLabel],
+      ["Week Start", formatDisplayDate(activeWeek.startISO)],
+      ["Week End", formatDisplayDate(activeWeek.endISO)],
+      ["Reflection", reflectionText]
+    ];
+
+    const metaAoa = [
+      ["Student Name", safe(currentUser.student_name)],
+      ["Student ID", safe(currentUser.student_id)],
+      ["Role", safe(currentUser.login_type)],
+      ["Department", safe(currentUser.course_dept)],
+      ["Email", safe(currentUser.email)],
+      ["Organization", org],
+      ["Assigned Department / Section", dept],
+      ["Week", weekLabel],
+      ["Export Date", todayISO()]
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(metaAoa), "Meta");
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(progressAoa), "Weekly Progress");
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(reflectionAoa), "Weekly Reflection");
+
+    const fname = `my_weekly_reports_${safe(currentUser.student_id)}_${activeWeek.startISO}.xlsx`;
+    XLSX.writeFile(wb, fname);
+    showToast("success", "Exported", `Downloaded ${fname}`);
+  }
+
+  function renderPrettyQR(targetEl, text) {
+    if (!targetEl || !window.QRCode) return;
+
+    targetEl.innerHTML = "";
+
+    const holder = document.createElement("div");
+    holder.style.width = "100%";
+    holder.style.height = "100%";
+    holder.style.display = "flex";
+    holder.style.alignItems = "center";
+    holder.style.justifyContent = "center";
+    targetEl.appendChild(holder);
+
+    new QRCode(holder, {
+      text,
+      width: 720,
+      height: 720,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+
+    setTimeout(() => {
+      const img = holder.querySelector("img");
+      const canvas = holder.querySelector("canvas");
+
+      if (img) {
+        img.style.width = "100%";
+        img.style.height = "100%";
+        img.style.display = "block";
+        img.style.objectFit = "contain";
+        img.style.background = "#fff";
+      }
+
+      if (canvas) {
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
+        canvas.style.display = "block";
+        canvas.style.objectFit = "contain";
+        canvas.style.background = "#fff";
+      }
+    }, 50);
+  }
+
+  function openQrModal() {
+    if (!currentUser) return;
+
+    const code = String(currentUser.generated_code || "").trim();
+    if (!code) {
+      showToast("warn", "No QR", "This user has no generated QR code yet.");
+      return;
+    }
+
+    const name = safe(currentUser.student_name);
+    const role = safe(currentUser.login_type).toUpperCase();
+    const dept = safe(currentUser.course_dept);
+    const shortCode = String(safe(currentUser.generated_code)).slice(-4);
+
+    const qrName = byId("qrName");
+    const qrRole = byId("qrRole");
+    const qrAvatar = byId("qrAvatar");
+    const qrMetaDept = byId("qrMetaDept");
+    const qrMetaCode = byId("qrMetaCode");
+
+    if (qrName) qrName.textContent = name;
+    if (qrRole) qrRole.textContent = role;
+    if (qrAvatar) qrAvatar.textContent = getInitials(name);
+    if (qrMetaDept) qrMetaDept.innerHTML = `<i class="fa-solid fa-building"></i><strong>${escapeHtml(dept)}</strong>`;
+    if (qrMetaCode) qrMetaCode.innerHTML = `<i class="fa-solid fa-hashtag"></i><strong>${escapeHtml(shortCode)}</strong>`;
+
+    pendingQrValue = code;
+
+    const modalEl = byId("qrModal");
+    if (!modalEl || !window.bootstrap) return;
+
+    qrModalInstance = qrModalInstance || new bootstrap.Modal(modalEl, {
+      backdrop: true,
+      keyboard: true,
+      focus: true
+    });
+
+    qrModalInstance.show();
+  }
+
+  function closeQrModal() {
+    try {
+      qrModalInstance?.hide();
+    } catch (e) {}
+  }
+
+  function openLogoutModal() {
+    const logoutModalEl = byId("logoutModal");
+
+    if (!logoutModalEl || !window.bootstrap) {
+      logoutUser();
+      return;
+    }
+
+    logoutModalInstance = bootstrap.Modal.getOrCreateInstance(logoutModalEl);
+    logoutModalInstance.show();
+  }
+
+  function confirmLogout() {
+    try {
+      logoutModalInstance?.hide();
+    } catch (e) {}
+
+    logoutUser();
+  }
+
+  function bindUI() {
+    const loginEmail = byId("loginEmail");
+    const qrModalEl = byId("qrModal");
+
+    on("btnUserLogin", "click", async () => {
+      try {
+        await loginWithEmail(loginEmail?.value || "");
+      } catch (err) {
+        console.error(err);
+        showToast("error", "Login Failed", err.message || "Unable to sign in.");
+      }
+    });
+
+    if (loginEmail) {
+      loginEmail.addEventListener("keydown", async (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          try {
+            await loginWithEmail(loginEmail.value);
+          } catch (err) {
+            console.error(err);
+            showToast("error", "Login Failed", err.message || "Unable to sign in.");
+          }
+        }
+      });
+    }
+
+    on("btnUseSavedSession", "click", async () => {
+      try {
+        await trySavedSession();
+      } catch (err) {
+        console.error(err);
+        showToast("error", "Session Failed", err.message || "Unable to restore session.");
+      }
+    });
+
+    on("menuToggle", "click", toggleMobileDrawer);
+    on("drawerClose", "click", closeMobileDrawer);
+    on("mobileMenuBackdrop", "click", closeMobileDrawer);
+
+    document.querySelectorAll(".side-nav-btn[data-user-view], .drawer-nav-btn[data-user-view]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        setUserPageView(btn.getAttribute("data-user-view"));
+      });
+    });
+
+    on("btnSidebarViewQR", "click", openQrModal);
+    on("btnDrawerViewQR", "click", () => {
+      openQrModal();
+      if (shouldUseMobileMenu()) closeMobileDrawer();
+    });
+    on("btnDashboardViewQR", "click", openQrModal);
+    on("btnAccountViewQR", "click", openQrModal);
+
+    const qrCloseBtn = document.querySelector("#qrModal .qr-x");
+    const qrBackBtn = byId("qrBackBtn");
+
+    if (qrCloseBtn) qrCloseBtn.addEventListener("click", closeQrModal);
+    if (qrBackBtn) qrBackBtn.addEventListener("click", closeQrModal);
+
+    if (qrModalEl) {
+      qrModalEl.addEventListener("shown.bs.modal", () => {
+        if (pendingQrValue) {
+          renderPrettyQR(byId("qrCanvas"), pendingQrValue);
+        }
+      });
+
+      qrModalEl.addEventListener("hidden.bs.modal", () => {
+        const qrCanvas = byId("qrCanvas");
+        if (qrCanvas) qrCanvas.innerHTML = "";
+      });
+    }
+
+    on("btnDashboardExportAttendance", "click", exportMyAttendanceExcel);
+    on("btnAttendanceExport", "click", exportMyAttendanceExcel);
+    on("btnReportsExportWeek", "click", exportMyWeeklyExcel);
+
+    on("btnQuickOpenReports", "click", () => {
+      setUserPageView("reportsView");
+    });
+
+    on("btnUserApplyAttendanceFilter", "click", async () => {
+      if (!currentUser) return;
+
+      try {
+        await loadUserAttendance(
+          byId("attendanceStart")?.value || "",
+          byId("attendanceEnd")?.value || ""
+        );
+      } catch (err) {
+        console.error(err);
+        showToast("error", "Load Failed", err.message || "Unable to filter attendance.");
+      }
+    });
+
+    on("btnUserResetAttendanceFilter", "click", async () => {
+      if (!currentUser) return;
+
+      const today = todayISO();
+      const som = startOfMonthISO();
+
+      const attendanceStart = byId("attendanceStart");
+      const attendanceEnd = byId("attendanceEnd");
+
+      if (attendanceStart) attendanceStart.value = som;
+      if (attendanceEnd) attendanceEnd.value = today;
+
+      try {
+        await loadUserAttendance(som, today);
+      } catch (err) {
+        console.error(err);
+        showToast("error", "Reset Failed", err.message || "Unable to reset attendance filter.");
+      }
+    });
+
+    on("dashWeekPicker", "change", async () => {
+      if (!currentUser) return;
+      const picked = byId("dashWeekPicker")?.value || todayISO();
+      const userWeekPicker = byId("userWeekPicker");
+      if (userWeekPicker) userWeekPicker.value = picked;
+
+      try {
+        await loadWeekDataForUser(picked);
+      } catch (err) {
+        console.error(err);
+        showToast("error", "Load Failed", err.message || "Unable to load selected week.");
+      }
+    });
+
+    on("btnDashLoadWeek", "click", async () => {
+      if (!currentUser) return;
+      const picked = byId("dashWeekPicker")?.value || todayISO();
+      const userWeekPicker = byId("userWeekPicker");
+      if (userWeekPicker) userWeekPicker.value = picked;
+
+      try {
+        await loadWeekDataForUser(picked);
+        showToast("success", "Loaded", "Selected week loaded.");
+      } catch (err) {
+        console.error(err);
+        showToast("error", "Load Failed", err.message || "Unable to load selected week.");
+      }
+    });
+
+    on("userWeekPicker", "change", async () => {
+      if (!currentUser) return;
+      const picked = byId("userWeekPicker")?.value || todayISO();
+      const dashWeekPicker = byId("dashWeekPicker");
+      if (dashWeekPicker) dashWeekPicker.value = picked;
+
+      try {
+        await loadWeekDataForUser(picked);
+      } catch (err) {
+        console.error(err);
+        showToast("error", "Load Failed", err.message || "Unable to load selected week.");
+      }
+    });
+
+    on("btnUserLoadWeek", "click", async () => {
+      if (!currentUser) return;
+      const picked = byId("userWeekPicker")?.value || todayISO();
+      const dashWeekPicker = byId("dashWeekPicker");
+      if (dashWeekPicker) dashWeekPicker.value = picked;
+
+      try {
+        await loadWeekDataForUser(picked);
+        showToast("success", "Loaded", "Week progress and reflection loaded.");
+      } catch (err) {
+        console.error(err);
+        showToast("error", "Load Failed", err.message || "Unable to load week data.");
+      }
+    });
+
+    on("userDailyDate", "change", () => {
+      const iso = byId("userDailyDate")?.value || todayISO();
+      updateDailyDatePreview();
+      loadDailyEntryIntoForm(iso);
+    });
+
+    on("btnAddAMItem", "click", () => appendNextNumber("userDailyAM"));
+    on("btnRenumberAM", "click", () => renumberActivity("userDailyAM"));
+    on("btnAddPMItem", "click", () => appendNextNumber("userDailyPM"));
+    on("btnRenumberPM", "click", () => renumberActivity("userDailyPM"));
+
+    on("btnUserSaveDaily", "click", saveUserDailyEntry);
+    on("btnUserClearDaily", "click", clearUserDailyForm);
+    on("btnUserSaveReflection", "click", saveUserWeeklyReflection);
+    on("btnUserClearReflection", "click", clearUserReflectionForm);
+
+    on("btnLogoutUser", "click", openLogoutModal);
+    on("btnDrawerLogout", "click", () => {
+      closeMobileDrawer();
+      openLogoutModal();
+    });
+    on("btnAccountLogout", "click", openLogoutModal);
+    on("btnConfirmLogout", "click", confirmLogout);
+
+    window.addEventListener("resize", debounce(() => {
+      syncMenuMode();
+      setupScrollableTables();
+    }, 180));
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        if (mobileDrawerOpen) closeMobileDrawer();
+        closeQrModal();
+      }
+    });
+  }
+
+  async function init() {
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    bindUI();
+    cleanupModalArtifacts();
+    updateReflectionButtonState();
+    syncMenuMode();
+    setupScrollableTables();
+    updateDailyDatePreview();
+
+    const cards = byId("userAttendanceCards");
+    if (cards) {
+      cards.innerHTML = `
+        <div class="attendance-mobile-empty">
+          <i class="fa-solid fa-inbox"></i>
+          <p>Login to load your attendance records.</p>
+        </div>
+      `;
+    }
+
+    try {
+      await loadAllStudents();
+    } catch (err) {
+      console.error(err);
+      showToast("error", "Startup Error", err.message || "Unable to initialize user portal.");
+    }
+
+    const session = getUserSession();
+    if (session) {
+      try {
+        await trySavedSession();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
@@ -4789,3 +9766,4 @@
   </script>
 </body>
 </html>
+
