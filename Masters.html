@@ -1396,7 +1396,7 @@
                 <i class="fa-solid fa-camera"></i>
                 QR Scanner
               </div>
-              <span class="badge-soft" id="scanModeBadge">Auto Detect</span>
+              <span class="badge-soft" id="scanModeBadge">AM Time In</span>
             </div>
 
             <div class="card-body">
@@ -1466,7 +1466,7 @@
                       <div>
                         <div style="font-weight:900;font-size:.94rem;">Smart scanning tip</div>
                         <div style="color:var(--text-muted);font-size:.84rem;font-weight:700;line-height:1.5;">
-                          Use Auto Detect for faster operation. Use manual AM/PM mode only when you need strict control for a session.
+                          Select the exact AM/PM Time In or Time Out mode before starting the scanner. Auto detect has been removed.
                         </div>
                       </div>
                     </div>
@@ -1639,6 +1639,7 @@
 
     dropdownStudentId: null,
     dropdownExisting: null,
+    prevScanMode: "am_in",
 
     timeInPinGranted: false,
     pinModal: null,
@@ -2028,7 +2029,7 @@
       clearScanModeContext();
     }
 
-    renderScanModeOptions(state.dropdownExisting || null);
+    renderScanModeOptions();
     updateLiveColumns();
   }
 
@@ -2145,7 +2146,7 @@
   function clearScanModeContext() {
     state.dropdownStudentId = null;
     state.dropdownExisting = null;
-    renderScanModeOptions(null);
+    renderScanModeOptions();
   }
 
   function normalizeExistingRow(row) {
@@ -2177,53 +2178,28 @@
     const existing = findExistingRow(studentId, date);
     state.dropdownStudentId = studentId;
     state.dropdownExisting = existing;
-    renderScanModeOptions(existing);
+    renderScanModeOptions();
   }
 
-  function renderScanModeOptions(existingRow = null) {
-    const current = el.scanMode.value || "auto";
-    const hasContext = !!existingRow;
-    const has = (k) => !!(existingRow && String(existingRow[k] || "").trim());
+  function renderScanModeOptions() {
+    const current = el.scanMode.value || state.prevScanMode || "am_in";
 
-    const allowAmIn = !hasContext || !has("am_in");
-    const allowAmOut = !hasContext ? true : (has("am_in") && !has("am_out"));
-    const allowPmIn = !hasContext || !has("pm_in");
-    const allowPmOut = !hasContext ? true : (has("pm_in") && !has("pm_out"));
+    const options = [
+      { label: "AM Time In", value: "am_in" },
+      { label: "AM Time Out", value: "am_out" },
+      { label: "PM Time In", value: "pm_in" },
+      { label: "PM Time Out", value: "pm_out" }
+    ];
 
     el.scanMode.innerHTML = "";
-    el.scanMode.appendChild(new Option("Auto Detect", "auto"));
-
-    const groupAm = document.createElement("optgroup");
-    groupAm.label = "AM";
-    if (allowAmIn) groupAm.appendChild(new Option("AM Time In", "am_in"));
-    if (allowAmOut) groupAm.appendChild(new Option("AM Time Out", "am_out"));
-    if (groupAm.children.length) el.scanMode.appendChild(groupAm);
-
-    const groupPm = document.createElement("optgroup");
-    groupPm.label = "PM";
-    if (allowPmIn) groupPm.appendChild(new Option("PM Time In", "pm_in"));
-    if (allowPmOut) groupPm.appendChild(new Option("PM Time Out", "pm_out"));
-    if (groupPm.children.length) el.scanMode.appendChild(groupPm);
+    options.forEach(opt => {
+      el.scanMode.appendChild(new Option(opt.label, opt.value));
+    });
 
     const exists = [...el.scanMode.options].some(o => o.value === current);
-    el.scanMode.value = exists ? current : "auto";
-    el.scanModeBadge.textContent = el.scanMode.options[el.scanMode.selectedIndex]?.text || "Auto Detect";
-  }
-
-  function pickLogTypeAuto(existingRow) {
-    const isAM = state.currentSession === "morning";
-
-    if (!existingRow) return isAM ? "am_in" : "pm_in";
-
-    if (isAM) {
-      if (!existingRow.am_in) return "am_in";
-      if (existingRow.am_in && !existingRow.am_out) return "am_out";
-      return null;
-    } else {
-      if (!existingRow.pm_in) return "pm_in";
-      if (existingRow.pm_in && !existingRow.pm_out) return "pm_out";
-      return null;
-    }
+    el.scanMode.value = exists ? current : "am_in";
+    state.prevScanMode = el.scanMode.value;
+    el.scanModeBadge.textContent = el.scanMode.options[el.scanMode.selectedIndex]?.text || "AM Time In";
   }
 
   function updateLiveColumns() {
@@ -2478,7 +2454,7 @@
       return;
     }
 
-    const mode = el.scanMode.value || "auto";
+    const mode = el.scanMode.value || "am_in";
     if (mode === "am_in" || mode === "pm_in") {
       const label = el.scanMode.options[el.scanMode.selectedIndex]?.text || "Time In";
       const ok = await askAdminPin("timein", label);
@@ -2490,6 +2466,8 @@
     } else {
       state.timeInPinGranted = false;
     }
+
+    state.prevScanMode = mode;
 
     try {
       if (!state.scanner) state.scanner = new Html5Qrcode("reader");
@@ -2595,16 +2573,7 @@
       const existing = findExistingRow(student.student_id, date);
       setScanModeContextForStudent(student.student_id, date);
 
-      let log_type = el.scanMode.value;
-      if (log_type === "auto") {
-        log_type = pickLogTypeAuto(existing);
-        if (!log_type) {
-          beep(120, 260, 0.06);
-          showToast("Session already completed", "warning", 2500);
-          el.lastScanInfo.innerHTML = `<i class="fa-solid fa-clock-rotate-left" style="color:var(--warning)"></i><span>${escapeHtml(student.student_name)} already completed this session.</span>`;
-          return;
-        }
-      }
+      const log_type = el.scanMode.value || "am_in";
 
       if (isTimeInLogType(log_type) && !state.timeInPinGranted) {
         beep(120, 260, 0.06);
@@ -2699,25 +2668,29 @@
     el.btnStop.addEventListener("click", stopScanner);
 
     el.scanMode.addEventListener("change", async () => {
-      el.scanModeBadge.textContent = el.scanMode.options[el.scanMode.selectedIndex]?.text || "Auto Detect";
+      const previousMode = state.prevScanMode || "am_in";
+      const selectedMode = el.scanMode.value || previousMode;
+
+      el.scanModeBadge.textContent = el.scanMode.options[el.scanMode.selectedIndex]?.text || "AM Time In";
       state.timeInPinGranted = false;
 
-      const mode = el.scanMode.value || "auto";
-      if (state.scanning && (mode === "am_in" || mode === "pm_in")) {
+      if (state.scanning && (selectedMode === "am_in" || selectedMode === "pm_in")) {
         const label = el.scanMode.options[el.scanMode.selectedIndex]?.text || "Time In";
         const ok = await askAdminPin("timein", label);
 
         if (!ok) {
-          el.scanMode.value = "auto";
-          el.scanModeBadge.textContent = el.scanMode.options[el.scanMode.selectedIndex]?.text || "Auto Detect";
-          showToast("PIN required for Time In. Mode reset to Auto.", "warning", 2500);
+          el.scanMode.value = previousMode;
+          el.scanModeBadge.textContent = el.scanMode.options[el.scanMode.selectedIndex]?.text || "AM Time In";
           state.timeInPinGranted = false;
+          showToast("PIN required for Time In. Previous mode restored.", "warning", 2500);
           return;
         }
 
         state.timeInPinGranted = true;
         showToast("Time In unlocked for this scan session.", "success", 1800);
       }
+
+      state.prevScanMode = el.scanMode.value || "am_in";
     });
 
     el.liveSessionFilter.addEventListener("change", () => {
@@ -2763,7 +2736,7 @@
     updateClock();
     setInterval(updateClock, 1000);
     updateLiveColumns();
-    renderScanModeOptions(null);
+    renderScanModeOptions();
     setScannerVisualState(false);
 
     await Promise.all([
